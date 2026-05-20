@@ -30,4 +30,32 @@ router.delete('/anime/:id', protect, requireAdmin, async (req, res) => {
   }
 });
 
+// Add season
+router.post('/anime/:id/seasons', protect, requireAdmin, async (req, res) => {
+  try {
+    const anime = await Anime.findById(req.params.id);
+    if (!anime) return res.status(404).json({ success: false, message: 'Anime not found' });
+    anime.seasons.push(req.body);
+    await anime.save();
+    res.json({ success: true, anime });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Add episode to season
+router.post('/anime/:id/seasons/:seasonNumber/episodes', protect, requireAdmin, async (req, res) => {
+  try {
+    const anime = await Anime.findById(req.params.id);
+    if (!anime) return res.status(404).json({ success: false, message: 'Anime not found' });
+    const season = anime.seasons.find(s => s.seasonNumber === parseInt(req.params.seasonNumber));
+    if (!season) return res.status(404).json({ success: false, message: 'Season not found' });
+    season.episodes.push(req.body);
+    await anime.save();
+    res.json({ success: true, anime });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;
