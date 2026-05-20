@@ -159,6 +159,7 @@
       <button class="admin-tab" onclick="switchAdminTab('theme')">🎨 Theme</button>
       <button class="admin-tab" onclick="switchAdminTab('cloud')">☁️ Cloud</button>
       <button class="admin-tab" onclick="switchAdminTab('security')">🔒 Security</button>
+      <button class="admin-tab" onclick="switchAdminTab('episodes'); loadEpAnimeList()">?? Episodes</button>
     </div>
 
     <!-- ── UPLOAD TAB ── -->
@@ -897,7 +898,177 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script src="app.js"></script>
+<script src="app.js">
+  // -- Episode Manager -----------------------------------------
+  let epAnimeId = null;
+  let epSeasonNum = null;
+  const EP_API = 'https://myanime-backend-2vc9.onrender.com';
+
+  function getAdminToken() {
+    return localStorage.getItem('accessToken') || localStorage.getItem('token') || '';
+  }
+
+  async function loadEpAnimeList() {
+    const sel = document.getElementById('epAnimeSelect');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Loading...</option>';
+    try {
+      const res = await fetch(`${EP_API}/api/anime?limit=300`);
+      const data = await res.json();
+      const list = data.anime || data.animes || data.results || (Array.isArray(data) ? data : []);
+      sel.innerHTML = '<option value="">� Select an anime �</option>';
+      list.forEach(a => {
+        const o = document.createElement('option');
+        o.value = a._id;
+        o.textContent = a.title;
+        sel.appendChild(o);
+      });
+    } catch(e) {
+      sel.innerHTML = '<option value="">Failed to load</option>';
+      showToast('Could not load anime list', 'error');
+    }
+  }
+
+  async function loadAnimeSeasons() {
+    const sel = document.getElementById('epAnimeSelect');
+    epAnimeId = sel.value;
+    document.getElementById('episodeSection').style.display = 'none';
+    if (!epAnimeId) { document.getElementById('seasonSection').style.display = 'none'; return; }
+    document.getElementById('seasonSection').style.display = 'block';
+    await refreshSeasonsList();
+  }
+
+  async function refreshSeasonsList() {
+    const list = document.getElementById('seasonsList');
+    list.innerHTML = '<p style="color:#aaa;padding:0.5rem 0">Loading seasons...</p>';
+    try {
+      const res = await fetch(`${EP_API}/api/anime/${epAnimeId}`);
+      const anime = await res.json();
+      const seasons = anime.seasons || [];
+      list.innerHTML = '';
+      if (!seasons.length) { list.innerHTML = '<p style="color:#aaa;padding:0.5rem 0">No seasons yet � add one below.</p>'; return; }
+      seasons.sort((a,b) => a.seasonNumber - b.seasonNumber).forEach(s => {
+        const d = document.createElement('div');
+        d.className = 'ep-item';
+        d.innerHTML = `
+          <div class="ep-item-info">
+            <strong>Season ${s.seasonNumber}</strong>
+            <span>${s.title || ''}</span>
+            <span class="ep-badge">${(s.episodes||[]).length} episodes</span>
+          </div>
+          <div class="ep-item-actions">
+            <button class="ep-btn ep-btn-view" onclick="openSeason(${s.seasonNumber},'Season ${s.seasonNumber}')">?? Episodes</button>
+            <button class="ep-btn ep-btn-del" onclick="deleteSeason(${s.seasonNumber})">??</button>
+          </div>`;
+        list.appendChild(d);
+      });
+    } catch(e) { showToast('Failed to load seasons','error'); }
+  }
+
+  async function addSeason() {
+    if (!epAnimeId) return showToast('Select an anime first','error');
+    const num = parseInt(document.getElementById('newSeasonNum').value);
+    const title = document.getElementById('newSeasonTitle').value || `Season ${num}`;
+    if (!num) return showToast('Enter a season number','error');
+    try {
+      const res = await fetch(`${EP_API}/api/admin/anime/${epAnimeId}/seasons`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${getAdminToken()}`},
+        body: JSON.stringify({seasonNumber:num, title})
+      });
+      if (!res.ok) throw new Error(await res.text());
+      showToast('Season added! ?','success');
+      document.getElementById('newSeasonNum').value = '';
+      document.getElementById('newSeasonTitle').value = '';
+      await refreshSeasonsList();
+    } catch(e) { showToast('Error: '+e.message,'error'); }
+  }
+
+  async function deleteSeason(num) {
+    if (!confirm(`Delete Season ${num} and ALL its episodes? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`${EP_API}/api/admin/anime/${epAnimeId}/seasons/${num}`, {
+        method:'DELETE', headers:{'Authorization':`Bearer ${getAdminToken()}`}
+      });
+      if (!res.ok) throw new Error(await res.text());
+      showToast('Season deleted','success');
+      document.getElementById('episodeSection').style.display = 'none';
+      await refreshSeasonsList();
+    } catch(e) { showToast('Error: '+e.message,'error'); }
+  }
+
+  async function openSeason(num, label) {
+    epSeasonNum = num;
+    document.getElementById('currentSeasonLabel').textContent = label;
+    document.getElementById('episodeSection').style.display = 'block';
+    document.getElementById('episodeSection').scrollIntoView({behavior:'smooth',block:'start'});
+    await refreshEpisodesList();
+  }
+
+  async function refreshEpisodesList() {
+    const list = document.getElementById('episodesList');
+    list.innerHTML = '<p style="color:#aaa;padding:0.5rem 0">Loading episodes...</p>';
+    try {
+      const res = await fetch(`${EP_API}/api/anime/${epAnimeId}`);
+      const anime = await res.json();
+      const season = (anime.seasons||[]).find(s => s.seasonNumber === epSeasonNum);
+      const episodes = (season && season.episodes) || [];
+      list.innerHTML = '';
+      if (!episodes.length) { list.innerHTML = '<p style="color:#aaa;padding:0.5rem 0">No episodes yet � add one below.</p>'; return; }
+      episodes.sort((a,b)=>a.episodeNumber-b.episodeNumber).forEach(ep => {
+        const d = document.createElement('div');
+        d.className = 'ep-item';
+        d.innerHTML = `
+          <div class="ep-item-info">
+            <strong>Ep ${ep.episodeNumber}</strong>
+            <span>${ep.title || ''}</span>
+            <span class="ep-url-preview" title="${ep.videoUrl}">${ep.videoUrl ? '?? '+ep.videoUrl.substring(0,40)+'...' : 'No URL'}</span>
+          </div>
+          <div class="ep-item-actions">
+            <button class="ep-btn ep-btn-del" onclick="deleteEpisode(${ep.episodeNumber})">??</button>
+          </div>`;
+        list.appendChild(d);
+      });
+    } catch(e) { showToast('Failed to load episodes','error'); }
+  }
+
+  async function addEpisode() {
+    if (!epAnimeId || !epSeasonNum) return showToast('Select a season first','error');
+    const num = parseInt(document.getElementById('newEpNum').value);
+    const title = document.getElementById('newEpTitle').value || `Episode ${num}`;
+    const videoUrl = document.getElementById('newEpUrl').value.trim();
+    const thumbnail = document.getElementById('newEpThumb').value.trim();
+    if (!num || !videoUrl) return showToast('Episode number and video URL are required','error');
+    const body = {episodeNumber:num, title, videoUrl};
+    if (thumbnail) body.thumbnail = thumbnail;
+    try {
+      const res = await fetch(`${EP_API}/api/admin/anime/${epAnimeId}/seasons/${epSeasonNum}/episodes`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':`Bearer ${getAdminToken()}`},
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error(await res.text());
+      showToast('Episode added! ?','success');
+      document.getElementById('newEpNum').value='';
+      document.getElementById('newEpTitle').value='';
+      document.getElementById('newEpUrl').value='';
+      document.getElementById('newEpThumb').value='';
+      await refreshEpisodesList();
+    } catch(e) { showToast('Error: '+e.message,'error'); }
+  }
+
+  async function deleteEpisode(num) {
+    if (!confirm(`Delete Episode ${num}?`)) return;
+    try {
+      const res = await fetch(`${EP_API}/api/admin/anime/${epAnimeId}/seasons/${epSeasonNum}/episodes/${num}`, {
+        method:'DELETE', headers:{'Authorization':`Bearer ${getAdminToken()}`}
+      });
+      if (!res.ok) throw new Error(await res.text());
+      showToast('Episode deleted','success');
+      await refreshEpisodesList();
+    } catch(e) { showToast('Error: '+e.message,'error'); }
+  }
+  </script>
 
 <!-- USER LOGIN/SIGNUP MODAL -->
 <div class="modal-overlay" id="userAuthModal" onclick="closeUserAuth()">
@@ -992,3 +1163,5 @@
 
 </body>
 </html>
+
+
