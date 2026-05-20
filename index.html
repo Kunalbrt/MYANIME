@@ -39,8 +39,8 @@
   </div>
 </nav>
 
-  </div>
-</nav>
+  
+
 
 <!-- HOME PAGE -->
 <div id="homePage" class="page active">
@@ -836,6 +836,8 @@
       </div>
       <div class="episode-sidebar" id="episodeList" style="display:none"></div>
     </div>
+     
+    </div>
   </div>
 </div>
 
@@ -942,6 +944,51 @@
     </div>
   </div>
 </div>
+
+
+    <!-- ── EPISODES TAB ── -->
+    <div class="admin-tab-content" id="episodesTab">
+      <div class="ep-manager">
+        <div class="ep-header">
+          <h2>🎬 Episode Manager</h2>
+          <button class="btn-primary" onclick="loadEpAnimeList()">🔄 Refresh Anime List</button>
+        </div>
+
+        <div class="ep-section">
+          <label class="ep-label">Select Anime</label>
+          <select id="epAnimeSelect" class="admin-input" onchange="loadAnimeSeasons()">
+            <option value="">— Loading anime list... —</option>
+          </select>
+        </div>
+
+        <div class="ep-section" id="seasonSection" style="display:none">
+          <div class="ep-section-header">
+            <h3>📅 Seasons</h3>
+          </div>
+          <div id="seasonsList" class="ep-list"></div>
+          <div class="ep-add-form">
+            <input type="number" id="newSeasonNum" placeholder="Season #" class="admin-input ep-short" min="1"/>
+            <input type="text" id="newSeasonTitle" placeholder="Title (e.g. Season 1)" class="admin-input"/>
+            <button class="btn-primary" onclick="addSeason()">+ Add Season</button>
+          </div>
+        </div>
+
+        <div class="ep-section" id="episodeSection" style="display:none">
+          <div class="ep-section-header">
+            <h3>🎞 Episodes — <span id="currentSeasonLabel" style="color:var(--red)"></span></h3>
+          </div>
+          <div id="episodesList" class="ep-list"></div>
+          <div class="ep-add-form ep-add-form--episodes">
+            <input type="number" id="newEpNum" placeholder="Ep #" class="admin-input ep-short" min="1"/>
+            <input type="text" id="newEpTitle" placeholder="Episode title" class="admin-input"/>
+            <input type="text" id="newEpUrl" placeholder="Video URL (.mp4 / .m3u8)" class="admin-input ep-wide"/>
+            <input type="text" id="newEpThumb" placeholder="Thumbnail URL (optional)" class="admin-input ep-wide"/>
+            <button class="btn-primary" onclick="addEpisode()">+ Add Episode</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 </body>
 </html>
-
