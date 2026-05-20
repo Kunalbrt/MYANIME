@@ -4,7 +4,7 @@
 
 // ── Sample / Demo Data ──────────────────────
 //const API = 'http://localhost:5000/api';
-const API = 'https://myanime-2klb.onrender.com'
+const API = ' https://myanime-backend-2vc9.onrender.com'
 // Auth helpers
 const getToken = () => localStorage.getItem('token');
 const setToken = (t) => localStorage.setItem('token', t);
