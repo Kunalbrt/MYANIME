@@ -1598,11 +1598,12 @@ function previewEditThumb(event) {
   reader.readAsDataURL(file);
 }
 
-function saveAnimeEdit() {
-  const id    = document.getElementById('editAnimeId').value;
+async function saveAnimeEdit() {
+  const id = document.getElementById('editAnimeId').value;
   const anime = animeLibrary.find(a => a.id === id);
   if (!anime) return;
-  anime.title    = document.getElementById('editTitle').value.trim()    || anime.title;
+  
+  anime.title    = document.getElementById('editTitle').value.trim() || anime.title;
   anime.desc     = document.getElementById('editDesc').value.trim();
   anime.type     = document.getElementById('editType').value;
   anime.year     = document.getElementById('editYear').value;
@@ -1610,10 +1611,33 @@ function saveAnimeEdit() {
   anime.rating   = document.getElementById('editRating').value;
   anime.videoUrl = document.getElementById('editVideoUrl').value.trim();
   if (editThumbBlob) anime.thumb = editThumbBlob;
-  anime.emoji = { action:'⚔️', adventure:'🗺️', romance:'💖', fantasy:'✨', thriller:'🔪' }[anime.genre] || '🎬';
+
+  try {
+    await fetch(`${API}/admin/anime/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+      body: JSON.stringify({
+        title: anime.title,
+        description: anime.desc,
+        type: anime.type,
+        year: parseInt(anime.year),
+        genre: [anime.genre],
+        rating: anime.rating,
+        videoUrl: anime.videoUrl,
+        thumbnailUrl: anime.thumb
+      })
+    });
+  } catch(err) {
+    console.log('Backend save failed:', err.message);
+  }
+
   saveToStorage(); renderAll(); closeEditModal();
   showToast(`✅ "${anime.title}" updated!`);
 }
+
 
 function deleteAnime(id) {
   const anime = animeLibrary.find(a => a.id === id);
