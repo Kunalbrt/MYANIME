@@ -1107,7 +1107,7 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   const videoUrl = episodeUrl || anime.videoUrl;
   video.src = ""; loading.classList.remove("hidden");
   if (videoUrl && videoUrl.trim()) {
-    if (Hls.isSupported() && videoUrl.includes(".m3u8")) { const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video); hls.on(Hls.Events.MANIFEST_PARSED, () => { video.play().catch(()=>{}); }); } else if (video.canPlayType("application/vnd.apple.mpegurl")) { video.src = videoUrl; video.load(); video.play().catch(()=>{}); } else { video.src = videoUrl; video.load(); video.play().catch(()=>{}); }
+    if (Hls.isSupported() && videoUrl.includes(".m3u8")) { const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video); } else if (video.canPlayType("application/vnd.apple.mpegurl")) { video.src = videoUrl; video.load(); } else { video.src = videoUrl; video.load(); }
     video.oncanplay = () => loading.classList.add('hidden');
     video.onerror   = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
   } else {
