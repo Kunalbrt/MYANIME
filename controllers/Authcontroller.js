@@ -27,10 +27,9 @@ exports.signup = async (req, res, next) => {
 
     const otp = generateOTP();
     const user = await User.create({
-      username, email, password,
-      otpCode: otp,
-      otpExpiry: new Date(Date.now() + 10 * 60 * 1000)  // 10 min
-    });
+  username, email, password,
+  isEmailVerified: true
+});
 
     // Send OTP email
     await sendOTPEmail(email, otp, username);
