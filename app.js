@@ -345,14 +345,14 @@ function trackSearch(term) {
 
 function trackMyListAdd() { analytics.myListAdds++; saveAnalytics(); }
 
-function simulateLiveUsers() {
-  setInterval(() => {
-    const change = Math.random() > 0.5 ? 1 : -1;
-    analytics.liveUsers = Math.max(1, Math.min(999, analytics.liveUsers + change));
-    const el = document.getElementById('statLiveUsers');
-    if (el) el.textContent = analytics.liveUsers;
-  }, 3000);
-}
+function simulateLiveUsers() { /* disabled - was fake random counter */ }
+
+
+
+
+
+
+
 
 function refreshAnalytics() {
   const el = id => document.getElementById(id);
@@ -362,7 +362,7 @@ function refreshAnalytics() {
   el('statPlays').textContent       = analytics.plays;
   el('statSearches').textContent    = analytics.searches;
   el('statMyListAdds').textContent  = analytics.myListAdds;
-  el('statLiveUsers').textContent   = analytics.liveUsers;
+  el('statLiveUsers').textContent = analytics.totalVisits;
 
   // Weekly bar chart
   const maxV   = Math.max(...analytics.weeklyVisits, 1);
