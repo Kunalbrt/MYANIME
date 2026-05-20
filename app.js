@@ -82,6 +82,7 @@ document.addEventListener('keydown', e => {
 function init() {
   loadFromStorage();
   if (animeLibrary.length === 0) { animeLibrary = [...DEMO_ANIME]; saveToStorage(); }
+  fetchAnimeFromBackend();
   loadAnalytics();
   trackVisit();
   renderAll();
@@ -1929,3 +1930,32 @@ function updateNavForAuth() {
 
 
 document.addEventListener('DOMContentLoaded', init);
+// ════════════════════════════════════════════
+//   FETCH ANIME FROM BACKEND
+// ════════════════════════════════════════════
+async function fetchAnimeFromBackend() {
+  try {
+    const res = await fetch(`${API}/anime`);
+    const data = await res.json();
+    if (data.success && data.anime.length > 0) {
+      // Map backend data to frontend format
+      animeLibrary = data.anime.map(a => ({
+        id: a._id,
+        title: a.title,
+        desc: a.description,
+        type: a.type,
+        genre: Array.isArray(a.genre) ? a.genre[0] : a.genre,
+        year: a.year,
+        rating: a.rating,
+        thumb: a.thumbnailUrl,
+        videoUrl: a.videoUrl,
+        emoji: '🎬',
+        trending: a.isTrending,
+        topRated: a.isTopRated
+      }));
+      renderAll();
+    }
+  } catch (err) {
+    console.log('Using local data:', err.message);
+  }
+}
