@@ -1105,6 +1105,8 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   }
 
   const videoUrl = episodeUrl || anime.videoUrl;
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  if (isMobile && videoUrl && videoUrl.includes(".m3u8")) { window.open(videoUrl, "_blank"); return; }
   video.src = ""; loading.classList.remove("hidden");
   if (videoUrl && videoUrl.trim()) {
     if (Hls.isSupported() && videoUrl.includes(".m3u8")) { const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video); } else if (video.canPlayType("application/vnd.apple.mpegurl")) { video.src = videoUrl; video.load(); } else { video.src = videoUrl; video.load(); }
