@@ -1107,13 +1107,13 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   const videoUrl = episodeUrl || anime.videoUrl;
   video.src = ""; loading.classList.remove("hidden");
   if (videoUrl && videoUrl.trim()) {
-    if (Hls.isSupported() && videoUrl.includes(".m3u8")) { const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video); } else if (video.canPlayType("application/vnd.apple.mpegurl")) { video.src = videoUrl; video.load(); } else { video.src = videoUrl; video.load(); }
+    if (Hls.isSupported() && videoUrl.includes(".m3u8")) { const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video); video.muted = false; } else if (video.canPlayType("application/vnd.apple.mpegurl")) { video.src = videoUrl; video.load(); } else { video.src = videoUrl; video.load(); }
     video.oncanplay = () => loading.classList.add('hidden');
     video.onerror   = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
   } else {
     setTimeout(() => { loading.classList.add('hidden'); showNoVideoMessage(); }, 1200);
   }
-  overlay.classList.add('active');
+  overlay.classList.add("active");
   document.body.style.overflow = 'hidden';
 }
 
