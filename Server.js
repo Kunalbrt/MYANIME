@@ -30,6 +30,7 @@ const commentRoutes = require('./routes/comments');
 const uploadRoutes = require('./routes/upload');
 
 const app = express();
+app.set('trust proxy', 1);
 
 // ── Security Middleware ───────────────────────
 app.use(helmet({
