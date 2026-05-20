@@ -824,8 +824,8 @@ function renderHero() {
   const bg = document.getElementById('heroBg');
   // ✅ FIX: support Cloudinary https:// URLs not just data: blobs
   if (featured.thumb && (featured.thumb.startsWith('data:') || featured.thumb.startsWith('http'))) {
-    bg.style.backgroundImage = `url(${featured.thumb})`;
-    bg.style.backgroundSize = 'cover';
+    bg.style.background = `url(${featured.thumb}) center/cover no-repeat`;
+    // backgroundSize handled above
   } else {
     bg.style.background = getGradient(featured.id);
   }
