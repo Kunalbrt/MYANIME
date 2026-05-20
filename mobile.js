@@ -381,7 +381,16 @@
   // ============================================================
   //  7. MOBILE TOAST NOTIFICATIONS
   // ============================================================
-  window.showMobileToast = function (msg, duration = 2500) {
+  window.mobilSearch = function(e) {
+  window.mobilSearch = function(e) {
+    const input = document.querySelector('#mobileSearchBar input');
+    const q = input?.value.trim();
+    if (!q) return;
+    if (typeof trackSearch === 'function') trackSearch(q);
+    const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
+    showPage('search');
+    renderGrid('searchGrid', results);
+  };
     const old = document.getElementById('mobileToast');
     if (old) old.remove();
 
@@ -448,8 +457,8 @@
     bar.innerHTML = `
       <span>??</span>
       <input type="text" placeholder="Search anime..." 
-        oninput="handleSearch({key:'',target:this})"
-        onkeyup="handleSearch(event)" />
+        
+        oninput="mobilSearch(event)" onkeyup="mobilSearch(event)" />
     `;
     document.body.appendChild(bar);
   }
@@ -478,4 +487,6 @@
   }
 
 })();
+
+
 
