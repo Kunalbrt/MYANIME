@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyAnime</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <!-- EmailJS for 2FA OTP emails -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-left">
+    <div class="logo" onclick="showPage('home')">
+      <span class="logo-icon">⚔️</span>
+      <span class="logo-text">MyAnime</span>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" class="nav-link active" onclick="showPage('home')">Home</a></li>
+      <li><a href="#" class="nav-link" onclick="showPage('movies')">Movies</a></li>
+      <li><a href="#" class="nav-link" onclick="showPage('series')">Series</a></li>
+      <li><a href="#" class="nav-link" onclick="showPage('mylist')">My List</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search anime..." onkeyup="handleSearch(event)"/>
+    </div>
+    <!--LOGIN BUTTON -->
+
+    <button class="admin-btn" id="adminBtn" style="display:none" onclick="showPage('admin')">⚙️ Admin</button>
+    <button class="login-btn" id="loginBtn" onclick="openUserAuth()">Login</button>
+    <div class="avatar" id="userAvatar" style="display:none">Z</div>
+  </div>
+</nav>
+
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="homePage" class="page active">
+  <section class="hero" id="heroSection">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content" id="heroContent">
+      <div class="hero-badge">⚔️ Featured Anime</div>
+      <h1 class="hero-title" id="heroTitle">ONE PIECE</h1>
+      <p class="hero-desc" id="heroDesc">Follow Monkey D. Luffy and his pirate crew in search of the world's ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.</p>
+      <div class="hero-meta" id="heroMeta">
+        <span class="meta-badge">HD</span>
+        <span class="meta-badge">TV-14</span>
+        <span class="meta-year" id="heroYear">2023</span>
+      </div>
+      <div class="hero-buttons">
+        <button class="btn-play" onclick="playHeroAnime()">▶ Play</button>
+        <button class="btn-info" onclick="showInfoModal(0)">ℹ More Info</button>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator">↓</div>
+  </section>
+
+  <div class="rows-container" id="homeRows">
+    <div class="anime-row">
+      <h2 class="row-title">🔥 Trending Now</h2>
+      <div class="row-track" id="trendingRow"></div>
+    </div>
+    <div class="anime-row">
+      <h2 class="row-title">⭐ Top Rated</h2>
+      <div class="row-track" id="topRatedRow"></div>
+    </div>
+    <div class="anime-row">
+      <h2 class="row-title">🆕 Recently Added</h2>
+      <div class="row-track" id="recentRow"></div>
+    </div>
+    <div class="anime-row">
+      <h2 class="row-title">📺 Series</h2>
+      <div class="row-track" id="seriesRow"></div>
+    </div>
+    <div class="anime-row">
+      <h2 class="row-title">🎬 Movies</h2>
+      <div class="row-track" id="moviesRowHome"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOVIES PAGE -->
+<div id="moviesPage" class="page">
+  <div class="browse-page">
+    <h1 class="browse-title">Movies</h1>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterContent('all','movies')">All</button>
+      <button class="filter-btn" onclick="filterContent('action','movies')">Action</button>
+      <button class="filter-btn" onclick="filterContent('adventure','movies')">Adventure</button>
+      <button class="filter-btn" onclick="filterContent('romance','movies')">Romance</button>
+      <button class="filter-btn" onclick="filterContent('fantasy','movies')">Fantasy</button>
+    </div>
+    <div class="browse-grid" id="moviesGrid"></div>
+  </div>
+</div>
+
+<!-- SERIES PAGE -->
+<div id="seriesPage" class="page">
+  <div class="browse-page">
+    <h1 class="browse-title">Series</h1>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterContent('all','series')">All</button>
+      <button class="filter-btn" onclick="filterContent('action','series')">Action</button>
+      <button class="filter-btn" onclick="filterContent('adventure','series')">Adventure</button>
+      <button class="filter-btn" onclick="filterContent('romance','series')">Romance</button>
+      <button class="filter-btn" onclick="filterContent('fantasy','series')">Fantasy</button>
+    </div>
+    <div class="browse-grid" id="seriesGrid"></div>
+  </div>
+</div>
+
+<!-- MY LIST PAGE -->
+<div id="mylistPage" class="page">
+  <div class="browse-page">
+    <h1 class="browse-title">My List</h1>
+    <div class="browse-grid" id="mylistGrid">
+      <div class="empty-list">
+        <div style="font-size:4rem">📋</div>
+        <p>Your list is empty. Add anime to watch later!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH RESULTS PAGE -->
+<div id="searchPage" class="page">
+  <div class="browse-page">
+    <h1 class="browse-title">Search Results</h1>
+    <div class="browse-grid" id="searchGrid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN PAGE — FULL FEATURED
+═══════════════════════════════════════════ -->
+<div id="adminPage" class="page">
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1>⚙️ Admin Dashboard</h1>
+      <p>Full control of your MyAnime website</p>
+    </div>
+
+    <div class="admin-tabs" id="adminTabsBar">
+      <button class="admin-tab active" onclick="switchAdminTab('upload')">📤 Upload</button>
+      <button class="admin-tab" onclick="switchAdminTab('library')">📚 Library</button>
+      <button class="admin-tab" onclick="switchAdminTab('analytics')">📊 Analytics</button>
+      <button class="admin-tab" onclick="switchAdminTab('siteeditor')">🖊️ Site Editor</button>
+      <button class="admin-tab" onclick="switchAdminTab('home')">🏠 Home Editor</button>
+      <button class="admin-tab" onclick="switchAdminTab('recommend')">⭐ Recommendations</button>
+      <button class="admin-tab" onclick="switchAdminTab('theme')">🎨 Theme</button>
+      <button class="admin-tab" onclick="switchAdminTab('cloud')">☁️ Cloud</button>
+      <button class="admin-tab" onclick="switchAdminTab('security')">🔒 Security</button>
+    </div>
+
+    <!-- ── UPLOAD TAB ── -->
+    <div class="admin-tab-content active" id="uploadTab">
+      <div class="upload-grid">
+        <div class="upload-card">
+          <h3>📹 Upload Video</h3>
+          <div class="drop-zone" id="dropZone" ondrop="handleDrop(event,'video')" ondragover="event.preventDefault()" ondragenter="this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')">
+            <div class="drop-icon">🎬</div>
+            <p>Drag & Drop video file here</p>
+            <p class="drop-sub">Supports MP4, MKV, AVI, WebM</p>
+            <input type="file" id="videoFile" accept="video/*" onchange="handleFileSelect(event,'video')" style="display:none"/>
+            <button class="btn-upload-select" onclick="document.getElementById('videoFile').click()">Browse Files</button>
+          </div>
+          <div class="upload-progress" id="videoProgress" style="display:none">
+            <div class="progress-bar"><div class="progress-fill" id="videoFill"></div></div>
+            <span id="videoPercent">0%</span>
+          </div>
+        </div>
+
+        <div class="upload-card">
+          <h3>🖼️ Upload Thumbnail</h3>
+          <div class="drop-zone" id="thumbZone" ondrop="handleDrop(event,'thumb')" ondragover="event.preventDefault()" ondragenter="this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')">
+            <div class="drop-icon" id="thumbPreviewIcon">🖼️</div>
+            <img id="thumbPreview" style="display:none;width:100%;border-radius:8px;max-height:160px;object-fit:cover"/>
+            <p>Drag & Drop thumbnail</p>
+            <p class="drop-sub">Supports JPG, PNG, WebP</p>
+            <input type="file" id="thumbFile" accept="image/*" onchange="handleFileSelect(event,'thumb')" style="display:none"/>
+            <button class="btn-upload-select" onclick="document.getElementById('thumbFile').click()">Browse Files</button>
+          </div>
+        </div>
+
+        <div class="upload-card upload-form-card">
+          <h3>📝 Anime Details</h3>
+          <div class="form-group">
+            <label>Title *</label>
+            <input type="text" id="animeTitle" placeholder="e.g. Attack on Titan" class="admin-input"/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="animeDesc" placeholder="Brief synopsis..." class="admin-input admin-textarea"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Type</label>
+              <select id="animeType" class="admin-input">
+                <option value="movie">Movie</option>
+                <option value="series">Series</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Year</label>
+              <input type="number" id="animeYear" placeholder="2024" class="admin-input" value="2024"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Genre</label>
+              <select id="animeGenre" class="admin-input">
+                <option value="action">Action</option>
+                <option value="adventure">Adventure</option>
+                <option value="romance">Romance</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="thriller">Thriller</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Rating</label>
+              <input type="text" id="animeRating" placeholder="TV-14" class="admin-input"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>☁️ Cloud Video URL (optional)</label>
+            <input type="url" id="cloudUrl" placeholder="https://storage.googleapis.com/..." class="admin-input"/>
+            <p class="field-hint">Paste a direct video URL from Google Drive, Cloudinary, S3, etc.</p>
+          </div>
+          <button class="btn-add-anime" onclick="addAnime()">➕ Add to Library</button>
+        </div>
+      </div>
+
+      <div class="cloud-providers">
+        <h3>☁️ Supported Cloud Storage Providers</h3>
+        <div class="provider-grid">
+          <div class="provider-card" onclick="showCloudGuide('gdrive')"><div class="provider-icon">📁</div><span>Google Drive</span><span class="provider-status connected">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('s3')"><div class="provider-icon">🪣</div><span>Amazon S3</span><span class="provider-status connected">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('cloudinary')"><div class="provider-icon">☁️</div><span>Cloudinary</span><span class="provider-status connected">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('backblaze')"><div class="provider-icon">🔥</div><span>Backblaze B2</span><span class="provider-status">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('wasabi')"><div class="provider-icon">🌿</div><span>Wasabi</span><span class="provider-status">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('jiocloud')"><div class="provider-icon">🇮🇳</div><span>Jio Cloud</span><span class="provider-status connected">Guide</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LIBRARY TAB ── -->
+    <div class="admin-tab-content" id="libraryTab">
+      <div class="library-header">
+        <h3>📚 Content Library (<span id="libraryCount">0</span> items)</h3>
+        <button class="btn-danger" onclick="clearLibrary()">🗑️ Clear All</button>
+      </div>
+      <div class="library-grid" id="libraryGrid"></div>
+    </div>
+
+    <!-- ── ANALYTICS TAB ── -->
+    <div class="admin-tab-content" id="analyticsTab">
+      <div class="analytics-dashboard">
+        <h3>📊 Website Analytics</h3>
+        <p class="cloud-desc">Real-time traffic overview for your MyAnime website</p>
+
+        <!-- Live Stats Row -->
+        <div class="analytics-stats-row">
+          <div class="stat-card stat-live">
+            <div class="stat-live-dot"></div>
+            <div class="stat-number" id="statLiveUsers">0</div>
+            <div class="stat-label">Live Visitors Now</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👁️</div>
+            <div class="stat-number" id="statTotalVisits">0</div>
+            <div class="stat-label">Total Visits</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-number" id="statTodayVisits">0</div>
+            <div class="stat-label">Visits Today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎬</div>
+            <div class="stat-number" id="statPlays">0</div>
+            <div class="stat-label">Total Plays</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔍</div>
+            <div class="stat-number" id="statSearches">0</div>
+            <div class="stat-label">Searches</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-number" id="statMyListAdds">0</div>
+            <div class="stat-label">My List Adds</div>
+          </div>
+        </div>
+
+        <!-- Sessions Over Time (mini chart) -->
+        <div class="analytics-section">
+          <h4>📈 Visit Activity (Last 7 Days)</h4>
+          <div class="bar-chart-wrap">
+            <div class="bar-chart" id="visitBarChart"></div>
+            <div class="bar-labels" id="visitBarLabels"></div>
+          </div>
+        </div>
+
+        <!-- Top Anime -->
+        <div class="analytics-two-col">
+          <div class="analytics-section">
+            <h4>🔥 Most Viewed Anime</h4>
+            <div id="topAnimeList" class="top-list"></div>
+          </div>
+          <div class="analytics-section">
+            <h4>🔎 Top Search Terms</h4>
+            <div id="topSearchList" class="top-list"></div>
+          </div>
+        </div>
+
+        <!-- Device & Browser -->
+        <div class="analytics-two-col">
+          <div class="analytics-section">
+            <h4>📱 Device Types</h4>
+            <div id="deviceList" class="top-list"></div>
+          </div>
+          <div class="analytics-section">
+            <h4>🌐 Browser Info</h4>
+            <div id="browserList" class="top-list"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1rem;margin-top:1rem">
+          <button class="btn-add-anime" style="max-width:180px" onclick="refreshAnalytics()">🔄 Refresh</button>
+          <button class="btn-danger" onclick="resetAnalytics()">🗑️ Reset Stats</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SITE EDITOR TAB ── -->
+    <div class="admin-tab-content" id="siteeditorTab">
+      <div class="home-editor">
+        <h3>🖊️ Full Website Editor</h3>
+        <p class="cloud-desc">Edit every visible part of your website — navbar, hero, footer text, page titles, and more.</p>
+
+        <!-- Navbar Editor -->
+        <div class="editor-section">
+          <h4>🧭 Navbar / Header</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Site Name (Logo Text)</label>
+              <input type="text" id="edit_siteName" class="admin-input" placeholder="MyAnime" oninput="liveEditSite()"/>
+            </div>
+            <div class="form-group">
+              <label>Logo Emoji / Icon</label>
+              <input type="text" id="edit_logoEmoji" class="admin-input" placeholder="⚔️" maxlength="4" oninput="liveEditSite()"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nav Link 1 Label</label>
+              <input type="text" id="edit_nav1" class="admin-input" placeholder="Home" oninput="liveEditNav()"/>
+            </div>
+            <div class="form-group">
+              <label>Nav Link 2 Label</label>
+              <input type="text" id="edit_nav2" class="admin-input" placeholder="Movies" oninput="liveEditNav()"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nav Link 3 Label</label>
+              <input type="text" id="edit_nav3" class="admin-input" placeholder="Series" oninput="liveEditNav()"/>
+            </div>
+            <div class="form-group">
+              <label>Nav Link 4 Label</label>
+              <input type="text" id="edit_nav4" class="admin-input" placeholder="My List" oninput="liveEditNav()"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Section Editor -->
+        <div class="editor-section">
+          <h4>🎬 Hero Section</h4>
+          <div class="form-group">
+            <label>Hero Badge Text</label>
+            <input type="text" id="edit_heroBadge" class="admin-input" placeholder="⚔️ Featured Anime" oninput="liveEditHero()"/>
+          </div>
+          <div class="form-group">
+            <label>Hero Subtitle / Tagline (below title)</label>
+            <input type="text" id="edit_heroTagline" class="admin-input" placeholder="Watch the best anime, anytime." oninput="liveEditHero()"/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Play Button Label</label>
+              <input type="text" id="edit_playBtn" class="admin-input" placeholder="▶ Play" oninput="liveEditHero()"/>
+            </div>
+            <div class="form-group">
+              <label>Info Button Label</label>
+              <input type="text" id="edit_infoBtn" class="admin-input" placeholder="ℹ More Info" oninput="liveEditHero()"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Page Titles Editor -->
+        <div class="editor-section">
+          <h4>📄 Page Titles</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Movies Page Title</label>
+              <input type="text" id="edit_moviesTitle" class="admin-input" placeholder="Movies" oninput="liveEditPageTitles()"/>
+            </div>
+            <div class="form-group">
+              <label>Series Page Title</label>
+              <input type="text" id="edit_seriesTitle" class="admin-input" placeholder="Series" oninput="liveEditPageTitles()"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>My List Page Title</label>
+              <input type="text" id="edit_mylistTitle" class="admin-input" placeholder="My List" oninput="liveEditPageTitles()"/>
+            </div>
+            <div class="form-group">
+              <label>Search Results Title</label>
+              <input type="text" id="edit_searchTitle" class="admin-input" placeholder="Search Results" oninput="liveEditPageTitles()"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Bar Editor -->
+        <div class="editor-section">
+          <h4>🔍 Search Bar</h4>
+          <div class="form-group">
+            <label>Search Placeholder Text</label>
+            <input type="text" id="edit_searchPlaceholder" class="admin-input" placeholder="Search anime..." oninput="liveEditSearch()"/>
+          </div>
+        </div>
+
+        <!-- Announcement Banner -->
+        <div class="editor-section">
+          <h4>📢 Announcement Banner</h4>
+          <p style="color:#aaa;font-size:0.85rem;margin-bottom:0.8rem">Show a banner at the top of the site for news or updates.</p>
+          <div class="row-toggle-item" style="margin-bottom:1rem">
+            <span>Enable Announcement Banner</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="edit_bannerEnabled" onchange="liveEditBanner()"/>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Banner Message</label>
+            <input type="text" id="edit_bannerText" class="admin-input" placeholder="🎉 New anime added every week!" oninput="liveEditBanner()"/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Banner Background Color</label>
+              <input type="color" id="edit_bannerBg" value="#e50914" class="color-input" oninput="liveEditBanner()"/>
+            </div>
+            <div class="form-group">
+              <label>Banner Text Color</label>
+              <input type="color" id="edit_bannerColor" value="#ffffff" class="color-input" oninput="liveEditBanner()"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Editor -->
+        <div class="editor-section">
+          <h4>📋 Footer Text</h4>
+          <div class="form-group">
+            <label>Footer Copyright Text</label>
+            <input type="text" id="edit_footerText" class="admin-input" placeholder="© 2024 MyAnime. All rights reserved." oninput="liveEditFooter()"/>
+          </div>
+        </div>
+
+        <!-- Empty States Editor -->
+        <div class="editor-section">
+          <h4>📭 Empty State Messages</h4>
+          <div class="form-group">
+            <label>My List Empty Message</label>
+            <input type="text" id="edit_emptyList" class="admin-input" placeholder="Your list is empty. Add anime to watch later!" oninput="liveEditEmptyStates()"/>
+          </div>
+          <div class="form-group">
+            <label>No Results Message</label>
+            <input type="text" id="edit_noResults" class="admin-input" placeholder="No content found." oninput="liveEditEmptyStates()"/>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <button class="btn-add-anime" style="max-width:220px" onclick="saveAllSiteEdits()">💾 Save All Changes</button>
+          <button class="btn-danger" onclick="resetSiteEdits()">↺ Reset to Defaults</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HOME EDITOR TAB ── -->
+    <div class="admin-tab-content" id="homeTab">
+      <div class="home-editor">
+        <h3>🏠 Home Page Editor</h3>
+        <p class="cloud-desc">Control what appears on the homepage — featured hero, row visibility, and row titles.</p>
+
+        <div class="editor-section">
+          <h4>🎬 Featured Hero Anime</h4>
+          <p style="color:#aaa;font-size:0.85rem;margin-bottom:0.8rem">Select which anime shows in the big hero banner.</p>
+          <select id="heroPickSelect" class="admin-input" style="max-width:400px" onchange="setFeaturedHero(this.value)">
+            <option value="">-- Select Anime --</option>
+          </select>
+          <div id="heroPreviewCard" style="margin-top:1rem"></div>
+        </div>
+
+        <div class="editor-section">
+          <h4>📋 Row Visibility</h4>
+          <p style="color:#aaa;font-size:0.85rem;margin-bottom:1rem">Toggle which rows appear on the homepage.</p>
+          <div class="row-toggles" id="rowToggles">
+            <div class="row-toggle-item"><span>🔥 Trending Now</span><label class="toggle-switch"><input type="checkbox" id="toggle_trending" checked onchange="saveRowSettings()"/><span class="toggle-slider"></span></label></div>
+            <div class="row-toggle-item"><span>⭐ Top Rated</span><label class="toggle-switch"><input type="checkbox" id="toggle_topRated" checked onchange="saveRowSettings()"/><span class="toggle-slider"></span></label></div>
+            <div class="row-toggle-item"><span>🆕 Recently Added</span><label class="toggle-switch"><input type="checkbox" id="toggle_recent" checked onchange="saveRowSettings()"/><span class="toggle-slider"></span></label></div>
+            <div class="row-toggle-item"><span>📺 Series</span><label class="toggle-switch"><input type="checkbox" id="toggle_series" checked onchange="saveRowSettings()"/><span class="toggle-slider"></span></label></div>
+            <div class="row-toggle-item"><span>🎬 Movies</span><label class="toggle-switch"><input type="checkbox" id="toggle_movies" checked onchange="saveRowSettings()"/><span class="toggle-slider"></span></label></div>
+          </div>
+        </div>
+
+        <div class="editor-section">
+          <h4>✏️ Customize Row Titles</h4>
+          <div class="row-title-editor">
+            <div class="form-row">
+              <div class="form-group"><label>Trending Row Title</label><input type="text" id="rowTitle_trending" class="admin-input" placeholder="🔥 Trending Now" onchange="saveRowSettings()"/></div>
+              <div class="form-group"><label>Top Rated Row Title</label><input type="text" id="rowTitle_topRated" class="admin-input" placeholder="⭐ Top Rated" onchange="saveRowSettings()"/></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Recent Row Title</label><input type="text" id="rowTitle_recent" class="admin-input" placeholder="🆕 Recently Added" onchange="saveRowSettings()"/></div>
+              <div class="form-group"><label>Series Row Title</label><input type="text" id="rowTitle_series" class="admin-input" placeholder="📺 Series" onchange="saveRowSettings()"/></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Movies Row Title</label><input type="text" id="rowTitle_movies" class="admin-input" placeholder="🎬 Movies" onchange="saveRowSettings()"/></div>
+            </div>
+          </div>
+          <button class="btn-add-anime" style="max-width:200px;margin-top:0.5rem" onclick="applyRowSettings()">💾 Apply Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RECOMMENDATIONS TAB ── -->
+    <div class="admin-tab-content" id="recommendTab">
+      <div class="home-editor">
+        <h3>⭐ Recommendations Manager</h3>
+        <p class="cloud-desc">Control which anime appear in Trending and Top Rated sections.</p>
+        <div class="editor-section">
+          <h4>🔥 Trending Now</h4>
+          <div id="trendingManager" class="recommend-grid"></div>
+        </div>
+        <div class="editor-section">
+          <h4>⭐ Top Rated</h4>
+          <div id="topRatedManager" class="recommend-grid"></div>
+        </div>
+        <button class="btn-add-anime" style="max-width:220px" onclick="saveRecommendations()">💾 Save Recommendations</button>
+      </div>
+    </div>
+
+    <!-- ── THEME TAB ── -->
+    <div class="admin-tab-content" id="themeTab">
+      <div class="home-editor">
+        <h3>🎨 Theme & Appearance</h3>
+        <p class="cloud-desc">Customize the look and feel of your MyAnime website.</p>
+
+        <div class="editor-section">
+          <h4>🎨 Preset Themes</h4>
+          <div class="theme-presets" id="themePresets">
+            <div class="theme-preset active" data-theme="netflix" onclick="applyThemePreset('netflix')"><div class="theme-swatch" style="background:linear-gradient(135deg,#141414,#e50914)"></div><span>Netflix Dark</span></div>
+            <div class="theme-preset" data-theme="ocean" onclick="applyThemePreset('ocean')"><div class="theme-swatch" style="background:linear-gradient(135deg,#0a0a1a,#0066ff)"></div><span>Ocean Blue</span></div>
+            <div class="theme-preset" data-theme="forest" onclick="applyThemePreset('forest')"><div class="theme-swatch" style="background:linear-gradient(135deg,#0a1a0a,#00aa44)"></div><span>Forest Green</span></div>
+            <div class="theme-preset" data-theme="purple" onclick="applyThemePreset('purple')"><div class="theme-swatch" style="background:linear-gradient(135deg,#1a0a2e,#9b59b6)"></div><span>Royal Purple</span></div>
+            <div class="theme-preset" data-theme="gold" onclick="applyThemePreset('gold')"><div class="theme-swatch" style="background:linear-gradient(135deg,#1a1400,#f0a500)"></div><span>Golden Anime</span></div>
+            <div class="theme-preset" data-theme="sakura" onclick="applyThemePreset('sakura')"><div class="theme-swatch" style="background:linear-gradient(135deg,#1a0a10,#ff6b9d)"></div><span>Sakura Pink</span></div>
+          </div>
+        </div>
+
+        <div class="editor-section">
+          <h4>🖌️ Custom Colors</h4>
+          <div class="color-pickers">
+            <div class="color-pick-row"><label>Accent Color</label><div style="display:flex;align-items:center;gap:0.8rem"><input type="color" id="accentColor" value="#e50914" class="color-input" onchange="applyCustomColor()"/><span id="accentHex" style="color:#aaa;font-size:0.85rem">#e50914</span></div></div>
+            <div class="color-pick-row"><label>Background Color</label><div style="display:flex;align-items:center;gap:0.8rem"><input type="color" id="bgColor" value="#141414" class="color-input" onchange="applyCustomColor()"/><span id="bgHex" style="color:#aaa;font-size:0.85rem">#141414</span></div></div>
+            <div class="color-pick-row"><label>Card Background</label><div style="display:flex;align-items:center;gap:0.8rem"><input type="color" id="cardColor" value="#181818" class="color-input" onchange="applyCustomColor()"/><span id="cardHex" style="color:#aaa;font-size:0.85rem">#181818</span></div></div>
+          </div>
+        </div>
+
+        <div class="editor-section">
+          <h4>🔤 Site Title & Branding</h4>
+          <div class="form-row">
+            <div class="form-group"><label>Site Title</label><input type="text" id="siteTitle" class="admin-input" placeholder="MyAnime" onchange="applyBranding()"/></div>
+            <div class="form-group"><label>Logo Icon (emoji)</label><input type="text" id="siteIcon" class="admin-input" placeholder="⚔️" maxlength="4" onchange="applyBranding()"/></div>
+          </div>
+        </div>
+
+        <div class="editor-section">
+          <h4>✨ Effects</h4>
+          <div class="row-toggles">
+            <div class="row-toggle-item"><span>Card Hover Scale Effect</span><label class="toggle-switch"><input type="checkbox" id="effect_hover" checked onchange="applyEffects()"/><span class="toggle-slider"></span></label></div>
+            <div class="row-toggle-item"><span>Smooth Page Transitions</span><label class="toggle-switch"><input type="checkbox" id="effect_transition" checked onchange="applyEffects()"/><span class="toggle-slider"></span></label></div>
+          </div>
+        </div>
+
+        <button class="btn-add-anime" style="max-width:200px" onclick="resetTheme()">↺ Reset to Default</button>
+      </div>
+    </div>
+
+    <!-- ── CLOUD TAB ── -->
+    <div class="admin-tab-content" id="cloudTab">
+      <div class="cloud-config">
+        <h3>☁️ Cloud Storage Configuration</h3>
+        <p class="cloud-desc">Configure your cloud storage to host anime videos.</p>
+        <div class="cloud-guide">
+          <div class="guide-step"><div class="step-num">1</div><div><strong>Upload your video to cloud storage</strong><p>Use Google Drive, Amazon S3, Cloudinary, or any cloud provider.</p></div></div>
+          <div class="guide-step"><div class="step-num">2</div><div><strong>Get the direct video URL</strong><p>Make sure the video is publicly accessible. Copy the direct stream link.</p></div></div>
+          <div class="guide-step"><div class="step-num">3</div><div><strong>Paste URL when adding anime</strong><p>In the Upload tab, paste the URL in the "Cloud Video URL" field.</p></div></div>
+        </div>
+        <div class="url-tester">
+          <h4>🧪 Test Video URL</h4>
+          <div class="url-test-row">
+            <input type="url" id="testUrl" placeholder="Paste video URL to test..." class="admin-input"/>
+            <button class="btn-test" onclick="testVideoUrl()">Test</button>
+          </div>
+          <video id="testPlayer" controls style="display:none;width:100%;margin-top:1rem;border-radius:12px;background:#000;max-height:300px"></video>
+        </div>
+        <div class="gdrive-helper">
+          <h4>📁 Google Drive URL Converter</h4>
+          <p>Paste a Google Drive share link and get a direct streamable URL:</p>
+          <div class="url-test-row">
+            <input type="url" id="gdriveInput" placeholder="https://drive.google.com/file/d/.../view" class="admin-input"/>
+            <button class="btn-test" onclick="convertGDriveUrl()">Convert</button>
+          </div>
+          <div id="gdriveResult" class="gdrive-result" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECURITY TAB ── -->
+    <div class="admin-tab-content" id="securityTab">
+      <div class="home-editor">
+        <h3>🔒 Security Settings</h3>
+        <p class="cloud-desc">Manage admin password and two-step authentication. Your 2FA codes are sent to <strong style="color:white">bhartikunal172@gmail.com</strong>.</p>
+
+        <!-- Change Password -->
+        <div class="editor-section">
+          <h4>🔑 Change Admin Password</h4>
+          <p style="color:#aaa;font-size:0.85rem;margin-bottom:1rem">Choose a strong password. Min 8 characters.</p>
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="sec_currentPwd" class="admin-input" placeholder="Enter current password"/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="sec_newPwd" class="admin-input" placeholder="Min 8 characters"/>
+            </div>
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" id="sec_confirmPwd" class="admin-input" placeholder="Repeat new password"/>
+            </div>
+          </div>
+          <div id="pwdStrengthBar" style="height:6px;background:#333;border-radius:3px;margin-bottom:0.5rem;overflow:hidden"><div id="pwdStrengthFill" style="height:100%;width:0%;border-radius:3px;transition:all 0.3s"></div></div>
+          <p id="pwdStrengthLabel" style="color:#aaa;font-size:0.78rem;margin-bottom:1rem"></p>
+          <button class="btn-add-anime" style="max-width:220px" onclick="changeAdminPassword()">🔑 Update Password</button>
+        </div>
+
+        <!-- 2FA Settings -->
+        <div class="editor-section">
+          <h4>📧 Two-Step Authentication (2FA)</h4>
+          <p style="color:#aaa;font-size:0.85rem;margin-bottom:1rem">When enabled, every admin login requires a one-time code sent to your email.</p>
+          <div class="row-toggle-item" style="margin-bottom:1.2rem">
+            <span>Enable 2FA Email Verification</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="twofa_enabled" onchange="toggle2FA()"/>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="twofa-info">
+            <div class="twofa-info-row"><span class="twofa-label">📧 Admin Email</span><span class="twofa-value">bhartikunal172@gmail.com</span></div>
+            <div class="twofa-info-row"><span class="twofa-label">⏱️ OTP Expires</span><span class="twofa-value">5 minutes</span></div>
+            <div class="twofa-info-row"><span class="twofa-label">🔄 Max Attempts</span><span class="twofa-value">3 per login</span></div>
+            <div class="twofa-info-row"><span class="twofa-label">🚫 Lockout After</span><span class="twofa-value">3 failed attempts (30 min)</span></div>
+          </div>
+          <div class="emailjs-config" style="margin-top:1.2rem">
+            <h5 style="color:white;margin-bottom:0.6rem">EmailJS Configuration</h5>
+            <p style="color:#777;font-size:0.78rem;margin-bottom:0.8rem">Required to send OTP emails. Get free keys at <a href="https://emailjs.com" target="_blank" style="color:var(--red)">emailjs.com</a></p>
+            <div class="form-row">
+              <div class="form-group">
+                <label>EmailJS Public Key</label>
+                <input type="text" id="ejs_pubkey" class="admin-input" placeholder="user_xxxxxx"/>
+              </div>
+              <div class="form-group">
+                <label>Service ID</label>
+                <input type="text" id="ejs_service" class="admin-input" placeholder="service_xxxxxx"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Template ID</label>
+              <input type="text" id="ejs_template" class="admin-input" placeholder="template_xxxxxx"/>
+            </div>
+            <p style="color:#555;font-size:0.75rem;margin-bottom:0.8rem">Template variables needed: <code style="background:#222;padding:2px 6px;border-radius:3px;color:#4caf50">{{otp_code}}</code> <code style="background:#222;padding:2px 6px;border-radius:3px;color:#4caf50">{{to_email}}</code></p>
+            <button class="btn-add-anime" style="max-width:200px" onclick="saveEmailJSConfig()">💾 Save EmailJS Config</button>
+            <button class="btn-test" style="margin-left:0.8rem" onclick="testEmailJS()">📧 Send Test OTP</button>
+          </div>
+        </div>
+
+        <!-- Login History -->
+        <div class="editor-section">
+          <h4>📋 Recent Login Attempts</h4>
+          <div id="loginHistory" class="login-history"></div>
+          <button class="btn-danger" style="margin-top:1rem;max-width:200px" onclick="clearLoginHistory()">🗑️ Clear History</button>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="editor-section danger-zone">
+          <h4>⚠️ Danger Zone</h4>
+          <p style="color:#aaa;font-size:0.85rem;margin-bottom:1rem">Irreversible actions. Use with extreme care.</p>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap">
+            <button class="btn-danger" onclick="lockAdminNow()">🔒 Lock Admin Now</button>
+            <button class="btn-danger" onclick="resetAllData()">💥 Reset All Site Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /admin-container -->
+</div><!-- /adminPage -->
+
+<!-- ─── EDIT ANIME MODAL ─── -->
+<div class="modal-overlay" id="editAnimeModal" onclick="closeEditModal()">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:700px">
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
+    <div style="padding:2rem">
+      <h2 style="color:white;margin-bottom:1.5rem">✏️ Edit Anime</h2>
+      <input type="hidden" id="editAnimeId"/>
+      <div class="form-group">
+        <label>Title *</label>
+        <input type="text" id="editTitle" class="admin-input"/>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="editDesc" class="admin-input admin-textarea"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Type</label>
+          <select id="editType" class="admin-input"><option value="movie">Movie</option><option value="series">Series</option></select></div>
+        <div class="form-group"><label>Year</label><input type="number" id="editYear" class="admin-input"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Genre</label>
+          <select id="editGenre" class="admin-input">
+            <option value="action">Action</option><option value="adventure">Adventure</option>
+            <option value="romance">Romance</option><option value="fantasy">Fantasy</option><option value="thriller">Thriller</option>
+          </select></div>
+        <div class="form-group"><label>Rating</label><input type="text" id="editRating" class="admin-input"/></div>
+      </div>
+      <div class="form-group">
+        <label>Video URL</label>
+        <input type="url" id="editVideoUrl" class="admin-input" placeholder="https://..."/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Thumbnail (upload new)</label>
+          <input type="file" id="editThumbFile" accept="image/*" class="admin-input" onchange="previewEditThumb(event)" style="padding:0.4rem"/>
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:1rem">
+          <img id="editThumbPreview" style="display:none;width:80px;height:50px;object-fit:cover;border-radius:6px"/>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.8rem;justify-content:flex-end;margin-top:1rem">
+        <button class="btn-info" onclick="closeEditModal()">Cancel</button>
+        <button class="btn-play" onclick="saveAnimeEdit()" style="background:var(--red);color:white">💾 Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INFO MODAL -->
+<div class="modal-overlay" id="infoModal" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-hero">
+      <img id="modalThumb" src="" alt="" class="modal-thumb"/>
+      <div class="modal-hero-overlay"></div>
+      <div class="modal-hero-info">
+        <h1 id="modalTitle"></h1>
+        <div class="modal-meta">
+          <span id="modalYear"></span>
+          <span id="modalRating"></span>
+          <span id="modalType"></span>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-play" onclick="playFromModal()">▶ Play</button>
+          <button class="btn-mylist" id="mylistBtn" onclick="toggleMyList()">+ My List</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <p id="modalDesc"></p>
+      <div class="modal-genre"><strong>Genre:</strong> <span id="modalGenre"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO PLAYER MODAL -->
+<div class="player-overlay" id="playerOverlay">
+  <div class="player-container">
+    <div class="player-header">
+      <button class="player-back" onclick="closePlayer()">← Back</button>
+      <span class="player-title" id="playerTitle">Now Playing</span>
+      <div class="player-controls-top">
+        <div class="resolution-selector" id="resolutionSelector">
+          <button class="res-btn active" id="resBtn" onclick="toggleResMenu()">⚙️ Auto</button>
+          <div class="res-menu" id="resMenu" style="display:none">
+            <div class="res-option" onclick="setResolution('auto')">🟢 Auto</div>
+            <div class="res-option" onclick="setResolution('1080p')">1080p HD</div>
+            <div class="res-option" onclick="setResolution('720p')">720p HD</div>
+            <div class="res-option" onclick="setResolution('480p')">480p SD</div>
+            <div class="res-option" onclick="setResolution('360p')">360p</div>
+          </div>
+        </div>
+        <button class="player-fullscreen" onclick="toggleFullscreen()">⛶</button>
+      </div>
+    </div>
+    <div class="player-video-wrap">
+      <video id="mainPlayer" controls autoplay playsinline class="main-video">Your browser does not support HTML5 video.</video>
+      <div class="player-loading" id="playerLoading"><div class="spinner"></div><p>Loading stream...</p></div>
+    </div>
+    <div class="player-info-bar">
+      <div><strong id="playerInfoTitle"></strong><span id="playerInfoMeta"></span></div>
+      <div class="player-next" onclick="playNext()">Next Episode ›</div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOUD GUIDE MODAL -->
+<div class="modal-overlay" id="cloudGuideModal" onclick="closeCloudGuide()">
+  <div class="modal guide-modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeCloudGuide()">✕</button>
+    <h2 id="guideTitle">Cloud Storage Guide</h2>
+    <div id="guideContent"></div>
+  </div>
+</div>
+
+<!-- ─── ADMIN LOGIN MODAL (Step 1: Password) ─── -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="modal admin-login-modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeAdminLogin()">✕</button>
+    <div class="admin-login-header">
+      <div style="font-size:2.5rem">⚔️</div>
+      <h2>Admin Access</h2>
+      <p>Enter your admin password to continue</p>
+    </div>
+    <div class="admin-login-body">
+      <div id="loginAttemptInfo" style="display:none;background:rgba(229,9,20,0.1);border:1px solid rgba(229,9,20,0.3);border-radius:6px;padding:0.6rem 1rem;color:#e57373;font-size:0.82rem;text-align:center;margin-bottom:0.5rem"></div>
+      <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Enter admin password..." oninput="onPasswordTyped()" onkeydown="if(event.key==='Enter')checkAdminPassword()"/>
+      <button class="btn-add-anime" onclick="checkAdminPassword()">🔓 Login</button>
+      <p id="adminError" style="display:none;color:#e57373;text-align:center;margin-top:0.5rem">❌ Wrong password. Try again.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ─── 2FA OTP MODAL (Step 2) ─── -->
+<div class="modal-overlay" id="otpModal">
+  <div class="modal admin-login-modal" onclick="event.stopPropagation()" style="max-width:420px">
+    <div class="admin-login-header">
+      <div style="font-size:2.5rem">📧</div>
+      <h2>Verify Your Identity</h2>
+      <p>A one-time code was sent to<br><strong style="color:white">bhartikunal172@gmail.com</strong></p>
+    </div>
+    <div class="admin-login-body">
+      <div class="otp-inputs" id="otpInputs" style="display:flex;justify-content:center;margin-bottom:0.5rem">
+        <input type="text" id="otpSingleInput" class="admin-input" maxlength="10" placeholder="Enter OTP code"
+          style="text-align:center;font-size:1.5rem;letter-spacing:0.3rem;max-width:260px;font-weight:700"
+          oninput="this.value=this.value.replace(/\D/g,'')"
+          onkeydown="if(event.key==='Enter')verifyOTP()"/>
+      </div>
+      <div id="otpTimer" style="text-align:center;color:#aaa;font-size:0.85rem;margin-top:0.5rem">Code expires in <span id="otpTimerCount">5:00</span></div>
+      <button class="btn-add-anime" onclick="verifyOTP()" id="otpVerifyBtn">✅ Verify Code</button>
+      <p id="otpError" style="display:none;color:#e57373;text-align:center;margin-top:0.5rem"></p>
+      <button onclick="resendOTP()" id="resendBtn" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.85rem;margin-top:0.5rem;display:block;width:100%;text-align:center" disabled>🔄 Resend Code (wait...)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT BANNER -->
+<div id="announcementBanner" style="display:none;position:fixed;top:68px;left:0;right:0;z-index:999;padding:0.5rem 2rem;text-align:center;font-size:0.88rem;font-weight:600"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+
+<!-- USER LOGIN/SIGNUP MODAL -->
+<div class="modal-overlay" id="userAuthModal" onclick="closeUserAuth()">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:420px">
+    <button class="modal-close" onclick="closeUserAuth()">✕</button>
+    <div style="padding:2rem">
+      <!-- Tabs -->
+      <div style="display:flex;gap:1rem;margin-bottom:1.5rem">
+        <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="btn-play" style="flex:1">Login</button>
+        <button id="tabSignupBtn" onclick="switchAuthTab('signup')" class="btn-info" style="flex:1">Sign Up</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" class="admin-input" placeholder="your@email.com"/>
+        </div>
+        <div class="form-group" style="margin-top:1rem">
+          <label>Password</label>
+          <input type="password" id="loginPassword" class="admin-input" placeholder="Password"/>
+        </div>
+        <p id="loginError" style="color:#e57373;font-size:0.85rem;margin-top:0.5rem;display:none"></p>
+        <button class="btn-play" style="width:100%;margin-top:1rem;justify-content:center" onclick="handleLogin()">Login</button>
+      </div>
+
+      <!-- Signup Form -->
+      <div id="signupForm" style="display:none">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="signupUsername" class="admin-input" placeholder="cooluser123"/>
+        </div>
+        <div class="form-group" style="margin-top:1rem">
+          <label>Email</label>
+          <input type="email" id="signupEmail" class="admin-input" placeholder="your@email.com"/>
+        </div>
+        <div class="form-group" style="margin-top:1rem">
+          <label>Password</label>
+          <input type="password" id="signupPassword" class="admin-input" placeholder="Min 6 characters"/>
+        </div>
+        <p id="signupError" style="color:#e57373;font-size:0.85rem;margin-top:0.5rem;display:none"></p>
+        <button class="btn-play" style="width:100%;margin-top:1rem;justify-content:center" onclick="handleSignup()">Create Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
