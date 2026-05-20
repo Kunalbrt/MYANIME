@@ -417,6 +417,46 @@
     document.head.appendChild(style);
   }
 
+  
+  // ============================================================
+  //  9. MOBILE SEARCH BAR — below navbar on home screen
+  // ============================================================
+  function initMobileSearchBar() {
+    const style = document.createElement('style');
+    style.textContent = `
+      #mobileSearchBar {
+        position: fixed; top: 56px; left: 0; right: 0; z-index: 998;
+        padding: 0.5rem 1rem;
+        background: #141414;
+        border-bottom: 1px solid #222;
+        display: flex; align-items: center; gap: 0.5rem;
+      }
+      #mobileSearchBar input {
+        flex: 1; background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 6px; padding: 0.5rem 0.8rem;
+        color: #fff; font-size: 0.9rem; outline: none;
+      }
+      #mobileSearchBar input::placeholder { color: #888; }
+      .hero { margin-top: 40px; }
+      .rows-container { margin-top: 40px; }
+    `;
+    document.head.appendChild(style);
+
+    const bar = document.createElement('div');
+    bar.id = 'mobileSearchBar';
+    bar.innerHTML = `
+      <span>??</span>
+      <input type="text" placeholder="Search anime..." 
+        oninput="handleSearch({key:'',target:this})"
+        onkeyup="handleSearch(event)" />
+    `;
+    document.body.appendChild(bar);
+  }
+
+
+
+
   // ============================================================
   //  INIT ALL
   // ============================================================
@@ -427,6 +467,7 @@
     initSwipeRows();
     initMobileEpisodeDrawer();
     initMobileHero();
+    initMobileSearchBar();
     console.log('[mobile.js] All mobile enhancements loaded âœ…');
   }
 
@@ -437,3 +478,4 @@
   }
 
 })();
+
