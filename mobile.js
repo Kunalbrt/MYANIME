@@ -40,12 +40,12 @@
       <style>
         @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
       </style>
-      <a class="mob-nav-link" onclick="showSection('home');closeMobileNav()">🏠 Home</a>
-      <a class="mob-nav-link" onclick="showSection('search');closeMobileNav()">🔍 Search</a>
-      <a class="mob-nav-link" onclick="showSection('mylist');closeMobileNav()">📋 My List</a>
-      <a class="mob-nav-link" onclick="showSection('genres');closeMobileNav()">🎭 Genres</a>
+      <a class="mob-nav-link" onclick="showPage('home');closeMobileNav()">🏠 Home</a>
+      <a class="mob-nav-link" onclick="showPage('search');closeMobileNav()">🔍 Search</a>
+      <a class="mob-nav-link" onclick="showPage('mylist');closeMobileNav()">📋 My List</a>
+      <a class="mob-nav-link" onclick="showPage('genres');closeMobileNav()">🎭 Genres</a>
       <hr style="border-color:#333;margin:0.2rem 0">
-      <a class="mob-nav-link" onclick="openAdminPanel?.();closeMobileNav()">⚙️ Admin</a>
+      <a class="mob-nav-link" onclick="openAdminLogin();closeMobileNav()">⚙️ Admin</a>
     `;
 
     // Style nav links inside drawer
