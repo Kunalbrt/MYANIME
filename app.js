@@ -4,7 +4,7 @@
 
 // ── API Base URL ─────────────────────────────
 // ✅ FIX: removed leading space and added /api suffix
-const API_URL = 'https://myanime-backend-2vc9.onrender.com/api';
+const API ='https://myanime-backend-2vc9.onrender.com/api';
 
 // ── Auth Helpers ─────────────────────────────
 const getToken = () => localStorage.getItem('token');
