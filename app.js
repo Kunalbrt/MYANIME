@@ -94,6 +94,8 @@ function init() {
   loadSavedTheme();
   loadSiteEdits();
   renderAll();
+      if (!featuredHeroId && animeLibrary.length > 0) { featuredHeroId = animeLibrary[0].id; }
+      renderHero();
   setupNavScroll();
   setupSearchListener();
   populateHomeEditor();
@@ -199,6 +201,8 @@ async function fetchAnimeFromBackend() {
       }));
       saveToStorage();
       renderAll();
+      if (!featuredHeroId && animeLibrary.length > 0) { featuredHeroId = animeLibrary[0].id; }
+      renderHero();
     }
   } catch (err) {
     console.log('Backend fetch failed, using local data:', err.message);

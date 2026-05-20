@@ -1068,6 +1068,11 @@
       await refreshEpisodesList();
     } catch(e) { showToast('Error: '+e.message,'error'); }
   }
+  
+  // Keep Render backend alive
+  setInterval(() => {
+    fetch('https://myanime-backend-2vc9.onrender.com/api/anime?limit=1').catch(()=>{});
+  }, 600000);
   </script>
 
 <!-- USER LOGIN/SIGNUP MODAL -->
@@ -1163,6 +1168,7 @@
 
 </body>
 </html>
+
 
 
 

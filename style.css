@@ -504,3 +504,15 @@ select.admin-input { cursor: pointer; }
     max-height: 200px;
   }
 }
+.btn-primary {
+  background: var(--red, #e53935);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.85; }
