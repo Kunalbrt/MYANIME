@@ -1067,30 +1067,58 @@ function toggleMyList() {
 // ════════════════════════════════════════════
 //   VIDEO PLAYER
 // ════════════════════════════════════════════
-function openPlayer(anime) {
+function openPlayer(anime, episodeUrl, episodeTitle) {
   if (!anime) return;
   currentPlayerAnime = anime;
   trackPlay(anime.id);
   const overlay = document.getElementById('playerOverlay');
   const video   = document.getElementById('mainPlayer');
   const loading = document.getElementById('playerLoading');
-  document.getElementById('playerTitle').textContent     = anime.title;
+
+  const displayTitle = episodeTitle ? `${anime.title} - ${episodeTitle}` : anime.title;
+  document.getElementById('playerTitle').textContent     = displayTitle;
   document.getElementById('playerInfoTitle').textContent = anime.title;
   document.getElementById('playerInfoMeta').textContent  = ` • ${anime.year||''} • ${anime.genre||''} • ${anime.rating||''}`;
+
+  // Build episode list if series has seasons
+  const episodeListEl = document.getElementById('episodeList');
+  if (episodeListEl) {
+    if (anime.seasons && anime.seasons.length > 0) {
+      episodeListEl.innerHTML = anime.seasons.map(season => `
+        <div class="season-block">
+          <div class="season-title">Season ${season.seasonNumber} ${season.title ? '- ' + season.title : ''}</div>
+          ${season.episodes.map(ep => `
+            <div class="episode-item" onclick="playEpisode('${anime.id}', '${ep.videoUrl}', 'S${season.seasonNumber}E${ep.episodeNumber} - ${ep.title}')">
+              <span>EP ${ep.episodeNumber}</span>
+              <span>${ep.title}</span>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+      episodeListEl.style.display = 'block';
+    } else {
+      episodeListEl.style.display = 'none';
+    }
+  }
+
+  const videoUrl = episodeUrl || anime.videoUrl;
   video.src = ''; loading.classList.remove('hidden');
-  if (anime.videoUrl && anime.videoUrl.trim()) {
-    video.src = anime.videoUrl; video.load();
+  if (videoUrl && videoUrl.trim()) {
+    video.src = videoUrl; video.load();
     video.oncanplay = () => loading.classList.add('hidden');
     video.onerror   = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
-  } else if (uploadedVideoBlob && currentPlayerAnime?.id === anime.id) {
-    video.src = uploadedVideoBlob; video.load();
-    video.oncanplay = () => loading.classList.add('hidden');
   } else {
     setTimeout(() => { loading.classList.add('hidden'); showNoVideoMessage(); }, 1200);
   }
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
+
+function playEpisode(animeId, videoUrl, episodeTitle) {
+  const anime = animeLibrary.find(a => a.id === animeId);
+  if (anime) openPlayer(anime, videoUrl, episodeTitle);
+}
+
 
 function showNoVideoMessage() {
   const video = document.getElementById('mainPlayer');
