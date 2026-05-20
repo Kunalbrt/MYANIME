@@ -201,7 +201,7 @@ async function fetchAnimeFromBackend() {
       }));
       saveToStorage();
       renderAll();
-      if (!featuredHeroId && animeLibrary.length > 0) { featuredHeroId = animeLibrary[0].id; }
+      if (!featuredHeroId && animeLibrary.length > 0) { const withThumb = animeLibrary.find(a => a.thumb && a.thumb.length > 10); featuredHeroId = withThumb ? withThumb.id : animeLibrary[0].id; }
       renderHero();
     }
   } catch (err) {
@@ -808,8 +808,7 @@ function showPage(page) {
 //   HERO
 // ════════════════════════════════════════════
 function renderHero() {
-  const featured = (featuredHeroId && animeLibrary.find(a => a.id === featuredHeroId))
-    || animeLibrary.find(a => a.topRated) || animeLibrary[0];
+  const featured = (featuredHeroId && animeLibrary.find(a => a.id === featuredHeroId)) || animeLibrary.find(a => a.thumb && a.thumb.length > 10) || animeLibrary[0];
   if (!featured) return;
   const edits = getSiteEdits();
   const badge = document.querySelector('.hero-badge');
