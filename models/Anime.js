@@ -79,11 +79,10 @@ const animeSchema = new mongoose.Schema({
 // ── Auto-generate slug ────────────────────────
 animeSchema.pre('save', function(next) {
   if (this.isModified('title') && !this.slug) {
-    this.slug = this.title.toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
+  this.slug = this.title.toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .trim() + '-' + Date.now();
   }
   next();
 });
