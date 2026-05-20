@@ -823,11 +823,19 @@
         <button class="player-fullscreen" onclick="toggleFullscreen()">⛶</button>
       </div>
     </div>
-    <div class="player-video-wrap">
-      <video id="mainPlayer" controls autoplay playsinline class="main-video">Your browser does not support HTML5 video.</video>
-      <div class="player-loading" id="playerLoading"><div class="spinner"></div><p>Loading stream...</p></div>
+   <div class="player-body">
+      <div class="player-main">
+        <div class="player-video-wrap">
+          <video id="mainPlayer" controls autoplay playsinline class="main-video">Your browser does not support HTML5 video.</video>
+          <div class="player-loading" id="playerLoading"><div class="spinner"></div><p>Loading stream...</p></div>
+        </div>
+        <div class="player-info-bar">
+          <div><strong id="playerInfoTitle"></strong><span id="playerInfoMeta"></span></div>
+          <div class="player-next" onclick="playNext()">Next Episode ›</div>
+        </div>
+      </div>
+      <div class="episode-sidebar" id="episodeList" style="display:none"></div>
     </div>
-    <div class="player-info-bar">
       <div><strong id="playerInfoTitle"></strong><span id="playerInfoMeta"></span></div>
       <div class="player-next" onclick="playNext()">Next Episode ›</div>
     </div>

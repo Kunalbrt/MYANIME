@@ -442,3 +442,65 @@ select.admin-input { cursor: pointer; }
   .otp-inputs { gap: 0.5rem; }
   .otp-box { width: 40px; height: 48px; font-size: 1.2rem; }
 }
+
+/* ── Episode Sidebar ─────────────────────── */
+.player-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+.player-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.episode-sidebar {
+  width: 280px;
+  background: #0e0e0e;
+  border-left: 1px solid #333;
+  overflow-y: auto;
+  padding: 1rem 0;
+  flex-shrink: 0;
+}
+.season-block { margin-bottom: 1rem; }
+.season-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  background: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.episode-item {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #1a1a1a;
+  transition: background 0.2s;
+}
+.episode-item:hover {
+  background: #222;
+  color: #fff;
+}
+.episode-item span:first-child {
+  color: var(--red);
+  font-weight: 700;
+  min-width: 36px;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 768px) {
+  .player-body { flex-direction: column; }
+  .episode-sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #333;
+    max-height: 200px;
+  }
+}
