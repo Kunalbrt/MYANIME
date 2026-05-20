@@ -31,9 +31,6 @@ exports.signup = async (req, res, next) => {
   isEmailVerified: true
 });
 
-    // Send OTP email
-    await sendOTPEmail(email, otp, username);
-
     // Track signup in analytics
     const today = todayStr();
     await Analytics.findOneAndUpdate(
@@ -41,12 +38,17 @@ exports.signup = async (req, res, next) => {
       { $inc: { signups: 1 } },
       { upsert: true }
     );
-
-    res.status(201).json({
-      success: true,
-      message: 'Account created. Please verify your email.',
-      userId: user._id
-    });
+const accessToken = generateAccessToken(user._id, user.role);
+const refreshToken = generateRefreshToken(user._id);
+res.status(201).json({
+  success: true,
+  message: 'Account created successfully!',
+  accessToken,
+  refreshToken,
+  user: user.toSafeObject()
+});
+    
+   
   } catch (err) { next(err); }
 };
 
