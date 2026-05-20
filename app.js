@@ -1,18 +1,20 @@
 // ============================================
-//   MYANIME — App Logic (Enhanced)
+//   MYANIME — App Logic (Optimized & Debugged)
 // ============================================
 
-// ── Sample / Demo Data ──────────────────────
-//const API = 'http://localhost:5000/api';
-const API = ' https://myanime-backend-2vc9.onrender.com'
-// Auth helpers
+// ── API Base URL ─────────────────────────────
+// ✅ FIX: removed leading space and added /api suffix
+const API = 'https://myanime-backend-2vc9.onrender.com/api';
+
+// ── Auth Helpers ─────────────────────────────
 const getToken = () => localStorage.getItem('token');
-const setToken = (t) => localStorage.setItem('token', t);
+const setToken = t => localStorage.setItem('token', t);
 const removeToken = () => localStorage.removeItem('token');
 const getUser = () => JSON.parse(localStorage.getItem('user') || 'null');
-const setUser = (u) => localStorage.setItem('user', JSON.stringify(u));
+const setUser = u => localStorage.setItem('user', JSON.stringify(u));
 const removeUser = () => localStorage.removeItem('user');
 
+// ── Demo Data ────────────────────────────────
 const DEMO_ANIME = [
   { id:'d1',title:'One Piece',type:'series',genre:'adventure',year:'1999',rating:'TV-14',desc:'Follow Monkey D. Luffy and his pirate crew in search of the world\'s ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.',thumb:'',videoUrl:'',emoji:'⚔️',trending:true,topRated:true },
   { id:'d2',title:'Attack on Titan',type:'series',genre:'action',year:'2013',rating:'TV-MA',desc:'Humanity lives inside cities surrounded by enormous walls due to the Titans, gigantic humanoid beings who devour humans seemingly without reason.',thumb:'',videoUrl:'',emoji:'🗡️',trending:true,topRated:true },
@@ -28,7 +30,7 @@ const DEMO_ANIME = [
   { id:'d12',title:'Sword Art Online',type:'series',genre:'fantasy',year:'2012',rating:'TV-14',desc:'In the near future, a virtual reality massive multiplayer online role-playing game called Sword Art Online is released.',thumb:'',videoUrl:'',emoji:'🗡️',trending:false,topRated:false },
 ];
 
-// ── State ────────────────────────────────────
+// ── State ─────────────────────────────────────
 let animeLibrary = [];
 let myList = [];
 let currentModalAnime = null;
@@ -37,41 +39,45 @@ let uploadedVideoBlob = null;
 let uploadedThumbBlob = null;
 let currentFilterPage = 'movies';
 let editThumbBlob = null;
+let featuredHeroId = null;
 
-// ── ADMIN AUTH STATE ──────────────────────────
-let ADMIN_PASSWORD = 'myanime2024'; // loaded from storage on init
+// ── Admin Auth State ──────────────────────────
+let ADMIN_PASSWORD = 'myanime2024';
 let adminUnlocked = false;
 let loginAttempts = 0;
 let lockoutUntil = 0;
 const MAX_ATTEMPTS = 3;
-const LOCKOUT_DURATION = 30 * 60 * 1000; // 30 min
+const LOCKOUT_DURATION = 30 * 60 * 1000;
 const ADMIN_EMAIL = 'bhartikunal172@gmail.com';
 
-// ── 2FA OTP STATE ─────────────────────────────
+// ── 2FA OTP State ─────────────────────────────
 let otpCode = '';
 let otpExpiry = 0;
 let otpAttempts = 0;
 let otpTimerInterval = null;
+let otpPrepared = false;
 let twoFAEnabled = false;
 let emailJSConfig = { pubkey: '', service: '', template: '' };
 
-// ── ANALYTICS STATE ───────────────────────────
+// ── Analytics State ───────────────────────────
 let analytics = {
-  totalVisits: 0,
-  todayVisits: 0,
-  lastVisitDate: '',
-  plays: 0,
-  searches: 0,
-  myListAdds: 0,
-  animeViews: {},      // { animeId: count }
-  searchTerms: {},     // { term: count }
+  totalVisits: 0, todayVisits: 0, lastVisitDate: '',
+  plays: 0, searches: 0, myListAdds: 0,
+  animeViews: {}, searchTerms: {},
   weeklyVisits: [0,0,0,0,0,0,0],
-  liveUsers: 1,        // simulated live count
-  devices: {},
-  browsers: {}
+  liveUsers: 1, devices: {}, browsers: {}
 };
 
-// ── SECRET KEYBOARD SHORTCUT ─────────────────
+// ── Row Settings ──────────────────────────────
+let rowSettings = {
+  trending: { visible:true, title:'🔥 Trending Now' },
+  topRated: { visible:true, title:'⭐ Top Rated' },
+  recent:   { visible:true, title:'🆕 Recently Added' },
+  series:   { visible:true, title:'📺 Series' },
+  movies:   { visible:true, title:'🎬 Movies' },
+};
+
+// ── Secret Shortcut ───────────────────────────
 document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') openAdminLogin();
 });
@@ -82,22 +88,22 @@ document.addEventListener('keydown', e => {
 function init() {
   loadFromStorage();
   if (animeLibrary.length === 0) { animeLibrary = [...DEMO_ANIME]; saveToStorage(); }
-  fetchAnimeFromBackend();
   loadAnalytics();
-  trackVisit();
+  loadRowSettings();
+  loadSecuritySettings();
+  loadSavedTheme();
+  loadSiteEdits();
   renderAll();
   setupNavScroll();
   setupSearchListener();
-  loadSavedTheme();
-  loadSiteEdits();
-  loadRowSettings();
-  loadSecuritySettings();
   populateHomeEditor();
   populateRecommendations();
   populateSiteEditorFields();
   simulateLiveUsers();
   renderLoginHistory();
-  // password strength live check
+  trackVisit();
+  updateNavForAuth();
+  fetchAnimeFromBackend(); // fetch last so local data shows first
   const np = document.getElementById('sec_newPwd');
   if (np) np.addEventListener('input', checkPasswordStrength);
 }
@@ -108,10 +114,10 @@ function init() {
 function loadFromStorage() {
   try {
     const lib = localStorage.getItem('myanime_library');
-    const ml = localStorage.getItem('myanime_mylist');
+    const ml  = localStorage.getItem('myanime_mylist');
     const pwd = localStorage.getItem('myanime_adminpwd');
     if (lib) animeLibrary = JSON.parse(lib);
-    if (ml) myList = JSON.parse(ml);
+    if (ml)  myList = JSON.parse(ml);
     if (pwd) ADMIN_PASSWORD = pwd;
   } catch(e) {}
 }
@@ -119,7 +125,7 @@ function loadFromStorage() {
 function saveToStorage() {
   try {
     localStorage.setItem('myanime_library', JSON.stringify(animeLibrary));
-    localStorage.setItem('myanime_mylist', JSON.stringify(myList));
+    localStorage.setItem('myanime_mylist',  JSON.stringify(myList));
   } catch(e) {}
 }
 
@@ -139,20 +145,18 @@ function loadSecuritySettings() {
     const s = localStorage.getItem('myanime_security');
     if (s) {
       const sec = JSON.parse(s);
-      twoFAEnabled = sec.twoFAEnabled || false;
+      twoFAEnabled  = sec.twoFAEnabled  || false;
       emailJSConfig = sec.emailJSConfig || { pubkey:'', service:'', template:'' };
-      lockoutUntil = sec.lockoutUntil || 0;
+      lockoutUntil  = sec.lockoutUntil  || 0;
       loginAttempts = sec.loginAttempts || 0;
     }
-    // Sync UI
     const cb = document.getElementById('twofa_enabled');
     if (cb) cb.checked = twoFAEnabled;
-    const ek = document.getElementById('ejs_pubkey');
-    const es = document.getElementById('ejs_service');
-    const et = document.getElementById('ejs_template');
-    if (ek) ek.value = emailJSConfig.pubkey || '';
-    if (es) es.value = emailJSConfig.service || '';
-    if (et) et.value = emailJSConfig.template || '';
+    const fields = { ejs_pubkey:'pubkey', ejs_service:'service', ejs_template:'template' };
+    Object.entries(fields).forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      if (el) el.value = emailJSConfig[key] || '';
+    });
   } catch(e) {}
 }
 
@@ -170,7 +174,135 @@ function renderAll() {
 }
 
 // ════════════════════════════════════════════
-//   ANALYTICS TRACKING
+//   FETCH ANIME FROM BACKEND  ← BUGS FIXED
+// ════════════════════════════════════════════
+async function fetchAnimeFromBackend() {
+  try {
+    const res = await fetch(`${API}/anime`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.success && Array.isArray(data.anime) && data.anime.length > 0) {
+      animeLibrary = data.anime.map(a => ({
+        id:       a._id,
+        title:    a.title,
+        desc:     a.description,
+        type:     a.type,
+        genre:    Array.isArray(a.genre) ? a.genre[0] : a.genre,
+        year:     String(a.year || ''),
+        rating:   a.rating,
+        // ✅ FIX: was checking startsWith('data:') which blocked Cloudinary https:// URLs
+        thumb:    a.thumbnailUrl || '',
+        videoUrl: a.videoUrl     || '',
+        emoji:    '🎬',
+        trending: a.isTrending  || false,
+        topRated: a.isTopRated  || false,
+      }));
+      saveToStorage();
+      renderAll();
+    }
+  } catch (err) {
+    console.log('Backend fetch failed, using local data:', err.message);
+  }
+}
+
+// ════════════════════════════════════════════
+//   ADD ANIME  ← FULLY FIXED (saves to MongoDB + Cloudinary)
+// ════════════════════════════════════════════
+async function addAnime() {
+  const title    = document.getElementById('animeTitle').value.trim();
+  const desc     = document.getElementById('animeDesc').value.trim();
+  const type     = document.getElementById('animeType').value;
+  const year     = document.getElementById('animeYear').value;
+  const genre    = document.getElementById('animeGenre').value;
+  const rating   = document.getElementById('animeRating').value.trim() || 'TV-14';
+  const cloudUrl = document.getElementById('cloudUrl').value.trim();
+
+  if (!title) { showToast('⚠️ Title is required!'); return; }
+
+  // Step 1 — Upload thumbnail to Cloudinary if a local image was selected
+  let thumbnailUrl = '';
+  if (uploadedThumbBlob && uploadedThumbBlob.startsWith('data:')) {
+    try {
+      showToast('⏳ Uploading thumbnail...');
+      const formData = new FormData();
+      const blob = await fetch(uploadedThumbBlob).then(r => r.blob());
+      formData.append('thumbnail', blob, 'thumbnail.jpg');
+      const thumbRes = await fetch(`${API}/upload/thumbnail`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${getToken()}` },
+        body: formData
+      });
+      const thumbData = await thumbRes.json();
+      if (thumbData.success) {
+        thumbnailUrl = thumbData.thumbnailUrl;
+      } else {
+        showToast('⚠️ Thumbnail upload failed: ' + thumbData.message);
+      }
+    } catch (err) {
+      console.log('Thumbnail upload error:', err.message);
+      showToast('⚠️ Thumbnail upload failed, saving without it.');
+    }
+  }
+
+  // Step 2 — Save anime to MongoDB
+  try {
+    showToast('⏳ Saving anime...');
+    const res = await fetch(`${API}/anime`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getToken()}`
+      },
+      body: JSON.stringify({
+        title,
+        description: desc,
+        type,
+        year: parseInt(year) || new Date().getFullYear(),
+        genre: [genre],
+        rating,
+        videoUrl:     cloudUrl,
+        thumbnailUrl: thumbnailUrl,
+        isPublished:  true
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      const emoji = { action:'⚔️', adventure:'🗺️', romance:'💖', fantasy:'✨', thriller:'🔪' }[genre] || '🎬';
+      animeLibrary.unshift({
+        id:       data.anime._id,
+        title, desc, type, genre,
+        year:     String(year),
+        rating,
+        thumb:    thumbnailUrl,
+        videoUrl: cloudUrl,
+        emoji,
+        trending: false,
+        topRated: false
+      });
+      saveToStorage();
+      renderAll();
+      showToast(`✅ "${title}" saved to database!`);
+      // Reset form
+      ['animeTitle','animeDesc','cloudUrl','animeRating'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
+      });
+      document.getElementById('videoProgress').style.display = 'none';
+      document.getElementById('videoFill').style.width = '0%';
+      document.getElementById('thumbPreview').style.display = 'none';
+      document.getElementById('thumbPreviewIcon').style.display = 'block';
+      uploadedVideoBlob = null;
+      uploadedThumbBlob = null;
+    } else {
+      showToast('❌ ' + data.message);
+    }
+  } catch (err) {
+    showToast('❌ Cannot connect to server!');
+    console.log('Save error:', err.message);
+  }
+}
+
+// ════════════════════════════════════════════
+//   ANALYTICS
 // ════════════════════════════════════════════
 function trackVisit() {
   analytics.totalVisits++;
@@ -180,18 +312,15 @@ function trackVisit() {
     analytics.lastVisitDate = today;
   }
   analytics.todayVisits++;
-  // Weekly visits: today = index 6
   analytics.weeklyVisits[6] = (analytics.weeklyVisits[6] || 0) + 1;
-  // Detect device
   const ua = navigator.userAgent;
-  let device = /Mobi|Android/i.test(ua) ? 'Mobile' : /Tablet|iPad/i.test(ua) ? 'Tablet' : 'Desktop';
+  const device = /Mobi|Android/i.test(ua) ? 'Mobile' : /Tablet|iPad/i.test(ua) ? 'Tablet' : 'Desktop';
   analytics.devices[device] = (analytics.devices[device] || 0) + 1;
-  // Detect browser
   let browser = 'Other';
-  if (/Chrome/i.test(ua) && !/Edge/i.test(ua)) browser = 'Chrome';
-  else if (/Firefox/i.test(ua)) browser = 'Firefox';
+  if (/Chrome/i.test(ua) && !/Edge/i.test(ua))        browser = 'Chrome';
+  else if (/Firefox/i.test(ua))                        browser = 'Firefox';
   else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) browser = 'Safari';
-  else if (/Edge/i.test(ua)) browser = 'Edge';
+  else if (/Edge/i.test(ua))                           browser = 'Edge';
   analytics.browsers[browser] = (analytics.browsers[browser] || 0) + 1;
   saveAnalytics();
 }
@@ -210,13 +339,9 @@ function trackSearch(term) {
   saveAnalytics();
 }
 
-function trackMyListAdd() {
-  analytics.myListAdds++;
-  saveAnalytics();
-}
+function trackMyListAdd() { analytics.myListAdds++; saveAnalytics(); }
 
 function simulateLiveUsers() {
-  // Simulate live users with a realistic random walk
   setInterval(() => {
     const change = Math.random() > 0.5 ? 1 : -1;
     analytics.liveUsers = Math.max(1, Math.min(999, analytics.liveUsers + change));
@@ -230,20 +355,17 @@ function refreshAnalytics() {
   if (!el('statTotalVisits')) return;
   el('statTotalVisits').textContent = analytics.totalVisits;
   el('statTodayVisits').textContent = analytics.todayVisits;
-  el('statPlays').textContent = analytics.plays;
-  el('statSearches').textContent = analytics.searches;
-  el('statMyListAdds').textContent = analytics.myListAdds;
-  el('statLiveUsers').textContent = analytics.liveUsers;
+  el('statPlays').textContent       = analytics.plays;
+  el('statSearches').textContent    = analytics.searches;
+  el('statMyListAdds').textContent  = analytics.myListAdds;
+  el('statLiveUsers').textContent   = analytics.liveUsers;
 
   // Weekly bar chart
-  const maxV = Math.max(...analytics.weeklyVisits, 1);
-  const chart = el('visitBarChart');
+  const maxV   = Math.max(...analytics.weeklyVisits, 1);
+  const chart  = el('visitBarChart');
   const labels = el('visitBarLabels');
   if (chart) {
-    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    const today = new Date().getDay(); // 0=Sun
-    chart.innerHTML = '';
-    labels.innerHTML = '';
+    chart.innerHTML = ''; labels.innerHTML = '';
     analytics.weeklyVisits.forEach((v, i) => {
       const bar = document.createElement('div');
       bar.className = 'bar-day';
@@ -252,7 +374,6 @@ function refreshAnalytics() {
       chart.appendChild(bar);
       const lbl = document.createElement('div');
       lbl.className = 'bar-label';
-      // Map index to day label (7 days ending today)
       const d = new Date(); d.setDate(d.getDate() - (6 - i));
       lbl.textContent = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
       labels.appendChild(lbl);
@@ -260,81 +381,78 @@ function refreshAnalytics() {
   }
 
   // Top anime
-  const topAnime = document.getElementById('topAnimeList');
+  const topAnime = el('topAnimeList');
   if (topAnime) {
-    topAnime.innerHTML = '';
     const sorted = Object.entries(analytics.animeViews).sort((a,b) => b[1]-a[1]).slice(0,5);
     const maxA = sorted[0]?.[1] || 1;
-    if (sorted.length === 0) { topAnime.innerHTML = '<p style="color:#555;font-size:0.85rem">No plays yet.</p>'; }
-    sorted.forEach(([id, cnt], idx) => {
-      const anime = animeLibrary.find(a => a.id === id);
-      if (!anime) return;
-      topAnime.innerHTML += `<div class="top-list-item">
-        <div class="top-list-rank">${idx+1}</div>
-        <div class="top-list-bar-wrap">
-          <div class="top-list-name">${anime.emoji||'🎬'} ${anime.title}</div>
-          <div class="top-list-bar" style="width:${(cnt/maxA)*100}%"></div>
-        </div>
-        <div class="top-list-count">${cnt}</div>
-      </div>`;
-    });
+    topAnime.innerHTML = sorted.length === 0
+      ? '<p style="color:#555;font-size:0.85rem">No plays yet.</p>'
+      : sorted.map(([id, cnt], idx) => {
+          const anime = animeLibrary.find(a => a.id === id);
+          if (!anime) return '';
+          return `<div class="top-list-item">
+            <div class="top-list-rank">${idx+1}</div>
+            <div class="top-list-bar-wrap">
+              <div class="top-list-name">${anime.emoji||'🎬'} ${anime.title}</div>
+              <div class="top-list-bar" style="width:${(cnt/maxA)*100}%"></div>
+            </div>
+            <div class="top-list-count">${cnt}</div>
+          </div>`;
+        }).join('');
   }
 
   // Top searches
-  const topSearch = document.getElementById('topSearchList');
+  const topSearch = el('topSearchList');
   if (topSearch) {
-    topSearch.innerHTML = '';
     const sorted = Object.entries(analytics.searchTerms).sort((a,b) => b[1]-a[1]).slice(0,5);
     const maxS = sorted[0]?.[1] || 1;
-    if (sorted.length === 0) { topSearch.innerHTML = '<p style="color:#555;font-size:0.85rem">No searches yet.</p>'; }
-    sorted.forEach(([term, cnt], idx) => {
-      topSearch.innerHTML += `<div class="top-list-item">
-        <div class="top-list-rank">${idx+1}</div>
-        <div class="top-list-bar-wrap">
-          <div class="top-list-name">🔍 ${term}</div>
-          <div class="top-list-bar" style="width:${(cnt/maxS)*100}%"></div>
-        </div>
-        <div class="top-list-count">${cnt}</div>
-      </div>`;
-    });
+    topSearch.innerHTML = sorted.length === 0
+      ? '<p style="color:#555;font-size:0.85rem">No searches yet.</p>'
+      : sorted.map(([term, cnt], idx) => `
+          <div class="top-list-item">
+            <div class="top-list-rank">${idx+1}</div>
+            <div class="top-list-bar-wrap">
+              <div class="top-list-name">🔍 ${term}</div>
+              <div class="top-list-bar" style="width:${(cnt/maxS)*100}%"></div>
+            </div>
+            <div class="top-list-count">${cnt}</div>
+          </div>`).join('');
   }
 
   // Devices
-  const deviceList = document.getElementById('deviceList');
+  const deviceList = el('deviceList');
   if (deviceList) {
-    deviceList.innerHTML = '';
     const devTotal = Object.values(analytics.devices).reduce((a,b)=>a+b,0)||1;
-    Object.entries(analytics.devices).forEach(([name, cnt]) => {
-      const icons = { Desktop:'🖥️', Mobile:'📱', Tablet:'📟' };
-      deviceList.innerHTML += `<div class="top-list-item">
-        <div class="top-list-rank">${icons[name]||'💻'}</div>
-        <div class="top-list-bar-wrap">
-          <div class="top-list-name">${name}</div>
-          <div class="top-list-bar" style="width:${(cnt/devTotal)*100}%"></div>
-        </div>
-        <div class="top-list-count">${cnt} (${Math.round(cnt/devTotal*100)}%)</div>
-      </div>`;
-    });
-    if (Object.keys(analytics.devices).length === 0) deviceList.innerHTML = '<p style="color:#555;font-size:0.85rem">No data yet.</p>';
+    const icons = { Desktop:'🖥️', Mobile:'📱', Tablet:'📟' };
+    deviceList.innerHTML = Object.keys(analytics.devices).length === 0
+      ? '<p style="color:#555;font-size:0.85rem">No data yet.</p>'
+      : Object.entries(analytics.devices).map(([name, cnt]) => `
+          <div class="top-list-item">
+            <div class="top-list-rank">${icons[name]||'💻'}</div>
+            <div class="top-list-bar-wrap">
+              <div class="top-list-name">${name}</div>
+              <div class="top-list-bar" style="width:${(cnt/devTotal)*100}%"></div>
+            </div>
+            <div class="top-list-count">${cnt} (${Math.round(cnt/devTotal*100)}%)</div>
+          </div>`).join('');
   }
 
   // Browsers
-  const browserList = document.getElementById('browserList');
+  const browserList = el('browserList');
   if (browserList) {
-    browserList.innerHTML = '';
     const brTotal = Object.values(analytics.browsers).reduce((a,b)=>a+b,0)||1;
-    Object.entries(analytics.browsers).forEach(([name, cnt]) => {
-      const icons = { Chrome:'🌐', Firefox:'🦊', Safari:'🧭', Edge:'🔷' };
-      browserList.innerHTML += `<div class="top-list-item">
-        <div class="top-list-rank">${icons[name]||'🌍'}</div>
-        <div class="top-list-bar-wrap">
-          <div class="top-list-name">${name}</div>
-          <div class="top-list-bar" style="width:${(cnt/brTotal)*100}%"></div>
-        </div>
-        <div class="top-list-count">${cnt} (${Math.round(cnt/brTotal*100)}%)</div>
-      </div>`;
-    });
-    if (Object.keys(analytics.browsers).length === 0) browserList.innerHTML = '<p style="color:#555;font-size:0.85rem">No data yet.</p>';
+    const icons = { Chrome:'🌐', Firefox:'🦊', Safari:'🧭', Edge:'🔷' };
+    browserList.innerHTML = Object.keys(analytics.browsers).length === 0
+      ? '<p style="color:#555;font-size:0.85rem">No data yet.</p>'
+      : Object.entries(analytics.browsers).map(([name, cnt]) => `
+          <div class="top-list-item">
+            <div class="top-list-rank">${icons[name]||'🌍'}</div>
+            <div class="top-list-bar-wrap">
+              <div class="top-list-name">${name}</div>
+              <div class="top-list-bar" style="width:${(cnt/brTotal)*100}%"></div>
+            </div>
+            <div class="top-list-count">${cnt} (${Math.round(cnt/brTotal*100)}%)</div>
+          </div>`).join('');
   }
 
   showToast('📊 Analytics refreshed');
@@ -343,17 +461,15 @@ function refreshAnalytics() {
 function resetAnalytics() {
   if (!confirm('Reset all analytics data? This cannot be undone.')) return;
   analytics = { totalVisits:0, todayVisits:0, lastVisitDate:'', plays:0, searches:0, myListAdds:0, animeViews:{}, searchTerms:{}, weeklyVisits:[0,0,0,0,0,0,0], liveUsers:1, devices:{}, browsers:{} };
-  saveAnalytics();
-  refreshAnalytics();
+  saveAnalytics(); refreshAnalytics();
   showToast('📊 Analytics reset.');
 }
 
 // ════════════════════════════════════════════
-//   ADMIN AUTH — Password + 2FA
+//   ADMIN AUTH
 // ════════════════════════════════════════════
 function openAdminLogin() {
   if (adminUnlocked) { showPage('admin'); return; }
-  // Check lockout
   if (Date.now() < lockoutUntil) {
     const mins = Math.ceil((lockoutUntil - Date.now()) / 60000);
     const info = document.getElementById('loginAttemptInfo');
@@ -371,26 +487,21 @@ function closeAdminLogin() {
   document.getElementById('adminError').style.display = 'none';
   document.getElementById('loginAttemptInfo').style.display = 'none';
   document.body.style.overflow = '';
-  otpPrepared = false; // reset so next open is fresh
+  otpPrepared = false;
 }
 
 function checkAdminPassword() {
-  // Lockout check
   if (Date.now() < lockoutUntil) {
     const mins = Math.ceil((lockoutUntil - Date.now()) / 60000);
     showToast(`🔒 Locked out for ${mins} more minute(s).`);
     return;
   }
-
   const input = document.getElementById('adminPasswordInput').value;
   if (input === ADMIN_PASSWORD) {
-    loginAttempts = 0;
-    saveSecurity();
+    loginAttempts = 0; saveSecurity();
     document.getElementById('adminPasswordInput').value = '';
-    // Check if 2FA is enabled
     if (twoFAEnabled && emailJSConfig.pubkey && emailJSConfig.service && emailJSConfig.template) {
-      closeAdminLogin();
-      initiate2FA();
+      closeAdminLogin(); initiate2FA();
     } else {
       grantAdminAccess();
     }
@@ -405,12 +516,13 @@ function checkAdminPassword() {
       document.getElementById('adminError').style.display = 'none';
       const info = document.getElementById('loginAttemptInfo');
       info.style.display = 'block';
-      info.textContent = `🔒 Too many failed attempts! Locked for 30 minutes.`;
+      info.textContent = '🔒 Too many failed attempts! Locked for 30 minutes.';
       document.getElementById('adminPasswordInput').value = '';
     } else {
       saveSecurity();
-      document.getElementById('adminError').style.display = 'block';
-      document.getElementById('adminError').textContent = `❌ Wrong password. ${remaining} attempt(s) remaining.`;
+      const errEl = document.getElementById('adminError');
+      errEl.style.display = 'block';
+      errEl.textContent = `❌ Wrong password. ${remaining} attempt(s) remaining.`;
       document.getElementById('adminPasswordInput').value = '';
       document.getElementById('adminPasswordInput').focus();
     }
@@ -419,8 +531,7 @@ function checkAdminPassword() {
 
 function grantAdminAccess() {
   adminUnlocked = true;
-  closeAdminLogin();
-  closeOTPModal();
+  closeAdminLogin(); closeOTPModal();
   document.getElementById('adminBtn').style.display = 'flex';
   showPage('admin');
   addLoginEntry('success', '✅ Login successful');
@@ -428,26 +539,18 @@ function grantAdminAccess() {
 }
 
 // ════════════════════════════════════════════
-//   2FA — OTP via EmailJS
+//   2FA — OTP
 // ════════════════════════════════════════════
-// ── OTP pool — one of these is picked randomly each time ──
 const OTP_POOL = ['2546','4896','47562','444444','85289','15679','47569','25489','12356','902714','56489','2035682'];
+function generateOTP() { return OTP_POOL[Math.floor(Math.random() * OTP_POOL.length)]; }
 
-function generateOTP() {
-  return OTP_POOL[Math.floor(Math.random() * OTP_POOL.length)];
-}
-
-// ── Triggered the moment user starts typing the password ──
-let otpPrepared = false; // ensure we only fire once per login attempt
 function onPasswordTyped() {
   const val = document.getElementById('adminPasswordInput').value;
   if (val.length > 0 && !otpPrepared) {
     otpPrepared = true;
-    // Pre-generate OTP immediately
     otpCode = generateOTP();
     otpExpiry = Date.now() + 5 * 60 * 1000;
     otpAttempts = 0;
-    // Send email right away
     _sendOTPEmail(otpCode);
     showToast('⚠️ Login attempt detected — OTP sent to your email!');
   }
@@ -467,41 +570,32 @@ function _sendOTPEmail(code) {
       showToast('⚠️ Could not send OTP email. Check EmailJS config.');
     });
   } else {
-    console.log('%c🔐 DEV MODE OTP: ' + code, 'color: #e50914; font-size: 20px; font-weight: bold;');
+    console.log('%c🔐 DEV MODE OTP: ' + code, 'color:#e50914;font-size:20px;font-weight:bold;');
     showToast('📧 OTP: ' + code + ' (EmailJS not configured)');
   }
 }
 
 function initiate2FA() {
-  // Reuse already-prepared OTP if available, otherwise generate fresh
   if (!otpPrepared || !otpCode) {
     otpCode = generateOTP();
     otpExpiry = Date.now() + 5 * 60 * 1000;
     otpAttempts = 0;
     _sendOTPEmail(otpCode);
   } else {
-    // OTP was already sent when user started typing — just notify
     showToast('📧 OTP already sent to ' + ADMIN_EMAIL);
   }
-  otpPrepared = false; // reset for next login
-
-  // Show OTP modal
+  otpPrepared = false;
   document.getElementById('otpModal').classList.add('active');
   document.body.style.overflow = 'hidden';
   document.getElementById('otpError').style.display = 'none';
   const singleInput = document.getElementById('otpSingleInput');
-  if (singleInput) { singleInput.value = ''; }
+  if (singleInput) singleInput.value = '';
   startOTPTimer();
   setTimeout(() => { if (singleInput) singleInput.focus(); }, 100);
-
-  // Enable resend after 30s
   const resendBtn = document.getElementById('resendBtn');
   resendBtn.disabled = true;
   resendBtn.textContent = '🔄 Resend Code (wait 30s...)';
-  setTimeout(() => {
-    resendBtn.disabled = false;
-    resendBtn.textContent = '🔄 Resend Code';
-  }, 30000);
+  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = '🔄 Resend Code'; }, 30000);
 }
 
 function startOTPTimer() {
@@ -515,8 +609,7 @@ function startOTPTimer() {
     if (left <= 0) {
       clearInterval(otpTimerInterval);
       const err = document.getElementById('otpError');
-      err.style.display = 'block';
-      err.textContent = '⏱️ Code expired. Please try again.';
+      err.style.display = 'block'; err.textContent = '⏱️ Code expired. Please try again.';
       document.getElementById('otpVerifyBtn').disabled = true;
     }
   }, 1000);
@@ -528,42 +621,12 @@ function closeOTPModal() {
   clearInterval(otpTimerInterval);
 }
 
-function otpInput(input, idx) {
-  input.value = input.value.replace(/\D/g, '');
-  if (input.value) {
-    input.classList.add('filled');
-    const boxes = document.querySelectorAll('.otp-box');
-    if (idx < 5) boxes[idx + 1].focus();
-    // Auto-verify when all filled
-    const allFilled = [...boxes].every(b => b.value.length === 1);
-    if (allFilled) setTimeout(verifyOTP, 200);
-  } else {
-    input.classList.remove('filled');
-  }
-}
-
-function otpKeydown(e, idx) {
-  const boxes = document.querySelectorAll('.otp-box');
-  if (e.key === 'Backspace' && !boxes[idx].value && idx > 0) boxes[idx-1].focus();
-}
-
 function verifyOTP() {
   const singleInput = document.getElementById('otpSingleInput');
   const entered = singleInput ? singleInput.value.trim() : '';
   const errEl = document.getElementById('otpError');
-
-  if (!entered) {
-    errEl.style.display = 'block';
-    errEl.textContent = '⚠️ Please enter your OTP code.';
-    return;
-  }
-
-  if (Date.now() > otpExpiry) {
-    errEl.style.display = 'block';
-    errEl.textContent = '⏱️ Code expired. Please resend.';
-    return;
-  }
-
+  if (!entered) { errEl.style.display = 'block'; errEl.textContent = '⚠️ Please enter your OTP code.'; return; }
+  if (Date.now() > otpExpiry) { errEl.style.display = 'block'; errEl.textContent = '⏱️ Code expired. Please resend.'; return; }
   otpAttempts++;
   if (entered === otpCode) {
     grantAdminAccess();
@@ -583,12 +646,11 @@ function verifyOTP() {
 }
 
 function resendOTP() {
-  otpPrepared = false; // force fresh generation
+  otpPrepared = false;
   otpCode = generateOTP();
   otpExpiry = Date.now() + 5 * 60 * 1000;
   otpAttempts = 0;
   _sendOTPEmail(otpCode);
-  // reopen modal / reset UI
   document.getElementById('otpError').style.display = 'none';
   const singleInput = document.getElementById('otpSingleInput');
   if (singleInput) { singleInput.value = ''; singleInput.focus(); }
@@ -610,8 +672,8 @@ function toggle2FA() {
 
 function saveEmailJSConfig() {
   emailJSConfig = {
-    pubkey: document.getElementById('ejs_pubkey').value.trim(),
-    service: document.getElementById('ejs_service').value.trim(),
+    pubkey:   document.getElementById('ejs_pubkey').value.trim(),
+    service:  document.getElementById('ejs_service').value.trim(),
     template: document.getElementById('ejs_template').value.trim()
   };
   saveSecurity();
@@ -623,29 +685,23 @@ function testEmailJS() {
   const sv = document.getElementById('ejs_service').value.trim();
   const tm = document.getElementById('ejs_template').value.trim();
   if (!pk || !sv || !tm) { showToast('⚠️ Fill in all EmailJS fields first.'); return; }
-  const testOtp = generateOTP();
-  if (typeof emailjs !== 'undefined') {
-    emailjs.init(pk);
-    emailjs.send(sv, tm, { otp_code: testOtp, to_email: ADMIN_EMAIL, site_name: 'MyAnime' })
-      .then(() => showToast('✅ Test OTP sent! Check ' + ADMIN_EMAIL))
-      .catch(() => showToast('❌ EmailJS send failed. Check your config.'));
-  } else {
-    showToast('⚠️ EmailJS library not loaded.');
-  }
+  if (typeof emailjs === 'undefined') { showToast('⚠️ EmailJS library not loaded.'); return; }
+  emailjs.init(pk);
+  emailjs.send(sv, tm, { otp_code: generateOTP(), to_email: ADMIN_EMAIL, site_name: 'MyAnime' })
+    .then(() => showToast('✅ Test OTP sent! Check ' + ADMIN_EMAIL))
+    .catch(() => showToast('❌ EmailJS send failed. Check your config.'));
 }
 
 function changeAdminPassword() {
   const current = document.getElementById('sec_currentPwd').value;
-  const newPwd = document.getElementById('sec_newPwd').value;
+  const newPwd  = document.getElementById('sec_newPwd').value;
   const confirm = document.getElementById('sec_confirmPwd').value;
   if (current !== ADMIN_PASSWORD) { showToast('❌ Current password is wrong.'); return; }
   if (newPwd.length < 8) { showToast('⚠️ Password must be at least 8 characters.'); return; }
   if (newPwd !== confirm) { showToast('❌ Passwords do not match.'); return; }
   ADMIN_PASSWORD = newPwd;
   localStorage.setItem('myanime_adminpwd', ADMIN_PASSWORD);
-  document.getElementById('sec_currentPwd').value = '';
-  document.getElementById('sec_newPwd').value = '';
-  document.getElementById('sec_confirmPwd').value = '';
+  ['sec_currentPwd','sec_newPwd','sec_confirmPwd'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.getElementById('pwdStrengthFill').style.width = '0%';
   document.getElementById('pwdStrengthLabel').textContent = '';
   showToast('✅ Password changed successfully!');
@@ -654,19 +710,19 @@ function changeAdminPassword() {
 function checkPasswordStrength() {
   const pwd = document.getElementById('sec_newPwd').value;
   let score = 0;
-  if (pwd.length >= 8) score++;
-  if (pwd.length >= 12) score++;
-  if (/[A-Z]/.test(pwd)) score++;
-  if (/[0-9]/.test(pwd)) score++;
+  if (pwd.length >= 8)          score++;
+  if (pwd.length >= 12)         score++;
+  if (/[A-Z]/.test(pwd))        score++;
+  if (/[0-9]/.test(pwd))        score++;
   if (/[^A-Za-z0-9]/.test(pwd)) score++;
-  const fill = document.getElementById('pwdStrengthFill');
-  const label = document.getElementById('pwdStrengthLabel');
+  const fill   = document.getElementById('pwdStrengthFill');
+  const label  = document.getElementById('pwdStrengthLabel');
   const colors = ['#e57373','#e57373','#ff9800','#ffeb3b','#4caf50'];
   const labels = ['Weak','Weak','Fair','Good','Strong'];
-  fill.style.width = (score * 20) + '%';
+  fill.style.width      = (score * 20) + '%';
   fill.style.background = colors[score-1] || '#333';
-  label.textContent = pwd ? labels[score-1] || '' : '';
-  label.style.color = colors[score-1] || '#aaa';
+  label.textContent     = pwd ? (labels[score-1] || '') : '';
+  label.style.color     = colors[score-1] || '#aaa';
 }
 
 function lockAdminNow() {
@@ -684,7 +740,6 @@ function resetAllData() {
   setTimeout(() => location.reload(), 1500);
 }
 
-// Login History
 function addLoginEntry(type, msg) {
   try {
     const hist = JSON.parse(localStorage.getItem('myanime_loginhistory') || '[]');
@@ -700,7 +755,10 @@ function renderLoginHistory() {
   if (!container) return;
   try {
     const hist = JSON.parse(localStorage.getItem('myanime_loginhistory') || '[]');
-    if (hist.length === 0) { container.innerHTML = '<p style="color:#555;font-size:0.85rem">No login attempts recorded yet.</p>'; return; }
+    if (hist.length === 0) {
+      container.innerHTML = '<p style="color:#555;font-size:0.85rem">No login attempts recorded yet.</p>';
+      return;
+    }
     container.innerHTML = hist.map(h => `
       <div class="login-entry ${h.type}">
         <span class="login-entry-status">${h.msg}</span>
@@ -729,46 +787,39 @@ function showPage(page) {
   const map = { home:'homePage', movies:'moviesPage', series:'seriesPage', mylist:'mylistPage', admin:'adminPage', search:'searchPage' };
   const pg = document.getElementById(map[page]);
   if (pg) pg.classList.add('active');
-  document.querySelectorAll('.nav-link').forEach(l => { if (l.getAttribute('onclick')?.includes(`'${page}'`)) l.classList.add('active'); });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelectorAll('.nav-link').forEach(l => {
+    if (l.getAttribute('onclick')?.includes(`'${page}'`)) l.classList.add('active');
+  });
+  window.scrollTo({ top:0, behavior:'smooth' });
   if (page === 'mylist') renderMyList();
   if (page === 'movies') renderGrid('moviesGrid', animeLibrary.filter(a => a.type === 'movie'));
   if (page === 'series') renderGrid('seriesGrid', animeLibrary.filter(a => a.type === 'series'));
   if (page === 'admin') {
-    populateHomeEditor();
-    populateRecommendations();
-    populateSiteEditorFields();
-    refreshAnalytics();
-    renderLoginHistory();
+    populateHomeEditor(); populateRecommendations();
+    populateSiteEditorFields(); refreshAnalytics(); renderLoginHistory();
   }
 }
 
 // ════════════════════════════════════════════
 //   HERO
 // ════════════════════════════════════════════
-let featuredHeroId = null;
-
 function renderHero() {
   const featured = (featuredHeroId && animeLibrary.find(a => a.id === featuredHeroId))
     || animeLibrary.find(a => a.topRated) || animeLibrary[0];
   if (!featured) return;
-
-  // Respect site edits
   const edits = getSiteEdits();
   const badge = document.querySelector('.hero-badge');
   if (badge && edits.heroBadge) badge.textContent = edits.heroBadge;
-
   document.getElementById('heroTitle').textContent = featured.title;
-  document.getElementById('heroDesc').textContent = featured.desc || 'An epic anime adventure awaits.';
-  document.getElementById('heroYear').textContent = featured.year || '';
-
+  document.getElementById('heroDesc').textContent  = featured.desc || 'An epic anime adventure awaits.';
+  document.getElementById('heroYear').textContent  = featured.year || '';
   const playBtn = document.querySelector('.btn-play');
   const infoBtn = document.querySelector('.btn-info');
   if (playBtn && edits.playBtn) playBtn.textContent = edits.playBtn;
   if (infoBtn && edits.infoBtn) infoBtn.textContent = edits.infoBtn;
-
   const bg = document.getElementById('heroBg');
-  if (featured.thumb && featured.thumb.startsWith('data:')) {
+  // ✅ FIX: support Cloudinary https:// URLs not just data: blobs
+  if (featured.thumb && (featured.thumb.startsWith('data:') || featured.thumb.startsWith('http'))) {
     bg.style.backgroundImage = `url(${featured.thumb})`;
     bg.style.backgroundSize = 'cover';
   } else {
@@ -797,14 +848,6 @@ function getGradient(id) {
 // ════════════════════════════════════════════
 //   ROWS & CARDS
 // ════════════════════════════════════════════
-let rowSettings = {
-  trending: { visible:true, title:'🔥 Trending Now' },
-  topRated: { visible:true, title:'⭐ Top Rated' },
-  recent:   { visible:true, title:'🆕 Recently Added' },
-  series:   { visible:true, title:'📺 Series' },
-  movies:   { visible:true, title:'🎬 Movies' },
-};
-
 function loadRowSettings() {
   try {
     const s = localStorage.getItem('myanime_rowsettings');
@@ -839,10 +882,10 @@ function applyRowSettings() {
 }
 
 function renderRows() {
-  renderRow('trendingRow', animeLibrary.filter(a => a.trending));
-  renderRow('topRatedRow', animeLibrary.filter(a => a.topRated));
-  renderRow('recentRow', [...animeLibrary].reverse().slice(0, 8));
-  renderRow('seriesRow', animeLibrary.filter(a => a.type === 'series'));
+  renderRow('trendingRow',   animeLibrary.filter(a => a.trending));
+  renderRow('topRatedRow',   animeLibrary.filter(a => a.topRated));
+  renderRow('recentRow',     [...animeLibrary].reverse().slice(0, 8));
+  renderRow('seriesRow',     animeLibrary.filter(a => a.type === 'series'));
   renderRow('moviesRowHome', animeLibrary.filter(a => a.type === 'movie'));
 }
 
@@ -853,19 +896,22 @@ function renderRow(containerId, items) {
   items.forEach((anime, i) => container.appendChild(createCard(anime, i)));
 }
 
-function createCard(anime, idx) {
+// ✅ FIX: helper so all render functions check http:// and https:// too
+function hasValidThumb(anime) {
+  return anime.thumb && (anime.thumb.startsWith('data:') || anime.thumb.startsWith('http'));
+}
+
+function createCard(anime) {
   const div = document.createElement('div');
   div.className = 'anime-card';
   const inList = myList.some(m => m.id === anime.id);
-
-  let thumbHtml = anime.thumb && anime.thumb.startsWith('data:')
+  const thumbOk = hasValidThumb(anime);
+  const thumbHtml = thumbOk
     ? `<img class="card-thumb" src="${anime.thumb}" alt="${anime.title}" loading="lazy"/>`
     : `<div class="card-thumb-placeholder"><span style="font-size:2rem">${anime.emoji||'🎬'}</span><span>${anime.title}</span></div>`;
-
-  let hoverThumbHtml = anime.thumb && anime.thumb.startsWith('data:')
+  const hoverThumbHtml = thumbOk
     ? `<img class="card-hover-img" src="${anime.thumb}" alt="${anime.title}"/>`
     : `<div class="card-hover-img" style="background:${getGradient(anime.id)};display:flex;align-items:center;justify-content:center;font-size:2.5rem">${anime.emoji||'🎬'}</div>`;
-
   div.innerHTML = `${thumbHtml}
     <div class="card-hover">
       ${hoverThumbHtml}
@@ -909,7 +955,8 @@ function renderGrid(containerId, items) {
 function createGridCard(anime) {
   const div = document.createElement('div');
   div.className = 'grid-card';
-  let innerHtml = anime.thumb && anime.thumb.startsWith('data:')
+  const thumbOk = hasValidThumb(anime);
+  const innerHtml = thumbOk
     ? `<img src="${anime.thumb}" alt="${anime.title}" loading="lazy"/>`
     : `<div class="grid-card-placeholder" style="background:${getGradient(anime.id)}"><span>${anime.emoji||'🎬'}</span><span>${anime.title}</span></div>`;
   div.innerHTML = `${innerHtml}
@@ -960,8 +1007,7 @@ function toggleListById(id, btn) {
     trackMyListAdd();
     showToast(`Added "${anime.title}" to My List`);
   }
-  saveToStorage();
-  updateMyListBtn();
+  saveToStorage(); updateMyListBtn();
 }
 
 function updateMyListBtn() {
@@ -976,22 +1022,21 @@ function updateMyListBtn() {
 // ════════════════════════════════════════════
 function showInfoModal(idx) {
   const anime = animeLibrary[idx];
-  if (!anime) return;
-  showInfoModal_byId(anime.id);
+  if (anime) showInfoModal_byId(anime.id);
 }
 
 function showInfoModal_byId(id) {
   const anime = animeLibrary.find(a => a.id === id);
   if (!anime) return;
   currentModalAnime = anime;
-  document.getElementById('modalTitle').textContent = anime.title;
-  document.getElementById('modalYear').textContent = anime.year || '';
+  document.getElementById('modalTitle').textContent  = anime.title;
+  document.getElementById('modalYear').textContent   = anime.year || '';
   document.getElementById('modalRating').textContent = anime.rating || '';
-  document.getElementById('modalType').textContent = anime.type === 'series' ? '📺 Series' : '🎬 Movie';
-  document.getElementById('modalDesc').textContent = anime.desc || 'No description available.';
-  document.getElementById('modalGenre').textContent = anime.genre || 'N/A';
+  document.getElementById('modalType').textContent   = anime.type === 'series' ? '📺 Series' : '🎬 Movie';
+  document.getElementById('modalDesc').textContent   = anime.desc || 'No description available.';
+  document.getElementById('modalGenre').textContent  = anime.genre || 'N/A';
   const thumb = document.getElementById('modalThumb');
-  if (anime.thumb && anime.thumb.startsWith('data:')) {
+  if (hasValidThumb(anime)) {
     thumb.src = anime.thumb; thumb.style.display = 'block';
   } else {
     thumb.src = '';
@@ -1008,25 +1053,15 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-function playFromModal() {
-  closeModal();
-  if (currentModalAnime) openPlayer(currentModalAnime);
-}
+function playFromModal() { closeModal(); if (currentModalAnime) openPlayer(currentModalAnime); }
 
 function toggleMyList() {
   if (!currentModalAnime) return;
   const id = currentModalAnime.id;
   const idx = myList.findIndex(m => m.id === id);
-  if (idx >= 0) {
-    myList.splice(idx, 1);
-    showToast(`Removed "${currentModalAnime.title}" from My List`);
-  } else {
-    myList.push(currentModalAnime);
-    trackMyListAdd();
-    showToast(`Added "${currentModalAnime.title}" to My List`);
-  }
-  saveToStorage();
-  updateMyListBtn();
+  if (idx >= 0) { myList.splice(idx, 1); showToast(`Removed "${currentModalAnime.title}" from My List`); }
+  else { myList.push(currentModalAnime); trackMyListAdd(); showToast(`Added "${currentModalAnime.title}" to My List`); }
+  saveToStorage(); updateMyListBtn();
 }
 
 // ════════════════════════════════════════════
@@ -1037,21 +1072,18 @@ function openPlayer(anime) {
   currentPlayerAnime = anime;
   trackPlay(anime.id);
   const overlay = document.getElementById('playerOverlay');
-  const video = document.getElementById('mainPlayer');
+  const video   = document.getElementById('mainPlayer');
   const loading = document.getElementById('playerLoading');
-  document.getElementById('playerTitle').textContent = anime.title;
+  document.getElementById('playerTitle').textContent     = anime.title;
   document.getElementById('playerInfoTitle').textContent = anime.title;
-  document.getElementById('playerInfoMeta').textContent = ` • ${anime.year||''} • ${anime.genre||''} • ${anime.rating||''}`;
-  video.src = '';
-  loading.classList.remove('hidden');
+  document.getElementById('playerInfoMeta').textContent  = ` • ${anime.year||''} • ${anime.genre||''} • ${anime.rating||''}`;
+  video.src = ''; loading.classList.remove('hidden');
   if (anime.videoUrl && anime.videoUrl.trim()) {
-    video.src = anime.videoUrl;
-    video.load();
+    video.src = anime.videoUrl; video.load();
     video.oncanplay = () => loading.classList.add('hidden');
-    video.onerror = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
+    video.onerror   = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
   } else if (uploadedVideoBlob && currentPlayerAnime?.id === anime.id) {
-    video.src = uploadedVideoBlob;
-    video.load();
+    video.src = uploadedVideoBlob; video.load();
     video.oncanplay = () => loading.classList.add('hidden');
   } else {
     setTimeout(() => { loading.classList.add('hidden'); showNoVideoMessage(); }, 1200);
@@ -1069,9 +1101,9 @@ function showNoVideoMessage() {
     msg.className = 'no-video-msg';
     msg.style.cssText = 'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#111;color:#aaa;text-align:center;padding:2rem;';
     msg.innerHTML = `<div style="font-size:4rem;margin-bottom:1rem">🎬</div>
-    <h3 style="color:white;margin-bottom:0.5rem">${currentPlayerAnime?.title||'Video'}</h3>
-    <p>No video source connected yet.</p>
-    <p style="margin-top:0.5rem;font-size:0.85rem">Go to <strong>Admin → Upload Content</strong> and add a Cloud Video URL or upload a video file.</p>`;
+      <h3 style="color:white;margin-bottom:0.5rem">${currentPlayerAnime?.title||'Video'}</h3>
+      <p>No video source connected yet.</p>
+      <p style="margin-top:0.5rem;font-size:0.85rem">Go to <strong>Admin → Upload Content</strong> and add a Cloud Video URL.</p>`;
     wrap.style.position = 'relative';
     wrap.appendChild(msg);
   }
@@ -1094,7 +1126,7 @@ function toggleFullscreen() {
 
 function playNext() {
   if (!currentPlayerAnime) return;
-  const idx = animeLibrary.findIndex(a => a.id === currentPlayerAnime.id);
+  const idx  = animeLibrary.findIndex(a => a.id === currentPlayerAnime.id);
   const next = animeLibrary[(idx + 1) % animeLibrary.length];
   closePlayer();
   setTimeout(() => openPlayer(next), 200);
@@ -1112,7 +1144,10 @@ function setupSearchListener() {
       const q = e.target.value.trim();
       if (q.length >= 2) {
         trackSearch(q);
-        const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase()) || (a.genre||'').includes(q.toLowerCase()));
+        const results = animeLibrary.filter(a =>
+          a.title.toLowerCase().includes(q.toLowerCase()) ||
+          (a.genre||'').toLowerCase().includes(q.toLowerCase())
+        );
         showPage('search');
         renderGrid('searchGrid', results);
         document.querySelector('#searchPage .browse-title').textContent = `Results for "${q}"`;
@@ -1129,8 +1164,7 @@ function handleSearch(e) {
     if (q) {
       trackSearch(q);
       const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
-      showPage('search');
-      renderGrid('searchGrid', results);
+      showPage('search'); renderGrid('searchGrid', results);
     }
   }
 }
@@ -1150,9 +1184,7 @@ function setResolution(res) {
   document.getElementById('resBtn').textContent = `⚙️ ${res === 'auto' ? 'Auto' : res}`;
   document.getElementById('resMenu').style.display = 'none';
   document.querySelectorAll('.res-option').forEach(o => o.classList.toggle('active', o.textContent.toLowerCase().includes(res)));
-  const video = document.getElementById('mainPlayer');
-  if (res === 'auto') { video.style.filter = 'none'; showToast('✅ Resolution: Auto'); }
-  else showToast(`⚙️ Resolution set to ${res}`);
+  showToast(res === 'auto' ? '✅ Resolution: Auto' : `⚙️ Resolution set to ${res}`);
 }
 
 document.addEventListener('click', e => {
@@ -1187,8 +1219,7 @@ function populateHomeEditor() {
 function setFeaturedHero(id) {
   featuredHeroId = id;
   localStorage.setItem('myanime_hero', id);
-  updateHeroPreview();
-  renderHero();
+  updateHeroPreview(); renderHero();
 }
 
 function updateHeroPreview() {
@@ -1237,8 +1268,7 @@ function toggleRecommend(field, id, cb) {
 }
 
 function saveRecommendations() {
-  saveToStorage();
-  renderRows();
+  saveToStorage(); renderRows();
   showToast('✅ Recommendations saved!');
 }
 
@@ -1246,7 +1276,7 @@ function saveRecommendations() {
 //   THEME MANAGER
 // ════════════════════════════════════════════
 const THEMES = {
-  netflix: { red:'#e50914', dark:'#141414', dark2:'#1a1a1a', dark3:'#222', dark4:'#2a2a2a', card:'#181818' },
+  netflix: { red:'#e50914', dark:'#141414', dark2:'#1a1a1a', dark3:'#222',    dark4:'#2a2a2a', card:'#181818' },
   ocean:   { red:'#0066ff', dark:'#050d1a', dark2:'#071220', dark3:'#0a1828', dark4:'#0d1e30', card:'#081525' },
   forest:  { red:'#00aa44', dark:'#050f08', dark2:'#071410', dark3:'#091a12', dark4:'#0b2016', card:'#07120e' },
   purple:  { red:'#9b59b6', dark:'#0d0814', dark2:'#130c1a', dark3:'#181020', dark4:'#1e1428', card:'#110a18' },
@@ -1255,60 +1285,53 @@ const THEMES = {
 };
 
 function applyThemePreset(name) {
-  const t = THEMES[name];
-  if (!t) return;
-  document.documentElement.style.setProperty('--red', t.red);
-  document.documentElement.style.setProperty('--red-hover', t.red);
-  document.documentElement.style.setProperty('--dark', t.dark);
-  document.documentElement.style.setProperty('--dark2', t.dark2);
-  document.documentElement.style.setProperty('--dark3', t.dark3);
-  document.documentElement.style.setProperty('--dark4', t.dark4);
-  document.documentElement.style.setProperty('--card-bg', t.card);
+  const t = THEMES[name]; if (!t) return;
+  const vars = { '--red':t.red, '--red-hover':t.red, '--dark':t.dark, '--dark2':t.dark2, '--dark3':t.dark3, '--dark4':t.dark4, '--card-bg':t.card };
+  Object.entries(vars).forEach(([k,v]) => document.documentElement.style.setProperty(k, v));
   document.body.style.background = t.dark;
   document.querySelectorAll('.theme-preset').forEach(p => p.classList.remove('active'));
   document.querySelector(`[data-theme="${name}"]`)?.classList.add('active');
-  ['accentColor','bgColor','cardColor'].forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (el) el.value = [t.red, t.dark, t.card][i];
+  [['accentColor',t.red],['bgColor',t.dark],['cardColor',t.card]].forEach(([id, val]) => {
+    const el = document.getElementById(id); if (el) el.value = val;
   });
   const hEl = document.getElementById('accentHex'); if (hEl) hEl.textContent = t.red;
-  const bEl = document.getElementById('bgHex'); if (bEl) bEl.textContent = t.dark;
-  const cEl = document.getElementById('cardHex'); if (cEl) cEl.textContent = t.card;
+  const bEl = document.getElementById('bgHex');     if (bEl) bEl.textContent = t.dark;
+  const cEl = document.getElementById('cardHex');   if (cEl) cEl.textContent = t.card;
   localStorage.setItem('myanime_theme', JSON.stringify({ name, ...t }));
   showToast(`✅ Theme: ${name}`);
 }
 
 function applyCustomColor() {
   const accent = document.getElementById('accentColor').value;
-  const bg = document.getElementById('bgColor').value;
-  const card = document.getElementById('cardColor').value;
-  document.documentElement.style.setProperty('--red', accent);
-  document.documentElement.style.setProperty('--dark', bg);
+  const bg     = document.getElementById('bgColor').value;
+  const card   = document.getElementById('cardColor').value;
+  document.documentElement.style.setProperty('--red',     accent);
+  document.documentElement.style.setProperty('--dark',    bg);
   document.documentElement.style.setProperty('--card-bg', card);
   document.body.style.background = bg;
   document.getElementById('accentHex').textContent = accent;
-  document.getElementById('bgHex').textContent = bg;
-  document.getElementById('cardHex').textContent = card;
+  document.getElementById('bgHex').textContent     = bg;
+  document.getElementById('cardHex').textContent   = card;
   document.querySelectorAll('.theme-preset').forEach(p => p.classList.remove('active'));
   localStorage.setItem('myanime_theme', JSON.stringify({ name:'custom', red:accent, dark:bg, card }));
 }
 
 function applyBranding() {
   const title = document.getElementById('siteTitle').value.trim();
-  const icon = document.getElementById('siteIcon').value.trim();
+  const icon  = document.getElementById('siteIcon').value.trim();
   if (title) { document.querySelector('.logo-text').textContent = title; document.title = title; }
-  if (icon) document.querySelector('.logo-icon').textContent = icon;
+  if (icon)  document.querySelector('.logo-icon').textContent = icon;
   localStorage.setItem('myanime_branding', JSON.stringify({ title, icon }));
 }
 
 function applyEffects() {
-  const hover = document.getElementById('effect_hover').checked;
+  const hover      = document.getElementById('effect_hover').checked;
   const transition = document.getElementById('effect_transition').checked;
   const style = document.getElementById('dynamicEffects') || (() => {
     const s = document.createElement('style'); s.id = 'dynamicEffects'; document.head.appendChild(s); return s;
   })();
   style.textContent = `
-    ${!hover ? '.anime-card:hover { transform: none !important; }' : ''}
+    ${!hover      ? '.anime-card:hover { transform: none !important; }' : ''}
     ${!transition ? '.page { animation: none !important; }' : ''}
   `;
   localStorage.setItem('myanime_effects', JSON.stringify({ hover, transition }));
@@ -1320,7 +1343,7 @@ function resetTheme() {
   document.querySelector('.logo-icon').textContent = '⚔️';
   document.title = 'MyAnime';
   document.getElementById('siteTitle').value = '';
-  document.getElementById('siteIcon').value = '';
+  document.getElementById('siteIcon').value  = '';
   localStorage.removeItem('myanime_theme');
   localStorage.removeItem('myanime_branding');
   showToast('↺ Theme reset to default');
@@ -1335,19 +1358,19 @@ function loadSavedTheme() {
       const theme = JSON.parse(t);
       if (theme.name && THEMES[theme.name]) applyThemePreset(theme.name);
       else {
-        document.documentElement.style.setProperty('--red', theme.red || '#e50914');
-        document.documentElement.style.setProperty('--dark', theme.dark || '#141414');
+        document.documentElement.style.setProperty('--red',     theme.red  || '#e50914');
+        document.documentElement.style.setProperty('--dark',    theme.dark || '#141414');
         document.documentElement.style.setProperty('--card-bg', theme.card || '#181818');
       }
     }
     if (b) {
       const brand = JSON.parse(b);
       if (brand.title) { document.querySelector('.logo-text').textContent = brand.title; document.title = brand.title; }
-      if (brand.icon) document.querySelector('.logo-icon').textContent = brand.icon;
+      if (brand.icon)  document.querySelector('.logo-icon').textContent = brand.icon;
     }
     if (e) {
       const eff = JSON.parse(e);
-      document.getElementById('effect_hover').checked = eff.hover !== false;
+      document.getElementById('effect_hover').checked      = eff.hover !== false;
       document.getElementById('effect_transition').checked = eff.transition !== false;
       applyEffects();
     }
@@ -1358,10 +1381,7 @@ function loadSavedTheme() {
 //   SITE EDITOR
 // ════════════════════════════════════════════
 function getSiteEdits() {
-  try {
-    const s = localStorage.getItem('myanime_siteedits');
-    return s ? JSON.parse(s) : {};
-  } catch(e) { return {}; }
+  try { const s = localStorage.getItem('myanime_siteedits'); return s ? JSON.parse(s) : {}; } catch(e) { return {}; }
 }
 
 function saveSiteEdits(edits) {
@@ -1370,59 +1390,29 @@ function saveSiteEdits(edits) {
 
 function populateSiteEditorFields() {
   const e = getSiteEdits();
-  const f = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
-  f('edit_siteName', e.siteName);
-  f('edit_logoEmoji', e.logoEmoji);
-  f('edit_nav1', e.nav1);
-  f('edit_nav2', e.nav2);
-  f('edit_nav3', e.nav3);
-  f('edit_nav4', e.nav4);
-  f('edit_heroBadge', e.heroBadge);
-  f('edit_heroTagline', e.heroTagline);
-  f('edit_playBtn', e.playBtn);
-  f('edit_infoBtn', e.infoBtn);
-  f('edit_moviesTitle', e.moviesTitle);
-  f('edit_seriesTitle', e.seriesTitle);
-  f('edit_mylistTitle', e.mylistTitle);
-  f('edit_searchTitle', e.searchTitle);
-  f('edit_searchPlaceholder', e.searchPlaceholder);
-  f('edit_bannerText', e.bannerText);
-  f('edit_footerText', e.footerText);
-  f('edit_emptyList', e.emptyList);
-  f('edit_noResults', e.noResults);
-  const bEn = document.getElementById('edit_bannerEnabled');
-  if (bEn) bEn.checked = e.bannerEnabled || false;
-  const bBg = document.getElementById('edit_bannerBg');
-  if (bBg) bBg.value = e.bannerBg || '#e50914';
-  const bCol = document.getElementById('edit_bannerColor');
-  if (bCol) bCol.value = e.bannerColor || '#ffffff';
+  ['siteName','logoEmoji','nav1','nav2','nav3','nav4','heroBadge','heroTagline','playBtn','infoBtn',
+   'moviesTitle','seriesTitle','mylistTitle','searchTitle','searchPlaceholder','bannerText','footerText','emptyList','noResults']
+    .forEach(key => { const el = document.getElementById('edit_' + key); if (el) el.value = e[key] || ''; });
+  const bEn  = document.getElementById('edit_bannerEnabled'); if (bEn)  bEn.checked = e.bannerEnabled || false;
+  const bBg  = document.getElementById('edit_bannerBg');      if (bBg)  bBg.value   = e.bannerBg  || '#e50914';
+  const bCol = document.getElementById('edit_bannerColor');   if (bCol) bCol.value  = e.bannerColor || '#ffffff';
 }
 
 function collectSiteEdits() {
   const g = id => document.getElementById(id)?.value || '';
   return {
-    siteName: g('edit_siteName'),
-    logoEmoji: g('edit_logoEmoji'),
-    nav1: g('edit_nav1'),
-    nav2: g('edit_nav2'),
-    nav3: g('edit_nav3'),
-    nav4: g('edit_nav4'),
-    heroBadge: g('edit_heroBadge'),
-    heroTagline: g('edit_heroTagline'),
-    playBtn: g('edit_playBtn'),
-    infoBtn: g('edit_infoBtn'),
-    moviesTitle: g('edit_moviesTitle'),
-    seriesTitle: g('edit_seriesTitle'),
-    mylistTitle: g('edit_mylistTitle'),
-    searchTitle: g('edit_searchTitle'),
+    siteName: g('edit_siteName'), logoEmoji: g('edit_logoEmoji'),
+    nav1: g('edit_nav1'), nav2: g('edit_nav2'), nav3: g('edit_nav3'), nav4: g('edit_nav4'),
+    heroBadge: g('edit_heroBadge'), heroTagline: g('edit_heroTagline'),
+    playBtn: g('edit_playBtn'), infoBtn: g('edit_infoBtn'),
+    moviesTitle: g('edit_moviesTitle'), seriesTitle: g('edit_seriesTitle'),
+    mylistTitle: g('edit_mylistTitle'), searchTitle: g('edit_searchTitle'),
     searchPlaceholder: g('edit_searchPlaceholder'),
     bannerEnabled: document.getElementById('edit_bannerEnabled')?.checked || false,
     bannerText: g('edit_bannerText'),
-    bannerBg: document.getElementById('edit_bannerBg')?.value || '#e50914',
+    bannerBg:    document.getElementById('edit_bannerBg')?.value    || '#e50914',
     bannerColor: document.getElementById('edit_bannerColor')?.value || '#ffffff',
-    footerText: g('edit_footerText'),
-    emptyList: g('edit_emptyList'),
-    noResults: g('edit_noResults'),
+    footerText: g('edit_footerText'), emptyList: g('edit_emptyList'), noResults: g('edit_noResults'),
   };
 }
 
@@ -1430,113 +1420,40 @@ function applyAllSiteEdits(e) {
   if (!e) e = getSiteEdits();
   if (e.siteName) { document.querySelector('.logo-text').textContent = e.siteName; document.title = e.siteName; }
   if (e.logoEmoji) document.querySelector('.logo-icon').textContent = e.logoEmoji;
-  // Nav labels
   const navLinks = document.querySelectorAll('.nav-link');
-  const navTexts = [e.nav1, e.nav2, e.nav3, e.nav4];
-  navLinks.forEach((lnk, i) => { if (navTexts[i]) lnk.textContent = navTexts[i]; });
-  // Hero badge
+  [e.nav1, e.nav2, e.nav3, e.nav4].forEach((text, i) => { if (text && navLinks[i]) navLinks[i].textContent = text; });
   const badge = document.querySelector('.hero-badge');
   if (badge && e.heroBadge) badge.textContent = e.heroBadge;
-  // Play/Info buttons
-  const playBtns = document.querySelectorAll('.hero-buttons .btn-play');
-  const infoBtns = document.querySelectorAll('.hero-buttons .btn-info');
-  playBtns.forEach(b => { if (e.playBtn) b.textContent = e.playBtn; });
-  infoBtns.forEach(b => { if (e.infoBtn) b.textContent = e.infoBtn; });
-  // Page titles
-  const mTitle = document.querySelector('#moviesPage .browse-title');
-  const sTitle = document.querySelector('#seriesPage .browse-title');
-  const mlTitle = document.querySelector('#mylistPage .browse-title');
-  if (mTitle && e.moviesTitle) mTitle.textContent = e.moviesTitle;
-  if (sTitle && e.seriesTitle) sTitle.textContent = e.seriesTitle;
-  if (mlTitle && e.mylistTitle) mlTitle.textContent = e.mylistTitle;
-  // Search placeholder
+  document.querySelectorAll('.hero-buttons .btn-play').forEach(b => { if (e.playBtn) b.textContent = e.playBtn; });
+  document.querySelectorAll('.hero-buttons .btn-info').forEach(b => { if (e.infoBtn) b.textContent = e.infoBtn; });
+  [['moviesTitle','#moviesPage .browse-title'],['seriesTitle','#seriesPage .browse-title'],['mylistTitle','#mylistPage .browse-title']]
+    .forEach(([key, sel]) => { const el = document.querySelector(sel); if (el && e[key]) el.textContent = e[key]; });
   const sp = document.getElementById('searchInput');
   if (sp && e.searchPlaceholder) sp.placeholder = e.searchPlaceholder;
-  // Banner
   const banner = document.getElementById('announcementBanner');
   if (banner) {
     if (e.bannerEnabled && e.bannerText) {
-      banner.style.display = 'block';
-      banner.textContent = e.bannerText;
-      banner.style.background = e.bannerBg || '#e50914';
-      banner.style.color = e.bannerColor || '#fff';
-    } else {
-      banner.style.display = 'none';
-    }
+      banner.style.display = 'block'; banner.textContent = e.bannerText;
+      banner.style.background = e.bannerBg || '#e50914'; banner.style.color = e.bannerColor || '#fff';
+    } else { banner.style.display = 'none'; }
   }
 }
 
-function liveEditSite() {
-  const e = collectSiteEdits();
-  const sn = e.siteName; const le = e.logoEmoji;
-  if (sn) { document.querySelector('.logo-text').textContent = sn; document.title = sn; }
-  if (le) document.querySelector('.logo-icon').textContent = le;
-}
+function liveEditSite()       { const e = collectSiteEdits(); if (e.siteName) { document.querySelector('.logo-text').textContent = e.siteName; document.title = e.siteName; } if (e.logoEmoji) document.querySelector('.logo-icon').textContent = e.logoEmoji; }
+function liveEditNav()        { const navLinks = document.querySelectorAll('.nav-link'); [1,2,3,4].map(n => document.getElementById('edit_nav'+n)?.value).forEach((v,i) => { if (v && navLinks[i]) navLinks[i].textContent = v; }); }
+function liveEditHero()       { const badge = document.querySelector('.hero-badge'); const val = document.getElementById('edit_heroBadge')?.value; if (badge && val) badge.textContent = val; const pb = document.getElementById('edit_playBtn')?.value; const ib = document.getElementById('edit_infoBtn')?.value; document.querySelectorAll('.hero-buttons .btn-play').forEach(b => { if (pb) b.textContent = pb; }); document.querySelectorAll('.hero-buttons .btn-info').forEach(b => { if (ib) b.textContent = ib; }); }
+function liveEditPageTitles() { [['edit_moviesTitle','#moviesPage .browse-title'],['edit_seriesTitle','#seriesPage .browse-title'],['edit_mylistTitle','#mylistPage .browse-title']].forEach(([inputId, sel]) => { const v = document.getElementById(inputId)?.value; const el = document.querySelector(sel); if (el && v) el.textContent = v; }); }
+function liveEditSearch()     { const v = document.getElementById('edit_searchPlaceholder')?.value; const sp = document.getElementById('searchInput'); if (sp && v) sp.placeholder = v; }
+function liveEditBanner()     { const enabled = document.getElementById('edit_bannerEnabled')?.checked; const text = document.getElementById('edit_bannerText')?.value; const bg = document.getElementById('edit_bannerBg')?.value; const col = document.getElementById('edit_bannerColor')?.value; const banner = document.getElementById('announcementBanner'); if (banner) { if (enabled && text) { banner.style.display = 'block'; banner.textContent = text; banner.style.background = bg; banner.style.color = col; } else { banner.style.display = 'none'; } } }
+function liveEditFooter()      {}
+function liveEditEmptyStates() {}
 
-function liveEditNav() {
-  const navLinks = document.querySelectorAll('.nav-link');
-  const navTexts = [document.getElementById('edit_nav1')?.value, document.getElementById('edit_nav2')?.value, document.getElementById('edit_nav3')?.value, document.getElementById('edit_nav4')?.value];
-  navLinks.forEach((lnk, i) => { if (navTexts[i]) lnk.textContent = navTexts[i]; });
-}
-
-function liveEditHero() {
-  const badge = document.querySelector('.hero-badge');
-  const val = document.getElementById('edit_heroBadge')?.value;
-  if (badge && val) badge.textContent = val;
-  const pb = document.getElementById('edit_playBtn')?.value;
-  const ib = document.getElementById('edit_infoBtn')?.value;
-  document.querySelectorAll('.hero-buttons .btn-play').forEach(b => { if (pb) b.textContent = pb; });
-  document.querySelectorAll('.hero-buttons .btn-info').forEach(b => { if (ib) b.textContent = ib; });
-}
-
-function liveEditPageTitles() {
-  const map = [['edit_moviesTitle','#moviesPage .browse-title'],['edit_seriesTitle','#seriesPage .browse-title'],['edit_mylistTitle','#mylistPage .browse-title']];
-  map.forEach(([inputId, sel]) => {
-    const v = document.getElementById(inputId)?.value;
-    const el = document.querySelector(sel);
-    if (el && v) el.textContent = v;
-  });
-}
-
-function liveEditSearch() {
-  const v = document.getElementById('edit_searchPlaceholder')?.value;
-  const sp = document.getElementById('searchInput');
-  if (sp && v) sp.placeholder = v;
-}
-
-function liveEditBanner() {
-  const enabled = document.getElementById('edit_bannerEnabled')?.checked;
-  const text = document.getElementById('edit_bannerText')?.value;
-  const bg = document.getElementById('edit_bannerBg')?.value;
-  const col = document.getElementById('edit_bannerColor')?.value;
-  const banner = document.getElementById('announcementBanner');
-  if (banner) {
-    if (enabled && text) {
-      banner.style.display = 'block';
-      banner.textContent = text;
-      banner.style.background = bg;
-      banner.style.color = col;
-    } else {
-      banner.style.display = 'none';
-    }
-  }
-}
-
-function liveEditFooter() { /* footer element not in DOM by default; saved for persistence */ }
-function liveEditEmptyStates() { /* applied on next render */ }
-
-function saveAllSiteEdits() {
-  const e = collectSiteEdits();
-  saveSiteEdits(e);
-  applyAllSiteEdits(e);
-  showToast('💾 Site edits saved!');
-}
+function saveAllSiteEdits() { const e = collectSiteEdits(); saveSiteEdits(e); applyAllSiteEdits(e); showToast('💾 Site edits saved!'); }
 
 function resetSiteEdits() {
   if (!confirm('Reset all site text edits to defaults?')) return;
   localStorage.removeItem('myanime_siteedits');
-  applyAllSiteEdits({});
-  populateSiteEditorFields();
+  applyAllSiteEdits({}); populateSiteEditorFields();
   document.querySelector('.logo-text').textContent = 'MyAnime';
   document.querySelector('.logo-icon').textContent = '⚔️';
   document.title = 'MyAnime';
@@ -1559,27 +1476,23 @@ function switchAdminTab(tab) {
   const tabEl = document.getElementById(tab + 'Tab');
   if (tabEl) tabEl.classList.add('active');
   if (tab === 'analytics') refreshAnalytics();
-  if (tab === 'home') { populateHomeEditor(); }
-  if (tab === 'recommend') { populateRecommendations(); }
-  if (tab === 'security') { renderLoginHistory(); loadSecuritySettings(); }
+  if (tab === 'home')      populateHomeEditor();
+  if (tab === 'recommend') populateRecommendations();
+  if (tab === 'security')  { renderLoginHistory(); loadSecuritySettings(); }
 }
 
 // ════════════════════════════════════════════
-//   LIBRARY — Add / Edit / Delete
+//   LIBRARY — FILE UPLOAD
 // ════════════════════════════════════════════
 function handleFileSelect(event, type) {
-  const file = event.target.files[0];
-  if (!file) return;
-  handleFile(file, type);
+  const file = event.target.files[0]; if (file) handleFile(file, type);
 }
 
 function handleDrop(event, type) {
   event.preventDefault();
   const zone = type === 'video' ? document.getElementById('dropZone') : document.getElementById('thumbZone');
   zone.classList.remove('drag-over');
-  const file = event.dataTransfer.files[0];
-  if (!file) return;
-  handleFile(file, type);
+  const file = event.dataTransfer.files[0]; if (file) handleFile(file, type);
 }
 
 function handleFile(file, type) {
@@ -1589,7 +1502,7 @@ function handleFile(file, type) {
     const reader = new FileReader();
     reader.onload = e => {
       const preview = document.getElementById('thumbPreview');
-      const icon = document.getElementById('thumbPreviewIcon');
+      const icon    = document.getElementById('thumbPreviewIcon');
       preview.src = e.target.result; preview.style.display = 'block'; icon.style.display = 'none';
       uploadedThumbBlob = e.target.result;
     };
@@ -1599,15 +1512,14 @@ function handleFile(file, type) {
 
 function simulateUpload(file) {
   const progress = document.getElementById('videoProgress');
-  const fill = document.getElementById('videoFill');
-  const percent = document.getElementById('videoPercent');
+  const fill     = document.getElementById('videoFill');
+  const percent  = document.getElementById('videoPercent');
   progress.style.display = 'block';
   const reader = new FileReader();
   let pct = 0;
   const interval = setInterval(() => {
     pct = Math.min(pct + Math.random() * 12, 95);
-    fill.style.width = pct + '%';
-    percent.textContent = Math.round(pct) + '%';
+    fill.style.width = pct + '%'; percent.textContent = Math.round(pct) + '%';
   }, 150);
   reader.onload = e => {
     clearInterval(interval);
@@ -1618,37 +1530,11 @@ function simulateUpload(file) {
   reader.readAsDataURL(file);
 }
 
-function addAnime() {
-  const title = document.getElementById('animeTitle').value.trim();
-  if (!title) { showToast('⚠️ Please enter a title!'); return; }
-  const type = document.getElementById('animeType').value;
-  const genre = document.getElementById('animeGenre').value;
-  const year = document.getElementById('animeYear').value || new Date().getFullYear().toString();
-  const rating = document.getElementById('animeRating').value || 'TV-14';
-  const desc = document.getElementById('animeDesc').value.trim();
-  const cloudUrl = document.getElementById('cloudUrl').value.trim();
-  const emoji = { action:'⚔️', adventure:'🗺️', romance:'💖', fantasy:'✨', thriller:'🔪' }[genre] || '🎬';
-  const anime = {
-    id: 'u' + Date.now(), title, type, genre, year, rating, desc, emoji,
-    thumb: uploadedThumbBlob || '',
-    videoUrl: cloudUrl || (uploadedVideoBlob || ''),
-    trending: false, topRated: false
-  };
-  animeLibrary.unshift(anime);
-  saveToStorage();
-  renderAll();
-  // Reset
-  ['animeTitle','animeDesc','cloudUrl','animeRating'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  document.getElementById('videoProgress').style.display = 'none';
-  document.getElementById('videoFill').style.width = '0%';
-  document.getElementById('thumbPreview').style.display = 'none';
-  document.getElementById('thumbPreviewIcon').style.display = 'block';
-  uploadedVideoBlob = null; uploadedThumbBlob = null;
-  showToast(`✅ "${title}" added to library!`);
-}
-
+// ════════════════════════════════════════════
+//   LIBRARY — Edit / Delete
+// ════════════════════════════════════════════
 function renderLibraryTab() {
-  const grid = document.getElementById('libraryGrid');
+  const grid  = document.getElementById('libraryGrid');
   const count = document.getElementById('libraryCount');
   if (!grid) return;
   count.textContent = animeLibrary.length;
@@ -1656,7 +1542,7 @@ function renderLibraryTab() {
   animeLibrary.forEach(anime => {
     const item = document.createElement('div');
     item.className = 'library-item';
-    let thumbHtml = anime.thumb && anime.thumb.startsWith('data:')
+    const thumbHtml = hasValidThumb(anime)
       ? `<img class="library-thumb" src="${anime.thumb}" alt="${anime.title}"/>`
       : `<div class="library-thumb-placeholder">${anime.emoji||'🎬'}</div>`;
     item.innerHTML = `
@@ -1677,25 +1563,21 @@ function renderLibraryTab() {
   });
 }
 
-// ── Edit Anime Modal ──────────────────────
 function openEditModal(id) {
   const anime = animeLibrary.find(a => a.id === id);
   if (!anime) return;
   editThumbBlob = null;
-  document.getElementById('editAnimeId').value = id;
-  document.getElementById('editTitle').value = anime.title || '';
-  document.getElementById('editDesc').value = anime.desc || '';
-  document.getElementById('editType').value = anime.type || 'series';
-  document.getElementById('editYear').value = anime.year || '';
-  document.getElementById('editGenre').value = anime.genre || 'action';
-  document.getElementById('editRating').value = anime.rating || '';
-  document.getElementById('editVideoUrl').value = anime.videoUrl || '';
+  document.getElementById('editAnimeId').value   = id;
+  document.getElementById('editTitle').value     = anime.title    || '';
+  document.getElementById('editDesc').value      = anime.desc     || '';
+  document.getElementById('editType').value      = anime.type     || 'series';
+  document.getElementById('editYear').value      = anime.year     || '';
+  document.getElementById('editGenre').value     = anime.genre    || 'action';
+  document.getElementById('editRating').value    = anime.rating   || '';
+  document.getElementById('editVideoUrl').value  = anime.videoUrl || '';
   const prev = document.getElementById('editThumbPreview');
-  if (anime.thumb && anime.thumb.startsWith('data:')) {
-    prev.src = anime.thumb; prev.style.display = 'block';
-  } else {
-    prev.style.display = 'none';
-  }
+  if (hasValidThumb(anime)) { prev.src = anime.thumb; prev.style.display = 'block'; }
+  else { prev.style.display = 'none'; }
   document.getElementById('editAnimeModal').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -1706,8 +1588,7 @@ function closeEditModal() {
 }
 
 function previewEditThumb(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+  const file = event.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
     editThumbBlob = e.target.result;
@@ -1718,41 +1599,35 @@ function previewEditThumb(event) {
 }
 
 function saveAnimeEdit() {
-  const id = document.getElementById('editAnimeId').value;
+  const id    = document.getElementById('editAnimeId').value;
   const anime = animeLibrary.find(a => a.id === id);
   if (!anime) return;
-  anime.title = document.getElementById('editTitle').value.trim() || anime.title;
-  anime.desc = document.getElementById('editDesc').value.trim();
-  anime.type = document.getElementById('editType').value;
-  anime.year = document.getElementById('editYear').value;
-  anime.genre = document.getElementById('editGenre').value;
-  anime.rating = document.getElementById('editRating').value;
+  anime.title    = document.getElementById('editTitle').value.trim()    || anime.title;
+  anime.desc     = document.getElementById('editDesc').value.trim();
+  anime.type     = document.getElementById('editType').value;
+  anime.year     = document.getElementById('editYear').value;
+  anime.genre    = document.getElementById('editGenre').value;
+  anime.rating   = document.getElementById('editRating').value;
   anime.videoUrl = document.getElementById('editVideoUrl').value.trim();
   if (editThumbBlob) anime.thumb = editThumbBlob;
   anime.emoji = { action:'⚔️', adventure:'🗺️', romance:'💖', fantasy:'✨', thriller:'🔪' }[anime.genre] || '🎬';
-  saveToStorage();
-  renderAll();
-  closeEditModal();
+  saveToStorage(); renderAll(); closeEditModal();
   showToast(`✅ "${anime.title}" updated!`);
 }
 
 function deleteAnime(id) {
   const anime = animeLibrary.find(a => a.id === id);
-  if (!anime) return;
-  if (!confirm(`Delete "${anime.title}"?`)) return;
+  if (!anime || !confirm(`Delete "${anime.title}"?`)) return;
   animeLibrary = animeLibrary.filter(a => a.id !== id);
-  myList = myList.filter(m => m.id !== id);
-  saveToStorage();
-  renderAll();
+  myList       = myList.filter(m => m.id !== id);
+  saveToStorage(); renderAll();
   showToast(`🗑️ "${anime.title}" deleted.`);
 }
 
 function clearLibrary() {
   if (!confirm('Clear entire library? Demo data will reload on refresh.')) return;
-  animeLibrary = [...DEMO_ANIME];
-  myList = [];
-  saveToStorage();
-  renderAll();
+  animeLibrary = [...DEMO_ANIME]; myList = [];
+  saveToStorage(); renderAll();
   showToast('Library reset to demo data.');
 }
 
@@ -1761,55 +1636,22 @@ function clearLibrary() {
 // ════════════════════════════════════════════
 function showCloudGuide(provider) {
   const guides = {
-    gdrive: { title:'📁 Google Drive Setup', steps:[
-      {title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},
-      {title:'Make it public',desc:'Right-click → Share → Change to "Anyone with the link → Viewer".'},
-      {title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},
-      {title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}
-    ]},
-    s3: { title:'🪣 Amazon S3 Setup', steps:[
-      {title:'Create an S3 bucket',desc:'Go to AWS Console → S3 → Create Bucket. Uncheck "Block all public access".'},
-      {title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},
-      {title:'Get the URL',desc:'Click the file → Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}
-    ]},
-    cloudinary: { title:'☁️ Cloudinary Setup', steps:[
-      {title:'Create free account',desc:'Sign up at cloudinary.com — free tier supports up to 25GB.'},
-      {title:'Upload video',desc:'Go to Media Library → Upload your video file.'},
-      {title:'Get the URL',desc:'Click your video → Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}
-    ]},
-    backblaze: { title:'🔥 Backblaze B2 Setup', steps:[
-      {title:'Create account',desc:'Sign up at backblaze.com/b2 — free 10GB storage.'},
-      {title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},
-      {title:'Upload & get URL',desc:'Upload video → click file → "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}
-    ]},
-    wasabi: { title:'🌿 Wasabi Setup', steps:[
-      {title:'Create account',desc:'Sign up at wasabi.com — $6.99/TB storage, no egress fees.'},
-      {title:'Create bucket',desc:'Create a new bucket with public read policy.'},
-      {title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}
-    ]},
-    jiocloud: { title:'🇮🇳 Jio Cloud Setup', steps:[
-      {title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},
-      {title:'Upload your video',desc:'Tap the + button → Upload → select your video file (MP4 recommended). Wait for the upload to complete.'},
-      {title:'Share the file',desc:'Long-press the video file → tap <strong>Share</strong> → select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},
-      {title:'Get the direct link',desc:'Copy the shared link. It will look like:', code:'https://www.jiocloud.com/s/xxxxxxxxxx'},
-      {title:'Paste into MyAnime',desc:'Go to Admin → Upload tab → paste the link in the <strong>Cloud Video URL</strong> field. Note: JioCloud share links may not stream directly in all browsers — if it does not play, use the JioCloud URL Converter below or try re-sharing as a public link.'},
-      {title:'Tip — Better streaming',desc:'For the smoothest playback, download your video from JioCloud and re-upload it to <strong>Cloudinary (free 25GB)</strong> or <strong>Google Drive</strong> which offer proper video streaming support.'}
-    ]}
+    gdrive:     { title:'📁 Google Drive Setup',  steps:[{title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},{title:'Make it public',desc:'Right-click → Share → Change to "Anyone with the link → Viewer".'},{title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},{title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}]},
+    s3:         { title:'🪣 Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console → S3 → Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file → Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
+    cloudinary: { title:'☁️ Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com — free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library → Upload your video file.'},{title:'Get the URL',desc:'Click your video → Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
+    backblaze:  { title:'🔥 Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 — free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video → click file → "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
+    wasabi:     { title:'🌿 Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com — $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
+    jiocloud:   { title:'🇮🇳 Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button → Upload → select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file → tap <strong>Share</strong> → select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin → Upload tab → paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip — Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
   };
-  const guide = guides[provider];
-  if (!guide) return;
+  const guide = guides[provider]; if (!guide) return;
   document.getElementById('guideTitle').textContent = guide.title;
-  let html = '';
-  guide.steps.forEach((s, i) => {
-    html += `<div class="step"><strong>${i+1}. ${s.title}</strong><p>${s.desc}</p>${s.code ? `<code>${s.code}</code>` : ''}</div>`;
-  });
-  document.getElementById('guideContent').innerHTML = html;
+  document.getElementById('guideContent').innerHTML = guide.steps.map((s, i) =>
+    `<div class="step"><strong>${i+1}. ${s.title}</strong><p>${s.desc}</p>${s.code ? `<code>${s.code}</code>` : ''}</div>`
+  ).join('');
   document.getElementById('cloudGuideModal').classList.add('active');
 }
 
-function closeCloudGuide() {
-  document.getElementById('cloudGuideModal').classList.remove('active');
-}
+function closeCloudGuide() { document.getElementById('cloudGuideModal').classList.remove('active'); }
 
 function testVideoUrl() {
   const url = document.getElementById('testUrl').value.trim();
@@ -1817,15 +1659,15 @@ function testVideoUrl() {
   const player = document.getElementById('testPlayer');
   player.src = url; player.style.display = 'block'; player.load();
   player.oncanplay = () => showToast('✅ Video URL works!');
-  player.onerror = () => showToast('❌ Cannot load video. Check URL & CORS settings.');
+  player.onerror   = () => showToast('❌ Cannot load video. Check URL & CORS settings.');
 }
 
 function convertGDriveUrl() {
-  const url = document.getElementById('gdriveInput').value.trim();
+  const url   = document.getElementById('gdriveInput').value.trim();
   const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
   const result = document.getElementById('gdriveResult');
   if (!match) { showToast('⚠️ Invalid Google Drive URL format.'); return; }
-  const fileId = match[1];
+  const fileId    = match[1];
   const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
   result.style.display = 'block';
   result.innerHTML = `
@@ -1833,6 +1675,65 @@ function convertGDriveUrl() {
     <code>${directUrl}</code>
     <p style="margin-top:0.5rem;color:#e57373;font-size:0.78rem">⚠️ Note: Google Drive may block large video streaming due to CORS. Cloudinary or S3 work better.</p>
     <button class="copy-url-btn" onclick="navigator.clipboard.writeText('${directUrl}');showToast('Copied!')">📋 Copy URL</button>`;
+}
+
+// ════════════════════════════════════════════
+//   USER AUTH
+// ════════════════════════════════════════════
+function openUserAuth()  { document.getElementById('userAuthModal').classList.add('active');    document.body.style.overflow = 'hidden'; }
+function closeUserAuth() { document.getElementById('userAuthModal').classList.remove('active'); document.body.style.overflow = ''; }
+
+function switchAuthTab(tab) {
+  document.getElementById('loginForm').style.display  = tab === 'login'  ? 'block' : 'none';
+  document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('tabLoginBtn').className    = tab === 'login'  ? 'btn-play' : 'btn-info';
+  document.getElementById('tabSignupBtn').className   = tab === 'signup' ? 'btn-play' : 'btn-info';
+}
+
+async function handleLogin() {
+  const email    = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errEl    = document.getElementById('loginError');
+  errEl.style.display = 'none';
+  if (!email || !password) { errEl.textContent = 'Please fill all fields.'; errEl.style.display = 'block'; return; }
+  try {
+    const res  = await fetch(`${API}/auth/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email, password }) });
+    const data = await res.json();
+    if (data.success) {
+      setToken(data.accessToken); setUser(data.user);
+      closeUserAuth(); updateNavForAuth();
+      showToast(`✅ Welcome back, ${data.user.username}!`);
+    } else { errEl.textContent = data.message; errEl.style.display = 'block'; }
+  } catch(e) { errEl.textContent = 'Connection error. Is server running?'; errEl.style.display = 'block'; }
+}
+
+async function handleSignup() {
+  const username = document.getElementById('signupUsername').value.trim();
+  const email    = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const errEl    = document.getElementById('signupError');
+  errEl.style.display = 'none';
+  if (!username || !email || !password) { errEl.textContent = 'Please fill all fields.'; errEl.style.display = 'block'; return; }
+  try {
+    const res  = await fetch(`${API}/auth/signup`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username, email, password }) });
+    const data = await res.json();
+    if (data.success) { closeUserAuth(); showToast('✅ Account created! Check your email to verify.'); }
+    else { errEl.textContent = data.message; errEl.style.display = 'block'; }
+  } catch(e) { errEl.textContent = 'Connection error. Is server running?'; errEl.style.display = 'block'; }
+}
+
+function updateNavForAuth() {
+  const user     = getUser();
+  const loginBtn = document.getElementById('loginBtn');
+  const avatar   = document.getElementById('userAvatar');
+  if (user) {
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (avatar) { avatar.style.display = 'flex'; avatar.textContent = user.username[0].toUpperCase(); }
+    if (user.role === 'admin') document.getElementById('adminBtn').style.display = 'flex';
+  } else {
+    if (loginBtn) loginBtn.style.display = 'block';
+    if (avatar)   avatar.style.display = 'none';
+  }
 }
 
 // ════════════════════════════════════════════
@@ -1850,112 +1751,4 @@ function showToast(msg) {
 // ════════════════════════════════════════════
 //   START
 // ════════════════════════════════════════════
-// ── USER AUTH UI ──────────────────────────────
-function openUserAuth() {
-  document.getElementById('userAuthModal').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeUserAuth() {
-  document.getElementById('userAuthModal').classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-function switchAuthTab(tab) {
-  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
-  document.getElementById('tabLoginBtn').className = tab === 'login' ? 'btn-play' : 'btn-info';
-  document.getElementById('tabSignupBtn').className = tab === 'signup' ? 'btn-play' : 'btn-info';
-}
-
-async function handleLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const errEl = document.getElementById('loginError');
-  errEl.style.display = 'none';
-  if (!email || !password) { errEl.textContent = 'Please fill all fields.'; errEl.style.display = 'block'; return; }
-  try {
-    const data = await apiLogin(email, password);
-    if (data.success) {
-      setToken(data.accessToken);
-      setUser(data.user);
-      closeUserAuth();
-      updateNavForAuth();
-      showToast(`✅ Welcome back, ${data.user.username}!`);
-    } else {
-      errEl.textContent = data.message;
-      errEl.style.display = 'block';
-    }
-  } catch(e) {
-    errEl.textContent = 'Connection error. Is server running?';
-    errEl.style.display = 'block';
-  }
-}
-
-async function handleSignup() {
-  const username = document.getElementById('signupUsername').value.trim();
-  const email = document.getElementById('signupEmail').value.trim();
-  const password = document.getElementById('signupPassword').value;
-  const errEl = document.getElementById('signupError');
-  errEl.style.display = 'none';
-  if (!username || !email || !password) { errEl.textContent = 'Please fill all fields.'; errEl.style.display = 'block'; return; }
-  try {
-    const data = await apiSignup(username, email, password);
-    if (data.success) {
-      closeUserAuth();
-      showToast('✅ Account created! Check your email to verify.');
-    } else {
-      errEl.textContent = data.message;
-      errEl.style.display = 'block';
-    }
-  } catch(e) {
-    errEl.textContent = 'Connection error. Is server running?';
-    errEl.style.display = 'block';
-  }
-}
-
-function updateNavForAuth() {
-  const user = getUser();
-  const loginBtn = document.getElementById('loginBtn');
-  const avatar = document.getElementById('userAvatar');
-  if (user) {
-    if (loginBtn) loginBtn.style.display = 'none';
-    if (avatar) { avatar.style.display = 'flex'; avatar.textContent = user.username[0].toUpperCase(); }
-    if (user.role === 'admin') document.getElementById('adminBtn').style.display = 'flex';
-  } else {
-    if (loginBtn) loginBtn.style.display = 'block';
-    if (avatar) avatar.style.display = 'none';
-  }
-}
-
-
 document.addEventListener('DOMContentLoaded', init);
-// ════════════════════════════════════════════
-//   FETCH ANIME FROM BACKEND
-// ════════════════════════════════════════════
-async function fetchAnimeFromBackend() {
-  try {
-    const res = await fetch(`${API}/anime`);
-    const data = await res.json();
-    if (data.success && data.anime.length > 0) {
-      // Map backend data to frontend format
-      animeLibrary = data.anime.map(a => ({
-        id: a._id,
-        title: a.title,
-        desc: a.description,
-        type: a.type,
-        genre: Array.isArray(a.genre) ? a.genre[0] : a.genre,
-        year: a.year,
-        rating: a.rating,
-        thumb: a.thumbnailUrl,
-        videoUrl: a.videoUrl,
-        emoji: '🎬',
-        trending: a.isTrending,
-        topRated: a.isTopRated
-      }));
-      renderAll();
-    }
-  } catch (err) {
-    console.log('Using local data:', err.message);
-  }
-}
