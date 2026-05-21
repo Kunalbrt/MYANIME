@@ -528,3 +528,22 @@ select.admin-input { cursor: pointer; }
 
 
 
+
+/* -- Movies Home Grid -- */
+.movies-home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  padding: 10px 4% 20px;
+}
+.movies-home-grid .anime-card {
+  width: 100%;
+  min-width: unset;
+}
+@media (max-width: 600px) {
+  .movies-home-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    padding: 8px 3% 16px;
+  }
+}
