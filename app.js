@@ -201,8 +201,7 @@ async function fetchAnimeFromBackend() {
       }));
       saveToStorage();
       renderAll();
-      if (!featuredHeroId && animeLibrary.length > 0) { const withThumb = animeLibrary.find(a => a.thumb && a.thumb.length > 10); featuredHeroId = withThumb ? withThumb.id : animeLibrary[0].id; }
-      renderHero();
+      if (animeLibrary.length > 0) { const heroExists = featuredHeroId && animeLibrary.find(a => a.id === featuredHeroId); if (!heroExists) { const withThumb = animeLibrary.find(a => a.thumb && a.thumb.length > 10); featuredHeroId = withThumb ? withThumb.id : animeLibrary[0].id; localStorage.setItem('myanime_hero', featuredHeroId); } renderHero(); }
     }
   } catch (err) {
     console.log('Backend fetch failed, using local data:', err.message);
