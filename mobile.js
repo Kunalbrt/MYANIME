@@ -42,10 +42,10 @@
       </style>
       <a class="mob-nav-link" onclick="showPage('home');closeMobileNav()">🏠 Home</a>
       <a class="mob-nav-link" onclick="showPage('search');closeMobileNav()">🔍 Search</a>
-      <a class="mob-nav-link" onclick="showPage('mylist');closeMobileNav()">ðŸ“‹ My List</a>
+      <a class="mob-nav-link" onclick="showPage('mylist');closeMobileNav()">My List</a>
       <a class="mob-nav-link" onclick="showPage('genres');closeMobileNav()">🎭 Genres</a>
       <hr style="border-color:#333;margin:0.2rem 0">
-      <a class="mob-nav-link" onclick="openAdminLogin();closeMobileNav()">âš™ï¸ Admin</a>
+      <a class="mob-nav-link" onclick="openAdminLogin();closeMobileNav()">Admin</a>
     `;
 
     // Style nav links inside drawer
@@ -487,6 +487,7 @@
   }
 
 })();
+
 
 
 
