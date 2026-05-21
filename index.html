@@ -151,23 +151,23 @@
     </div>
 
     <div class="admin-tabs" id="adminTabsBar">
-      <button class="admin-tab active" onclick="switchAdminTab('upload')">ðŸ“¤ Upload</button>
-      <button class="admin-tab" onclick="switchAdminTab('library')">ðŸ“š Library</button>
-      <button class="admin-tab" onclick="switchAdminTab('analytics')">📊 Analytics</button>
-      <button class="admin-tab" onclick="switchAdminTab('siteeditor')">🖊️ Site Editor</button>
-      <button class="admin-tab" onclick="switchAdminTab('home')">🏠 Home Editor</button>
-      <button class="admin-tab" onclick="switchAdminTab('recommend')">⭐ Recommendations</button>
-      <button class="admin-tab" onclick="switchAdminTab('theme')">🎨 Theme</button>
-      <button class="admin-tab" onclick="switchAdminTab('cloud')">☁️ Cloud</button>
-      <button class="admin-tab" onclick="switchAdminTab('security')">ðŸ”’ Security</button>
-      <button class="admin-tab" onclick="switchAdminTab('episodes'); loadEpAnimeList()">🎬 Episodes</button>
+      <button class="admin-tab active" onclick="switchAdminTab('upload')">Upload</button>
+      <button class="admin-tab" onclick="switchAdminTab('library')">Library</button>
+      <button class="admin-tab" onclick="switchAdminTab('analytics')">Analytics</button>
+      <button class="admin-tab" onclick="switchAdminTab('siteeditor')">Site Editor</button>
+      <button class="admin-tab" onclick="switchAdminTab('home')">Home Editor</button>
+      <button class="admin-tab" onclick="switchAdminTab('recommend')">Recommendations</button>
+      <button class="admin-tab" onclick="switchAdminTab('theme')">Theme</button>
+      <button class="admin-tab" onclick="switchAdminTab('cloud')">Cloud</button>
+      <button class="admin-tab" onclick="switchAdminTab('security')">Security</button>
+      <button class="admin-tab" onclick="switchAdminTab('episodes'); loadEpAnimeList()">Episodes</button>
     </div>
 
     <!-- â”€â”€ UPLOAD TAB â”€â”€ -->
     <div class="admin-tab-content active" id="uploadTab">
       <div class="upload-grid">
         <div class="upload-card">
-          <h3>ðŸ“¹ Upload Video</h3>
+          <h3>Upload Video</h3>
           <div class="drop-zone" id="dropZone" ondrop="handleDrop(event,'video')" ondragover="event.preventDefault()" ondragenter="this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')">
             <div class="drop-icon">🎬</div>
             <p>Drag & Drop video file here</p>
@@ -182,7 +182,7 @@
         </div>
 
         <div class="upload-card">
-          <h3>🖼️ Upload Thumbnail</h3>
+          <h3>Upload Thumbnail</h3>
           <div class="drop-zone" id="thumbZone" ondrop="handleDrop(event,'thumb')" ondragover="event.preventDefault()" ondragenter="this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')">
             <div class="drop-icon" id="thumbPreviewIcon">🖼️</div>
             <img id="thumbPreview" style="display:none;width:100%;border-radius:8px;max-height:160px;object-fit:cover"/>
@@ -233,7 +233,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label>☁️ Cloud Video URL (optional)</label>
+            <label>Cloud Video URL (optional)</label>
             <input type="url" id="cloudUrl" placeholder="https://storage.googleapis.com/..." class="admin-input"/>
             <p class="field-hint">Paste a direct video URL from Google Drive, Cloudinary, S3, etc.</p>
           </div>
@@ -547,7 +547,7 @@
     <!-- â”€â”€ RECOMMENDATIONS TAB â”€â”€ -->
     <div class="admin-tab-content" id="recommendTab">
       <div class="home-editor">
-        <h3>⭐ Recommendations Manager</h3>
+        <h3>Recommendations Manager</h3>
         <p class="cloud-desc">Control which anime appear in Trending and Top Rated sections.</p>
         <div class="editor-section">
           <h4>🔥 Trending Now</h4>
@@ -564,7 +564,7 @@
     <!-- â”€â”€ THEME TAB â”€â”€ -->
     <div class="admin-tab-content" id="themeTab">
       <div class="home-editor">
-        <h3>🎨 Theme & Appearance</h3>
+        <h3>Theme & Appearance</h3>
         <p class="cloud-desc">Customize the look and feel of your MyAnime website.</p>
 
         <div class="editor-section">
@@ -611,7 +611,7 @@
     <!-- â”€â”€ CLOUD TAB â”€â”€ -->
     <div class="admin-tab-content" id="cloudTab">
       <div class="cloud-config">
-        <h3>☁️ Cloud Storage Configuration</h3>
+        <h3>Cloud Storage Configuration</h3>
         <p class="cloud-desc">Configure your cloud storage to host anime videos.</p>
         <div class="cloud-guide">
           <div class="guide-step"><div class="step-num">1</div><div><strong>Upload your video to cloud storage</strong><p>Use Google Drive, Amazon S3, Cloudinary, or any cloud provider.</p></div></div>
@@ -641,7 +641,7 @@
     <!-- â”€â”€ SECURITY TAB â”€â”€ -->
     <div class="admin-tab-content" id="securityTab">
       <div class="home-editor">
-        <h3>ðŸ”’ Security Settings</h3>
+        <h3>Security Settings</h3>
         <p class="cloud-desc">Manage admin password and two-step authentication. Your 2FA codes are sent to <strong style="color:white">bhartikunal172@gmail.com</strong>.</p>
 
         <!-- Change Password -->
@@ -958,7 +958,7 @@
             <span class="ep-badge">${(s.episodes||[]).length} episodes</span>
           </div>
           <div class="ep-item-actions">
-            <button class="ep-btn ep-btn-view" onclick="openSeason(${s.seasonNumber},'Season ${s.seasonNumber}')">🎬 Episodes</button>
+            <button class="ep-btn ep-btn-view" onclick="openSeason(${s.seasonNumber},'Season ${s.seasonNumber}')">Episodes</button>
             <button class="ep-btn ep-btn-del" onclick="deleteSeason(${s.seasonNumber})">??</button>
           </div>`;
         list.appendChild(d);
@@ -1152,7 +1152,7 @@
 
         <div class="ep-section" id="episodeSection" style="display:none">
           <div class="ep-section-header">
-            <h3>🎞 Episodes â€” <span id="currentSeasonLabel" style="color:var(--red)"></span></h3>
+            <h3>Episodes â€” <span id="currentSeasonLabel" style="color:var(--red)"></span></h3>
           </div>
           <div id="episodesList" class="ep-list"></div>
           <div class="ep-add-form ep-add-form--episodes">
