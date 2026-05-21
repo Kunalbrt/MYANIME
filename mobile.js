@@ -455,7 +455,7 @@
     const bar = document.createElement('div');
     bar.id = 'mobileSearchBar';
     bar.innerHTML = `
-      <span>??</span>
+      <span></span>
       <input type="text" placeholder="Search anime..." 
         
         oninput="mobilSearch(event)" onkeyup="mobilSearch(event)" />
@@ -524,9 +524,11 @@
       }
     });
     function updateBackButton() {
-      btn.style.display = (history[history.length-1] !== 'home') ? 'flex' : 'none';
+      const activePage = document.querySelector('.page.active')?.id; btn.style.display = (activePage && activePage !== 'homePage') ? 'flex' : 'none';
     }
   }
   init();
 }
 })();
+
+
