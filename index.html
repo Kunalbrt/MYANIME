@@ -140,9 +140,9 @@
   </div>
 </div>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+<!-- ═══════════════════════════════════════════
      ADMIN PAGE â€” FULL FEATURED
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+═══════════════════════════════════════════ -->
 <div id="adminPage" class="page">
   <div class="admin-container">
     <div class="admin-header">
@@ -154,11 +154,11 @@
       <button class="admin-tab active" onclick="switchAdminTab('upload')">ðŸ“¤ Upload</button>
       <button class="admin-tab" onclick="switchAdminTab('library')">ðŸ“š Library</button>
       <button class="admin-tab" onclick="switchAdminTab('analytics')">📊 Analytics</button>
-      <button class="admin-tab" onclick="switchAdminTab('siteeditor')">ðŸ–Š️ Site Editor</button>
-      <button class="admin-tab" onclick="switchAdminTab('home')">ðŸ  Home Editor</button>
+      <button class="admin-tab" onclick="switchAdminTab('siteeditor')">🖊️ Site Editor</button>
+      <button class="admin-tab" onclick="switchAdminTab('home')">🏠 Home Editor</button>
       <button class="admin-tab" onclick="switchAdminTab('recommend')">⭐ Recommendations</button>
-      <button class="admin-tab" onclick="switchAdminTab('theme')">ðŸŽ¨ Theme</button>
-      <button class="admin-tab" onclick="switchAdminTab('cloud')">â˜️ Cloud</button>
+      <button class="admin-tab" onclick="switchAdminTab('theme')">🎨 Theme</button>
+      <button class="admin-tab" onclick="switchAdminTab('cloud')">☁️ Cloud</button>
       <button class="admin-tab" onclick="switchAdminTab('security')">ðŸ”’ Security</button>
       <button class="admin-tab" onclick="switchAdminTab('episodes'); loadEpAnimeList()">🎬 Episodes</button>
     </div>
@@ -182,9 +182,9 @@
         </div>
 
         <div class="upload-card">
-          <h3>ðŸ–¼️ Upload Thumbnail</h3>
+          <h3>🖼️ Upload Thumbnail</h3>
           <div class="drop-zone" id="thumbZone" ondrop="handleDrop(event,'thumb')" ondragover="event.preventDefault()" ondragenter="this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')">
-            <div class="drop-icon" id="thumbPreviewIcon">ðŸ–¼️</div>
+            <div class="drop-icon" id="thumbPreviewIcon">🖼️</div>
             <img id="thumbPreview" style="display:none;width:100%;border-radius:8px;max-height:160px;object-fit:cover"/>
             <p>Drag & Drop thumbnail</p>
             <p class="drop-sub">Supports JPG, PNG, WebP</p>
@@ -233,22 +233,22 @@
             </div>
           </div>
           <div class="form-group">
-            <label>â˜️ Cloud Video URL (optional)</label>
+            <label>☁️ Cloud Video URL (optional)</label>
             <input type="url" id="cloudUrl" placeholder="https://storage.googleapis.com/..." class="admin-input"/>
             <p class="field-hint">Paste a direct video URL from Google Drive, Cloudinary, S3, etc.</p>
           </div>
-          <button class="btn-add-anime" onclick="addAnime()">âž• Add to Library</button>
+          <button class="btn-add-anime" onclick="addAnime()">➕ Add to Library</button>
         </div>
       </div>
 
       <div class="cloud-providers">
-        <h3>â˜️ Supported Cloud Storage Providers</h3>
+        <h3>☁️ Supported Cloud Storage Providers</h3>
         <div class="provider-grid">
           <div class="provider-card" onclick="showCloudGuide('gdrive')"><div class="provider-icon">ðŸ“</div><span>Google Drive</span><span class="provider-status connected">Guide</span></div>
-          <div class="provider-card" onclick="showCloudGuide('s3')"><div class="provider-icon">ðŸª£</div><span>Amazon S3</span><span class="provider-status connected">Guide</span></div>
-          <div class="provider-card" onclick="showCloudGuide('cloudinary')"><div class="provider-icon">â˜️</div><span>Cloudinary</span><span class="provider-status connected">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('s3')"><div class="provider-icon">🪣</div><span>Amazon S3</span><span class="provider-status connected">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('cloudinary')"><div class="provider-icon">☁️</div><span>Cloudinary</span><span class="provider-status connected">Guide</span></div>
           <div class="provider-card" onclick="showCloudGuide('backblaze')"><div class="provider-icon">🔥</div><span>Backblaze B2</span><span class="provider-status">Guide</span></div>
-          <div class="provider-card" onclick="showCloudGuide('wasabi')"><div class="provider-icon">ðŸŒ¿</div><span>Wasabi</span><span class="provider-status">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('wasabi')"><div class="provider-icon">🌿</div><span>Wasabi</span><span class="provider-status">Guide</span></div>
           <div class="provider-card" onclick="showCloudGuide('jiocloud')"><div class="provider-icon">ðŸ‡®ðŸ‡³</div><span>Jio Cloud</span><span class="provider-status connected">Guide</span></div>
         </div>
       </div>
@@ -331,7 +331,7 @@
             <div id="deviceList" class="top-list"></div>
           </div>
           <div class="analytics-section">
-            <h4>ðŸŒ Browser Info</h4>
+            <h4>🌐 Browser Info</h4>
             <div id="browserList" class="top-list"></div>
           </div>
         </div>
@@ -346,12 +346,12 @@
     <!-- â”€â”€ SITE EDITOR TAB â”€â”€ -->
     <div class="admin-tab-content" id="siteeditorTab">
       <div class="home-editor">
-        <h3>ðŸ–Š️ Full Website Editor</h3>
+        <h3>🖊️ Full Website Editor</h3>
         <p class="cloud-desc">Edit every visible part of your website â€” navbar, hero, footer text, page titles, and more.</p>
 
         <!-- Navbar Editor -->
         <div class="editor-section">
-          <h4>ðŸ§­ Navbar / Header</h4>
+          <h4>🧭 Navbar / Header</h4>
           <div class="form-row">
             <div class="form-group">
               <label>Site Name (Logo Text)</label>
@@ -454,7 +454,7 @@
           </div>
           <div class="form-group">
             <label>Banner Message</label>
-            <input type="text" id="edit_bannerText" class="admin-input" placeholder="ðŸŽ‰ New anime added every week!" oninput="liveEditBanner()"/>
+            <input type="text" id="edit_bannerText" class="admin-input" placeholder="🎉 New anime added every week!" oninput="liveEditBanner()"/>
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -492,7 +492,7 @@
 
         <div style="display:flex;gap:1rem;flex-wrap:wrap">
           <button class="btn-add-anime" style="max-width:220px" onclick="saveAllSiteEdits()">💾 Save All Changes</button>
-          <button class="btn-danger" onclick="resetSiteEdits()">â†º Reset to Defaults</button>
+          <button class="btn-danger" onclick="resetSiteEdits()">↺ Reset to Defaults</button>
         </div>
       </div>
     </div>
@@ -500,7 +500,7 @@
     <!-- â”€â”€ HOME EDITOR TAB â”€â”€ -->
     <div class="admin-tab-content" id="homeTab">
       <div class="home-editor">
-        <h3>ðŸ  Home Page Editor</h3>
+        <h3>🏠 Home Page Editor</h3>
         <p class="cloud-desc">Control what appears on the homepage â€” featured hero, row visibility, and row titles.</p>
 
         <div class="editor-section">
@@ -525,7 +525,7 @@
         </div>
 
         <div class="editor-section">
-          <h4>âœ️ Customize Row Titles</h4>
+          <h4>✏️ Customize Row Titles</h4>
           <div class="row-title-editor">
             <div class="form-row">
               <div class="form-group"><label>Trending Row Title</label><input type="text" id="rowTitle_trending" class="admin-input" placeholder="🔥 Trending Now" onchange="saveRowSettings()"/></div>
@@ -564,11 +564,11 @@
     <!-- â”€â”€ THEME TAB â”€â”€ -->
     <div class="admin-tab-content" id="themeTab">
       <div class="home-editor">
-        <h3>ðŸŽ¨ Theme & Appearance</h3>
+        <h3>🎨 Theme & Appearance</h3>
         <p class="cloud-desc">Customize the look and feel of your MyAnime website.</p>
 
         <div class="editor-section">
-          <h4>ðŸŽ¨ Preset Themes</h4>
+          <h4>🎨 Preset Themes</h4>
           <div class="theme-presets" id="themePresets">
             <div class="theme-preset active" data-theme="netflix" onclick="applyThemePreset('netflix')"><div class="theme-swatch" style="background:linear-gradient(135deg,#141414,#e50914)"></div><span>Netflix Dark</span></div>
             <div class="theme-preset" data-theme="ocean" onclick="applyThemePreset('ocean')"><div class="theme-swatch" style="background:linear-gradient(135deg,#0a0a1a,#0066ff)"></div><span>Ocean Blue</span></div>
@@ -580,7 +580,7 @@
         </div>
 
         <div class="editor-section">
-          <h4>ðŸ–Œ️ Custom Colors</h4>
+          <h4>🖌️ Custom Colors</h4>
           <div class="color-pickers">
             <div class="color-pick-row"><label>Accent Color</label><div style="display:flex;align-items:center;gap:0.8rem"><input type="color" id="accentColor" value="#e50914" class="color-input" onchange="applyCustomColor()"/><span id="accentHex" style="color:#aaa;font-size:0.85rem">#e50914</span></div></div>
             <div class="color-pick-row"><label>Background Color</label><div style="display:flex;align-items:center;gap:0.8rem"><input type="color" id="bgColor" value="#141414" class="color-input" onchange="applyCustomColor()"/><span id="bgHex" style="color:#aaa;font-size:0.85rem">#141414</span></div></div>
@@ -597,21 +597,21 @@
         </div>
 
         <div class="editor-section">
-          <h4>âœ¨ Effects</h4>
+          <h4>✨ Effects</h4>
           <div class="row-toggles">
             <div class="row-toggle-item"><span>Card Hover Scale Effect</span><label class="toggle-switch"><input type="checkbox" id="effect_hover" checked onchange="applyEffects()"/><span class="toggle-slider"></span></label></div>
             <div class="row-toggle-item"><span>Smooth Page Transitions</span><label class="toggle-switch"><input type="checkbox" id="effect_transition" checked onchange="applyEffects()"/><span class="toggle-slider"></span></label></div>
           </div>
         </div>
 
-        <button class="btn-add-anime" style="max-width:200px" onclick="resetTheme()">â†º Reset to Default</button>
+        <button class="btn-add-anime" style="max-width:200px" onclick="resetTheme()">↺ Reset to Default</button>
       </div>
     </div>
 
     <!-- â”€â”€ CLOUD TAB â”€â”€ -->
     <div class="admin-tab-content" id="cloudTab">
       <div class="cloud-config">
-        <h3>â˜️ Cloud Storage Configuration</h3>
+        <h3>☁️ Cloud Storage Configuration</h3>
         <p class="cloud-desc">Configure your cloud storage to host anime videos.</p>
         <div class="cloud-guide">
           <div class="guide-step"><div class="step-num">1</div><div><strong>Upload your video to cloud storage</strong><p>Use Google Drive, Amazon S3, Cloudinary, or any cloud provider.</p></div></div>
@@ -619,7 +619,7 @@
           <div class="guide-step"><div class="step-num">3</div><div><strong>Paste URL when adding anime</strong><p>In the Upload tab, paste the URL in the "Cloud Video URL" field.</p></div></div>
         </div>
         <div class="url-tester">
-          <h4>ðŸ§ª Test Video URL</h4>
+          <h4>🧪 Test Video URL</h4>
           <div class="url-test-row">
             <input type="url" id="testUrl" placeholder="Paste video URL to test..." class="admin-input"/>
             <button class="btn-test" onclick="testVideoUrl()">Test</button>
@@ -682,7 +682,7 @@
             <div class="twofa-info-row"><span class="twofa-label">ðŸ“§ Admin Email</span><span class="twofa-value">bhartikunal172@gmail.com</span></div>
             <div class="twofa-info-row"><span class="twofa-label">⏱️ OTP Expires</span><span class="twofa-value">5 minutes</span></div>
             <div class="twofa-info-row"><span class="twofa-label">ðŸ”„ Max Attempts</span><span class="twofa-value">3 per login</span></div>
-            <div class="twofa-info-row"><span class="twofa-label">ðŸš« Lockout After</span><span class="twofa-value">3 failed attempts (30 min)</span></div>
+            <div class="twofa-info-row"><span class="twofa-label">🚫 Lockout After</span><span class="twofa-value">3 failed attempts (30 min)</span></div>
           </div>
           <div class="emailjs-config" style="margin-top:1.2rem">
             <h5 style="color:white;margin-bottom:0.6rem">EmailJS Configuration</h5>
@@ -716,7 +716,7 @@
 
         <!-- Danger Zone -->
         <div class="editor-section danger-zone">
-          <h4>âš ️ Danger Zone</h4>
+          <h4>⚠️ Danger Zone</h4>
           <p style="color:#aaa;font-size:0.85rem;margin-bottom:1rem">Irreversible actions. Use with extreme care.</p>
           <div style="display:flex;gap:1rem;flex-wrap:wrap">
             <button class="btn-danger" onclick="lockAdminNow()">ðŸ”’ Lock Admin Now</button>
@@ -732,9 +732,9 @@
 <!-- â”€â”€â”€ EDIT ANIME MODAL â”€â”€â”€ -->
 <div class="modal-overlay" id="editAnimeModal" onclick="closeEditModal()">
   <div class="modal" onclick="event.stopPropagation()" style="max-width:700px">
-    <button class="modal-close" onclick="closeEditModal()">âœ•</button>
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
     <div style="padding:2rem">
-      <h2 style="color:white;margin-bottom:1.5rem">âœ️ Edit Anime</h2>
+      <h2 style="color:white;margin-bottom:1.5rem">✏️ Edit Anime</h2>
       <input type="hidden" id="editAnimeId"/>
       <div class="form-group">
         <label>Title *</label>
@@ -781,7 +781,7 @@
 <!-- INFO MODAL -->
 <div class="modal-overlay" id="infoModal" onclick="closeModal()">
   <div class="modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal()">âœ•</button>
+    <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-hero">
       <img id="modalThumb" src="" alt="" class="modal-thumb"/>
       <div class="modal-hero-overlay"></div>
@@ -809,20 +809,20 @@
 <div class="player-overlay" id="playerOverlay">
   <div class="player-container">
     <div class="player-header">
-      <button class="player-back" onclick="closePlayer()">â† Back</button>
+      <button class="player-back" onclick="closePlayer()">← Back</button>
       <span class="player-title" id="playerTitle">Now Playing</span>
       <div class="player-controls-top">
         <div class="resolution-selector" id="resolutionSelector">
           <button class="res-btn active" id="resBtn" onclick="toggleResMenu()">Auto</button>
           <div class="res-menu" id="resMenu" style="display:none">
-            <div class="res-option" onclick="setResolution('auto')">ðŸŸ¢ Auto</div>
+            <div class="res-option" onclick="setResolution('auto')">🟢 Auto</div>
             <div class="res-option" onclick="setResolution('1080p')">1080p HD</div>
             <div class="res-option" onclick="setResolution('720p')">720p HD</div>
             <div class="res-option" onclick="setResolution('480p')">480p SD</div>
             <div class="res-option" onclick="setResolution('360p')">360p</div>
           </div>
         </div>
-        <button class="player-fullscreen" onclick="toggleFullscreen()">â›¶</button>
+        <button class="player-fullscreen" onclick="toggleFullscreen()">⛶</button>
       </div>
     </div>
    <div class="player-body">
@@ -846,7 +846,7 @@
 <!-- CLOUD GUIDE MODAL -->
 <div class="modal-overlay" id="cloudGuideModal" onclick="closeCloudGuide()">
   <div class="modal guide-modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeCloudGuide()">âœ•</button>
+    <button class="modal-close" onclick="closeCloudGuide()">✕</button>
     <h2 id="guideTitle">Cloud Storage Guide</h2>
     <div id="guideContent"></div>
   </div>
@@ -855,7 +855,7 @@
 <!-- â”€â”€â”€ ADMIN LOGIN MODAL (Step 1: Password) â”€â”€â”€ -->
 <div class="modal-overlay" id="adminLoginModal">
   <div class="modal admin-login-modal" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeAdminLogin()">âœ•</button>
+    <button class="modal-close" onclick="closeAdminLogin()">✕</button>
     <div class="admin-login-header">
       <div style="font-size:2.5rem">⚔️️</div>
       <h2>Admin Access</h2>
@@ -865,7 +865,7 @@
       <div id="loginAttemptInfo" style="display:none;background:rgba(229,9,20,0.1);border:1px solid rgba(229,9,20,0.3);border-radius:6px;padding:0.6rem 1rem;color:#e57373;font-size:0.82rem;text-align:center;margin-bottom:0.5rem"></div>
       <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Enter admin password..." oninput="onPasswordTyped()" onkeydown="if(event.key==='Enter')checkAdminPassword()"/>
       <button class="btn-add-anime" onclick="checkAdminPassword()">ðŸ”“ Login</button>
-      <p id="adminError" style="display:none;color:#e57373;text-align:center;margin-top:0.5rem">âŒ Wrong password. Try again.</p>
+      <p id="adminError" style="display:none;color:#e57373;text-align:center;margin-top:0.5rem">❌ Wrong password. Try again.</p>
     </div>
   </div>
 </div>
@@ -1079,7 +1079,7 @@
 <!-- USER LOGIN/SIGNUP MODAL -->
 <div class="modal-overlay" id="userAuthModal" onclick="closeUserAuth()">
   <div class="modal" onclick="event.stopPropagation()" style="max-width:420px">
-    <button class="modal-close" onclick="closeUserAuth()">âœ•</button>
+    <button class="modal-close" onclick="closeUserAuth()">✕</button>
     <div style="padding:2rem">
       <!-- Tabs -->
       <div style="display:flex;gap:1rem;margin-bottom:1.5rem">
@@ -1152,7 +1152,7 @@
 
         <div class="ep-section" id="episodeSection" style="display:none">
           <div class="ep-section-header">
-            <h3>ðŸŽž Episodes â€” <span id="currentSeasonLabel" style="color:var(--red)"></span></h3>
+            <h3>🎞 Episodes â€” <span id="currentSeasonLabel" style="color:var(--red)"></span></h3>
           </div>
           <div id="episodesList" class="ep-list"></div>
           <div class="ep-add-form ep-add-form--episodes">

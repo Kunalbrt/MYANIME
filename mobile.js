@@ -6,7 +6,7 @@
 (function () {
   const isMobile = /Mobi|Android|iPhone|iPad|Tablet/i.test(navigator.userAgent)
     || window.innerWidth <= 768;
-  if (!isMobile) return; // â† desktop sees nothing from this file
+  if (!isMobile) return; // ← desktop sees nothing from this file
 
   console.log('[mobile.js] Mobile mode active');
 
@@ -40,7 +40,7 @@
       <style>
         @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
       </style>
-      <a class="mob-nav-link" onclick="showPage('home');closeMobileNav()">ðŸ  Home</a>
+      <a class="mob-nav-link" onclick="showPage('home');closeMobileNav()">🏠 Home</a>
       <a class="mob-nav-link" onclick="showPage('search');closeMobileNav()">🔍 Search</a>
       <a class="mob-nav-link" onclick="showPage('mylist');closeMobileNav()">ðŸ“‹ My List</a>
       <a class="mob-nav-link" onclick="showPage('genres');closeMobileNav()">🎭 Genres</a>
@@ -159,7 +159,7 @@
             <div style="color:#aaa;font-size:0.8rem;margin-top:0.2rem">Choose how to watch</div>
           </div>
           <button onclick="document.getElementById('mobilePlayerSheet').remove()"
-            style="background:none;border:none;color:#aaa;font-size:1.4rem;cursor:pointer">âœ•</button>
+            style="background:none;border:none;color:#aaa;font-size:1.4rem;cursor:pointer">✕</button>
         </div>
 
         <button class="mob-player-btn" onclick="mobilePlayInApp('${videoUrl}', '${anime.title}')">
@@ -236,7 +236,7 @@
         padding:0.8rem 1rem; background:#111;
       ">
         <button onclick="document.getElementById('mobileVideoOverlay').remove()"
-          style="background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer">â†</button>
+          style="background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer">←</button>
         <span style="color:#fff;font-size:0.9rem;font-weight:600;flex:1;
           white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</span>
       </div>

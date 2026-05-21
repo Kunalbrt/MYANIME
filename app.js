@@ -21,7 +21,7 @@ const DEMO_ANIME = [
   { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'🔥',trending:true,topRated:false },
   { id:'d4',title:'Spirited Away',type:'movie',genre:'fantasy',year:'2001',rating:'PG',desc:'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.',thumb:'',videoUrl:'',emoji:'ðŸŒ¸',trending:false,topRated:true },
   { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'🔍¥',trending:false,topRated:true },
-  { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'âœ¨',trending:true,topRated:true },
+  { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'✨',trending:true,topRated:true },
   { id:'d7',title:'Fullmetal Alchemist',type:'series',genre:'adventure',year:'2009',rating:'TV-14',desc:'Two brothers search for a Philosopher\'s Stone after an attempt to revive their deceased mother goes wrong.',thumb:'',videoUrl:'',emoji:'âš—ï¸',trending:false,topRated:true },
   { id:'d8',title:'Dragon Ball Z',type:'series',genre:'action',year:'1989',rating:'TV-PG',desc:'The adventures of Earth\'s martial arts defender, Son Goku, continues with a new family and the revelation of his alien origin.',thumb:'',videoUrl:'',emoji:'ðŸ”µ',trending:false,topRated:false },
   { id:'d9',title:'Princess Mononoke',type:'movie',genre:'fantasy',year:'1997',rating:'PG-13',desc:'On a journey to find the cure for a Tatarigami\'s curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara.',thumb:'',videoUrl:'',emoji:'ðŸº',trending:false,topRated:true },
@@ -82,9 +82,9 @@ document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') openAdminLogin();
 });
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   INIT
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function init() {
   loadFromStorage();
   if (animeLibrary.length === 0) { animeLibrary = [...DEMO_ANIME]; saveToStorage(); }
@@ -110,9 +110,9 @@ function init() {
   if (np) np.addEventListener('input', checkPasswordStrength);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   STORAGE
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function loadFromStorage() {
   try {
     const lib = localStorage.getItem('myanime_library');
@@ -175,9 +175,9 @@ function renderAll() {
   renderLibraryTab();
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-//   FETCH ANIME FROM BACKEND  â† BUGS FIXED
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
+//   FETCH ANIME FROM BACKEND  ← BUGS FIXED
+// ════════════════════════════════════════════
 async function fetchAnimeFromBackend() {
   try {
     const res = await fetch(`${API}/anime`);
@@ -208,9 +208,9 @@ async function fetchAnimeFromBackend() {
   }
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-//   ADD ANIME  â† FULLY FIXED (saves to MongoDB + Cloudinary)
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
+//   ADD ANIME  ← FULLY FIXED (saves to MongoDB + Cloudinary)
+// ════════════════════════════════════════════
 async function addAnime() {
   const title    = document.getElementById('animeTitle').value.trim();
   const desc     = document.getElementById('animeDesc').value.trim();
@@ -270,7 +270,7 @@ async function addAnime() {
     });
     const data = await res.json();
     if (data.success) {
-      const emoji = { action:'⚔️ï¸', adventure:'ðŸ—ºï¸', romance:'ðŸ’–', fantasy:'âœ¨', thriller:'ðŸ”ª' }[genre] || '🎬';
+      const emoji = { action:'⚔️ï¸', adventure:'ðŸ—ºï¸', romance:'ðŸ’–', fantasy:'✨', thriller:'ðŸ”ª' }[genre] || '🎬';
       animeLibrary.unshift({
         id:       data.anime._id,
         title, desc, type, genre,
@@ -296,17 +296,17 @@ async function addAnime() {
       uploadedVideoBlob = null;
       uploadedThumbBlob = null;
     } else {
-      showToast('âŒ ' + data.message);
+      showToast('❌ ' + data.message);
     }
   } catch (err) {
-    showToast('âŒ Cannot connect to server!');
+    showToast('❌ Cannot connect to server!');
     console.log('Save error:', err.message);
   }
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   ANALYTICS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function trackVisit() {
   analytics.totalVisits++;
   const today = new Date().toDateString();
@@ -444,7 +444,7 @@ function refreshAnalytics() {
   const browserList = el('browserList');
   if (browserList) {
     const brTotal = Object.values(analytics.browsers).reduce((a,b)=>a+b,0)||1;
-    const icons = { Chrome:'ðŸŒ', Firefox:'ðŸ¦Š', Safari:'ðŸ§­', Edge:'ðŸ”·' };
+    const icons = { Chrome:'🌐', Firefox:'ðŸ¦Š', Safari:'🧭', Edge:'ðŸ”·' };
     browserList.innerHTML = Object.keys(analytics.browsers).length === 0
       ? '<p style="color:#555;font-size:0.85rem">No data yet.</p>'
       : Object.entries(analytics.browsers).map(([name, cnt]) => `
@@ -468,9 +468,9 @@ function resetAnalytics() {
   showToast('ðŸ“Š Analytics reset.');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   ADMIN AUTH
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function openAdminLogin() {
   if (adminUnlocked) { showPage('admin'); return; }
   if (Date.now() < lockoutUntil) {
@@ -525,7 +525,7 @@ function checkAdminPassword() {
       saveSecurity();
       const errEl = document.getElementById('adminError');
       errEl.style.display = 'block';
-      errEl.textContent = `âŒ Wrong password. ${remaining} attempt(s) remaining.`;
+      errEl.textContent = `❌ Wrong password. ${remaining} attempt(s) remaining.`;
       document.getElementById('adminPasswordInput').value = '';
       document.getElementById('adminPasswordInput').focus();
     }
@@ -541,9 +541,9 @@ function grantAdminAccess() {
   showToast('âœ… Admin access granted!');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   2FA â€” OTP
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 const OTP_POOL = ['2546','4896','47562','444444','85289','15679','47569','25489','12356','902714','56489','2035682'];
 function generateOTP() { return OTP_POOL[Math.floor(Math.random() * OTP_POOL.length)]; }
 
@@ -642,7 +642,7 @@ function verifyOTP() {
       showToast('ðŸ”’ Too many wrong codes. Locked for 30 min.');
     } else {
       errEl.style.display = 'block';
-      errEl.textContent = `âŒ Wrong code. ${3 - otpAttempts} attempt(s) left.`;
+      errEl.textContent = `❌ Wrong code. ${3 - otpAttempts} attempt(s) left.`;
       if (singleInput) { singleInput.value = ''; singleInput.focus(); }
     }
   }
@@ -664,9 +664,9 @@ function resendOTP() {
   setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = 'ðŸ”„ Resend Code'; }, 30000);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   SECURITY SETTINGS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function toggle2FA() {
   twoFAEnabled = document.getElementById('twofa_enabled').checked;
   saveSecurity();
@@ -692,16 +692,16 @@ function testEmailJS() {
   emailjs.init(pk);
   emailjs.send(sv, tm, { otp_code: generateOTP(), to_email: ADMIN_EMAIL, site_name: 'MyAnime' })
     .then(() => showToast('âœ… Test OTP sent! Check ' + ADMIN_EMAIL))
-    .catch(() => showToast('âŒ EmailJS send failed. Check your config.'));
+    .catch(() => showToast('❌ EmailJS send failed. Check your config.'));
 }
 
 function changeAdminPassword() {
   const current = document.getElementById('sec_currentPwd').value;
   const newPwd  = document.getElementById('sec_newPwd').value;
   const confirm = document.getElementById('sec_confirmPwd').value;
-  if (current !== ADMIN_PASSWORD) { showToast('âŒ Current password is wrong.'); return; }
+  if (current !== ADMIN_PASSWORD) { showToast('❌ Current password is wrong.'); return; }
   if (newPwd.length < 8) { showToast('âš ï¸ Password must be at least 8 characters.'); return; }
-  if (newPwd !== confirm) { showToast('âŒ Passwords do not match.'); return; }
+  if (newPwd !== confirm) { showToast('❌ Passwords do not match.'); return; }
   ADMIN_PASSWORD = newPwd;
   localStorage.setItem('myanime_adminpwd', ADMIN_PASSWORD);
   ['sec_currentPwd','sec_newPwd','sec_confirmPwd'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
@@ -776,9 +776,9 @@ function clearLoginHistory() {
   showToast('ðŸ—‘ï¸ Login history cleared.');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   NAVBAR
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function setupNavScroll() {
   const nb = document.getElementById('navbar');
   window.addEventListener('scroll', () => nb.classList.toggle('scrolled', window.scrollY > 80));
@@ -803,9 +803,9 @@ function showPage(page) {
   }
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   HERO
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function renderHero() {
   const featured = (featuredHeroId && animeLibrary.find(a => a.id === featuredHeroId)) || animeLibrary.find(a => a.thumb && a.thumb.length > 10) || animeLibrary[0];
   if (!featured) return;
@@ -847,9 +847,9 @@ function getGradient(id) {
   return gradients[idx >= 0 ? idx : 0];
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   ROWS & CARDS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function loadRowSettings() {
   try {
     const s = localStorage.getItem('myanime_rowsettings');
@@ -934,9 +934,9 @@ function createCard(anime) {
   return div;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   BROWSE GRIDS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function renderBrowsePages() {
   renderGrid('moviesGrid', animeLibrary.filter(a => a.type === 'movie'));
   renderGrid('seriesGrid', animeLibrary.filter(a => a.type === 'series'));
@@ -982,9 +982,9 @@ function filterContent(genre, type) {
   renderGrid(type === 'movies' ? 'moviesGrid' : 'seriesGrid', items);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   MY LIST
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function renderMyList() {
   const grid = document.getElementById('mylistGrid');
   const edits = getSiteEdits();
@@ -1019,9 +1019,9 @@ function updateMyListBtn() {
   if (btn) { btn.textContent = inList ? 'âœ“ In My List' : '+ My List'; btn.classList.toggle('added', inList); }
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   INFO MODAL
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function showInfoModal(idx) {
   const anime = animeLibrary[idx];
   if (anime) showInfoModal_byId(anime.id);
@@ -1066,9 +1066,9 @@ function toggleMyList() {
   saveToStorage(); updateMyListBtn();
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   VIDEO PLAYER
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function openPlayer(anime, episodeUrl, episodeTitle) {
   if (!anime) return;
   currentPlayerAnime = anime;
@@ -1164,9 +1164,9 @@ function playNext() {
   setTimeout(() => openPlayer(next), 200);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   SEARCH
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function setupSearchListener() {
   const input = document.getElementById('searchInput');
   let timeout;
@@ -1201,9 +1201,9 @@ function handleSearch(e) {
   }
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   RESOLUTION SELECTOR
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 let currentResolution = 'auto';
 
 function toggleResMenu() {
@@ -1226,9 +1226,9 @@ document.addEventListener('click', e => {
   }
 });
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   HOME EDITOR
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function populateHomeEditor() {
   const sel = document.getElementById('heroPickSelect');
   if (!sel) return;
@@ -1265,9 +1265,9 @@ function updateHeroPreview() {
   </div>`;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   RECOMMENDATIONS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function populateRecommendations() {
   renderRecommendGrid('trendingManager', 'trending');
   renderRecommendGrid('topRatedManager', 'topRated');
@@ -1304,9 +1304,9 @@ function saveRecommendations() {
   showToast('âœ… Recommendations saved!');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   THEME MANAGER
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 const THEMES = {
   netflix: { red:'#e50914', dark:'#141414', dark2:'#1a1a1a', dark3:'#222',    dark4:'#2a2a2a', card:'#181818' },
   ocean:   { red:'#0066ff', dark:'#050d1a', dark2:'#071220', dark3:'#0a1828', dark4:'#0d1e30', card:'#081525' },
@@ -1378,7 +1378,7 @@ function resetTheme() {
   document.getElementById('siteIcon').value  = '';
   localStorage.removeItem('myanime_theme');
   localStorage.removeItem('myanime_branding');
-  showToast('â†º Theme reset to default');
+  showToast('↺ Theme reset to default');
 }
 
 function loadSavedTheme() {
@@ -1409,9 +1409,9 @@ function loadSavedTheme() {
   } catch(err) {}
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   SITE EDITOR
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function getSiteEdits() {
   try { const s = localStorage.getItem('myanime_siteedits'); return s ? JSON.parse(s) : {}; } catch(e) { return {}; }
 }
@@ -1490,7 +1490,7 @@ function resetSiteEdits() {
   document.querySelector('.logo-icon').textContent = '⚔️ï¸';
   document.title = 'MyAnime';
   document.getElementById('announcementBanner').style.display = 'none';
-  showToast('â†º Site edits reset.');
+  showToast('↺ Site edits reset.');
 }
 
 function loadSiteEdits() {
@@ -1498,9 +1498,9 @@ function loadSiteEdits() {
   if (Object.keys(e).length > 0) applyAllSiteEdits(e);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   ADMIN TABS
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function switchAdminTab(tab) {
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
@@ -1513,9 +1513,9 @@ function switchAdminTab(tab) {
   if (tab === 'security')  { renderLoginHistory(); loadSecuritySettings(); }
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   LIBRARY â€” FILE UPLOAD
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function handleFileSelect(event, type) {
   const file = event.target.files[0]; if (file) handleFile(file, type);
 }
@@ -1562,9 +1562,9 @@ function simulateUpload(file) {
   reader.readAsDataURL(file);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   LIBRARY â€” Edit / Delete
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function renderLibraryTab() {
   const grid  = document.getElementById('libraryGrid');
   const count = document.getElementById('libraryCount');
@@ -1687,16 +1687,16 @@ function clearLibrary() {
   showToast('Library reset to demo data.');
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   CLOUD GUIDE
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function showCloudGuide(provider) {
   const guides = {
     gdrive:     { title:'ðŸ“ Google Drive Setup',  steps:[{title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},{title:'Make it public',desc:'Right-click â†’ Share â†’ Change to "Anyone with the link â†’ Viewer".'},{title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},{title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}]},
-    s3:         { title:'ðŸª£ Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console â†’ S3 â†’ Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file â†’ Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
+    s3:         { title:'🪣 Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console â†’ S3 â†’ Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file â†’ Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
     cloudinary: { title:'â˜ï¸ Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com â€” free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library â†’ Upload your video file.'},{title:'Get the URL',desc:'Click your video â†’ Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
     backblaze:  { title:'🔥 Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 â€” free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video â†’ click file â†’ "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
-    wasabi:     { title:'ðŸŒ¿ Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com â€” $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
+    wasabi:     { title:'🌿 Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com â€” $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
     jiocloud:   { title:'ðŸ‡®ðŸ‡³ Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button â†’ Upload â†’ select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file â†’ tap <strong>Share</strong> â†’ select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin â†’ Upload tab â†’ paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip â€” Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
   };
   const guide = guides[provider]; if (!guide) return;
@@ -1715,7 +1715,7 @@ function testVideoUrl() {
   const player = document.getElementById('testPlayer');
   player.src = url; player.style.display = 'block'; player.load();
   player.oncanplay = () => showToast('âœ… Video URL works!');
-  player.onerror   = () => showToast('âŒ Cannot load video. Check URL & CORS settings.');
+  player.onerror   = () => showToast('❌ Cannot load video. Check URL & CORS settings.');
 }
 
 function convertGDriveUrl() {
@@ -1733,9 +1733,9 @@ function convertGDriveUrl() {
     <button class="copy-url-btn" onclick="navigator.clipboard.writeText('${directUrl}');showToast('Copied!')">ðŸ“‹ Copy URL</button>`;
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   USER AUTH
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 function openUserAuth()  { document.getElementById('userAuthModal').classList.add('active');    document.body.style.overflow = 'hidden'; }
 function closeUserAuth() { document.getElementById('userAuthModal').classList.remove('active'); document.body.style.overflow = ''; }
 
@@ -1792,9 +1792,9 @@ function updateNavForAuth() {
   }
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   TOAST
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 let toastTimeout;
 function showToast(msg) {
   const toast = document.getElementById('toast');
@@ -1804,9 +1804,9 @@ function showToast(msg) {
   toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 //   START
-// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', init);
 
 
