@@ -135,12 +135,12 @@ body {
 .card-thumb { width: 100%; height: 115px; object-fit: cover; border-radius: var(--card-radius); display: block; background: var(--card-bg); }
 .card-thumb-placeholder { width: 100%; height: 115px; background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: var(--card-radius); color: white; font-size: 1.8rem; }
 .card-thumb-placeholder span { font-size: 0.65rem; margin-top: 0.3rem; color: #aaa; text-align: center; padding: 0 0.5rem; }
-.card-hover { position: absolute; top: 0; left: 0; right: 0; background: var(--card-bg); border-radius: var(--card-radius); opacity: 0; pointer-events: none; transition: opacity 0.3s ease 0.1s; min-height: 115px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); z-index: 10; }
+.card-hover { position: absolute; inset: 0; background: rgba(0,0,0,0.6); border-radius: var(--card-radius); opacity: 0; pointer-events: none; transition: opacity 0.25s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; z-index: 10; }
 .anime-card:hover .card-hover { opacity: 1; pointer-events: all; }
-.anime-card:hover .card-thumb, .anime-card:hover .card-thumb-placeholder { border-radius: var(--card-radius) var(--card-radius) 0 0; }
-.card-hover-img { width: 100%; height: 115px; object-fit: cover; border-radius: var(--card-radius) var(--card-radius) 0 0; display: block; background: var(--card-bg); }
-.card-hover-body { padding: 0.7rem 0.8rem 0.8rem; }
-.card-hover-actions { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+
+.card-hover-img { display: none; }
+.card-hover-body { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.card-hover-actions { display: flex; align-items: center; gap: 0.5rem; }
 .card-play-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--white); color: #000; border: none; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform var(--transition); }
 .card-play-btn:hover { transform: scale(1.1); }
 .card-list-btn { width: 32px; height: 32px; border-radius: 50%; background: transparent; color: var(--white); border: 2px solid #ccc; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); }
@@ -442,7 +442,7 @@ select.admin-input { cursor: pointer; }
   .search-bar input { width: 120px; }
   .anime-card { flex: 0 0 150px; min-width: 150px; height: 85px; }
   .card-thumb, .card-thumb-placeholder { height: 85px; }
-  .card-hover-img { height: 85px; }
+  .card-hover-img { display: none; }
   .upload-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
   .modal-hero { height: 250px; }
@@ -524,4 +524,6 @@ select.admin-input { cursor: pointer; }
   transition: opacity 0.2s;
 }
 .btn-primary:hover { opacity: 0.85; }
+
+
 
