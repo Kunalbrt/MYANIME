@@ -477,12 +477,59 @@
     initMobileEpisodeDrawer();
     initMobileHero();
     initMobileSearchBar();
+    initBackButton();
+
     console.log('[mobile.js] All mobile enhancements loaded âœ…');
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
+   // ============================================================
+  //  10. BACK BUTTON
+  // ============================================================
+  function initBackButton() {
+    const history = ['home'];
+    
+    // Override showPage to track history
+    const _origShowPage = window.showPage;
+    window.showPage = function(page) {
+      if (page !== history[history.length-1]) {
+        history.push(page);
+      }
+      _origShowPage(page);
+      updateBackButton();
+    };
+
+    // Create back button
+    const btn = document.createElement('button');
+    btn.id = 'mobileBackBtn';
+    btn.innerHTML = '&#8592;';
+    btn.style.cssText = `
+      position: fixed; top: 10px; left: 10px; z-index: 1001;
+      background: rgba(0,0,0,0.6); border: none; color: #fff;
+      font-size: 1.4rem; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer; display: none;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    `;
+    document.body.appendChild(btn);
+
+    btn.addEventListener('click', () => {
+      if (history.length > 1) {
+        history.pop();
+        const prev = history[history.length-1];
+        _origShowPage(prev);
+        updateBackButton();
+      }
+    });
+
+    function updateBackButton() {
+      btn.style.display = history.length > 1 ? 'flex' : 'none';
+    }
+  }
+
+
     init();
   }
 
