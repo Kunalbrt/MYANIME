@@ -889,6 +889,7 @@ function renderRows() {
   renderRow('recentRow',     [...animeLibrary].reverse().slice(0, 8));
   renderRow('seriesRow',     animeLibrary.filter(a => a.type === 'series'));
   renderRow('moviesRowHome', animeLibrary.filter(a => a.type === 'movie'));
+  renderMoviesPosterGrid();
 }
 
 function renderRow(containerId, items) {
@@ -1810,4 +1811,27 @@ function showToast(msg) {
 document.addEventListener('DOMContentLoaded', init);
 
 
+
+
+// -- Poster Card (3-col grid) --
+function createPosterCard(anime) {
+  const div = document.createElement('div');
+  div.className = 'poster-card';
+  const thumbOk = hasValidThumb(anime);
+  div.innerHTML = thumbOk
+    ? <img src="\" alt="\" loading="lazy"/>
+    : <div class="poster-card-placeholder"><span style="font-size:2rem">\</span><span>\</span></div>;
+  div.innerHTML += 
+    <div class="poster-card-title">\</div>
+    <div class="poster-card-badge">\</div>;
+  div.onclick = () => openPlayer(anime);
+  return div;
+}
+function renderMoviesPosterGrid() {
+  const container = document.getElementById('moviesPosterGrid');
+  if (!container) return;
+  container.innerHTML = '';
+  animeLibrary.filter(a => a.type === 'movie')
+    .forEach(a => container.appendChild(createPosterCard(a)));
+}
 
