@@ -525,7 +525,7 @@
     });
 
     function updateBackButton() {
-      btn.style.display = history.length > 1 ? 'flex' : 'none';
+      btn.style.display = (history[history.length-1] !== 'home') ? 'flex' : 'none';
     }
   }
 
@@ -534,6 +534,7 @@
   }
 
 })();
+
 
 
 
