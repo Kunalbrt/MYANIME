@@ -43,7 +43,7 @@
       <a class="mob-nav-link" onclick="showPage('home');closeMobileNav()">ðŸ  Home</a>
       <a class="mob-nav-link" onclick="showPage('search');closeMobileNav()">ðŸ” Search</a>
       <a class="mob-nav-link" onclick="showPage('mylist');closeMobileNav()">ðŸ“‹ My List</a>
-      <a class="mob-nav-link" onclick="showPage('genres');closeMobileNav()">ðŸŽ­ Genres</a>
+      <a class="mob-nav-link" onclick="showPage('genres');closeMobileNav()">🎭 Genres</a>
       <hr style="border-color:#333;margin:0.2rem 0">
       <a class="mob-nav-link" onclick="openAdminLogin();closeMobileNav()">âš™ï¸ Admin</a>
     `;

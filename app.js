@@ -18,7 +18,7 @@ const removeUser = () => localStorage.removeItem('user');
 const DEMO_ANIME = [
   { id:'d1',title:'One Piece',type:'series',genre:'adventure',year:'1999',rating:'TV-14',desc:'Follow Monkey D. Luffy and his pirate crew in search of the world\'s ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.',thumb:'',videoUrl:'',emoji:'âš”ï¸',trending:true,topRated:true },
   { id:'d2',title:'Attack on Titan',type:'series',genre:'action',year:'2013',rating:'TV-MA',desc:'Humanity lives inside cities surrounded by enormous walls due to the Titans, gigantic humanoid beings who devour humans seemingly without reason.',thumb:'',videoUrl:'',emoji:'ðŸ—¡ï¸',trending:true,topRated:true },
-  { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'ðŸ”¥',trending:true,topRated:false },
+  { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'🔥',trending:true,topRated:false },
   { id:'d4',title:'Spirited Away',type:'movie',genre:'fantasy',year:'2001',rating:'PG',desc:'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.',thumb:'',videoUrl:'',emoji:'ðŸŒ¸',trending:false,topRated:true },
   { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'ðŸ¥',trending:false,topRated:true },
   { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'âœ¨',trending:true,topRated:true },
@@ -70,11 +70,11 @@ let analytics = {
 
 // â”€â”€ Row Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let rowSettings = {
-  trending: { visible:true, title:'ðŸ”¥ Trending Now' },
-  topRated: { visible:true, title:'â­ Top Rated' },
+  trending: { visible:true, title:'🔥 Trending Now' },
+  topRated: { visible:true, title:'⭐ Top Rated' },
   recent:   { visible:true, title:'ðŸ†• Recently Added' },
   series:   { visible:true, title:'ðŸ“º Series' },
-  movies:   { visible:true, title:'ðŸŽ¬ Movies' },
+  movies:   { visible:true, title:'🎬 Movies' },
 };
 
 // â”€â”€ Secret Shortcut â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -195,7 +195,7 @@ async function fetchAnimeFromBackend() {
         // âœ… FIX: was checking startsWith('data:') which blocked Cloudinary https:// URLs
         thumb:    a.thumbnailUrl || '',
         videoUrl: a.videoUrl     || '',
-        emoji:    'ðŸŽ¬',
+        emoji:    '🎬',
         trending: a.isTrending  || false,
         topRated: a.isTopRated  || false,
       }));
@@ -270,7 +270,7 @@ async function addAnime() {
     });
     const data = await res.json();
     if (data.success) {
-      const emoji = { action:'âš”ï¸', adventure:'ðŸ—ºï¸', romance:'ðŸ’–', fantasy:'âœ¨', thriller:'ðŸ”ª' }[genre] || 'ðŸŽ¬';
+      const emoji = { action:'âš”ï¸', adventure:'ðŸ—ºï¸', romance:'ðŸ’–', fantasy:'âœ¨', thriller:'ðŸ”ª' }[genre] || '🎬';
       animeLibrary.unshift({
         id:       data.anime._id,
         title, desc, type, genre,
@@ -396,7 +396,7 @@ function refreshAnalytics() {
           return `<div class="top-list-item">
             <div class="top-list-rank">${idx+1}</div>
             <div class="top-list-bar-wrap">
-              <div class="top-list-name">${anime.emoji||'ðŸŽ¬'} ${anime.title}</div>
+              <div class="top-list-name">${anime.emoji||'🎬'} ${anime.title}</div>
               <div class="top-list-bar" style="width:${(cnt/maxA)*100}%"></div>
             </div>
             <div class="top-list-count">${cnt}</div>
@@ -680,7 +680,7 @@ function saveEmailJSConfig() {
     template: document.getElementById('ejs_template').value.trim()
   };
   saveSecurity();
-  showToast('ðŸ’¾ EmailJS config saved!');
+  showToast('💾 EmailJS config saved!');
 }
 
 function testEmailJS() {
@@ -910,10 +910,10 @@ function createCard(anime) {
   const thumbOk = hasValidThumb(anime);
   const thumbHtml = thumbOk
     ? `<img class="card-thumb" src="${anime.thumb}" alt="${anime.title}" loading="lazy"/>`
-    : `<div class="card-thumb-placeholder"><span style="font-size:2rem">${anime.emoji||'ðŸŽ¬'}</span><span>${anime.title}</span></div>`;
+    : `<div class="card-thumb-placeholder"><span style="font-size:2rem">${anime.emoji||'🎬'}</span><span>${anime.title}</span></div>`;
   const hoverThumbHtml = thumbOk
     ? `<img class="card-hover-img" src="${anime.thumb}" alt="${anime.title}"/>`
-    : `<div class="card-hover-img" style="background:${getGradient(anime.id)};display:flex;align-items:center;justify-content:center;font-size:2.5rem">${anime.emoji||'ðŸŽ¬'}</div>`;
+    : `<div class="card-hover-img" style="background:${getGradient(anime.id)};display:flex;align-items:center;justify-content:center;font-size:2.5rem">${anime.emoji||'🎬'}</div>`;
   div.innerHTML = `${thumbHtml}
     <div class="card-hover">
       ${hoverThumbHtml}
@@ -960,7 +960,7 @@ function createGridCard(anime) {
   const thumbOk = hasValidThumb(anime);
   const innerHtml = thumbOk
     ? `<img src="${anime.thumb}" alt="${anime.title}" loading="lazy"/>`
-    : `<div class="grid-card-placeholder" style="background:${getGradient(anime.id)}"><span>${anime.emoji||'ðŸŽ¬'}</span><span>${anime.title}</span></div>`;
+    : `<div class="grid-card-placeholder" style="background:${getGradient(anime.id)}"><span>${anime.emoji||'🎬'}</span><span>${anime.title}</span></div>`;
   div.innerHTML = `${innerHtml}
     <div class="grid-card-overlay">
       <div class="grid-card-title">${anime.title}</div>
@@ -1034,7 +1034,7 @@ function showInfoModal_byId(id) {
   document.getElementById('modalTitle').textContent  = anime.title;
   document.getElementById('modalYear').textContent   = anime.year || '';
   document.getElementById('modalRating').textContent = anime.rating || '';
-  document.getElementById('modalType').textContent   = anime.type === 'series' ? 'ðŸ“º Series' : 'ðŸŽ¬ Movie';
+  document.getElementById('modalType').textContent   = anime.type === 'series' ? 'ðŸ“º Series' : '🎬 Movie';
   document.getElementById('modalDesc').textContent   = anime.desc || 'No description available.';
   document.getElementById('modalGenre').textContent  = anime.genre || 'N/A';
   const thumb = document.getElementById('modalThumb');
@@ -1132,7 +1132,7 @@ function showNoVideoMessage() {
     msg = document.createElement('div');
     msg.className = 'no-video-msg';
     msg.style.cssText = 'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#111;color:#aaa;text-align:center;padding:2rem;';
-    msg.innerHTML = `<div style="font-size:4rem;margin-bottom:1rem">ðŸŽ¬</div>
+    msg.innerHTML = `<div style="font-size:4rem;margin-bottom:1rem">🎬</div>
       <h3 style="color:white;margin-bottom:0.5rem">${currentPlayerAnime?.title||'Video'}</h3>
       <p>No video source connected yet.</p>
       <p style="margin-top:0.5rem;font-size:0.85rem">Go to <strong>Admin â†’ Upload Content</strong> and add a Cloud Video URL.</p>`;
@@ -1260,7 +1260,7 @@ function updateHeroPreview() {
   const anime = animeLibrary.find(a => a.id === featuredHeroId);
   if (!anime) { card.innerHTML = ''; return; }
   card.innerHTML = `<div class="hero-preview-mini">
-    <div class="mini-emoji">${anime.emoji||'ðŸŽ¬'}</div>
+    <div class="mini-emoji">${anime.emoji||'🎬'}</div>
     <div><strong>${anime.title}</strong><span>${anime.year||''} â€¢ ${anime.type} â€¢ ${anime.genre||''}</span></div>
   </div>`;
 }
@@ -1284,7 +1284,7 @@ function renderRecommendGrid(containerId, field) {
       <input type="checkbox" id="rec_${field}_${anime.id}" ${anime[field]?'checked':''}
         onchange="toggleRecommend('${field}','${anime.id}',this)"/>
       <div class="recommend-item-info">
-        <strong>${anime.emoji||'ðŸŽ¬'} ${anime.title}</strong>
+        <strong>${anime.emoji||'🎬'} ${anime.title}</strong>
         <span>${anime.type} â€¢ ${anime.year||''}</span>
       </div>`;
     item.onclick = e => { if (e.target.tagName !== 'INPUT') item.querySelector('input').click(); };
@@ -1480,7 +1480,7 @@ function liveEditBanner()     { const enabled = document.getElementById('edit_ba
 function liveEditFooter()      {}
 function liveEditEmptyStates() {}
 
-function saveAllSiteEdits() { const e = collectSiteEdits(); saveSiteEdits(e); applyAllSiteEdits(e); showToast('ðŸ’¾ Site edits saved!'); }
+function saveAllSiteEdits() { const e = collectSiteEdits(); saveSiteEdits(e); applyAllSiteEdits(e); showToast('💾 Site edits saved!'); }
 
 function resetSiteEdits() {
   if (!confirm('Reset all site text edits to defaults?')) return;
@@ -1576,7 +1576,7 @@ function renderLibraryTab() {
     item.className = 'library-item';
     const thumbHtml = hasValidThumb(anime)
       ? `<img class="library-thumb" src="${anime.thumb}" alt="${anime.title}"/>`
-      : `<div class="library-thumb-placeholder">${anime.emoji||'ðŸŽ¬'}</div>`;
+      : `<div class="library-thumb-placeholder">${anime.emoji||'🎬'}</div>`;
     item.innerHTML = `
       ${thumbHtml}
       <div class="library-info">
@@ -1695,7 +1695,7 @@ function showCloudGuide(provider) {
     gdrive:     { title:'ðŸ“ Google Drive Setup',  steps:[{title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},{title:'Make it public',desc:'Right-click â†’ Share â†’ Change to "Anyone with the link â†’ Viewer".'},{title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},{title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}]},
     s3:         { title:'ðŸª£ Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console â†’ S3 â†’ Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file â†’ Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
     cloudinary: { title:'â˜ï¸ Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com â€” free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library â†’ Upload your video file.'},{title:'Get the URL',desc:'Click your video â†’ Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
-    backblaze:  { title:'ðŸ”¥ Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 â€” free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video â†’ click file â†’ "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
+    backblaze:  { title:'🔥 Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 â€” free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video â†’ click file â†’ "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
     wasabi:     { title:'ðŸŒ¿ Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com â€” $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
     jiocloud:   { title:'ðŸ‡®ðŸ‡³ Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button â†’ Upload â†’ select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file â†’ tap <strong>Share</strong> â†’ select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin â†’ Upload tab â†’ paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip â€” Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
   };
