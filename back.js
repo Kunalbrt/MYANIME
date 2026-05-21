@@ -40,7 +40,7 @@
   function updateBtn() {
     const active = document.querySelector('.page.active');
     console.log("[back.js] active page:", active?.id); const isHome = !active || active.id === 'homePage';
-    btn.style.display = isHome ? 'none' : 'flex';
+    btn.style.display = "flex"; // forced
   }
 
   // Override showPage once it's available
@@ -94,4 +94,5 @@
   }
 
 })();
+
 
