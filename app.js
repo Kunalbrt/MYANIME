@@ -966,7 +966,7 @@ function createGridCard(anime) {
       <div class="grid-card-title">${anime.title}</div>
       <div class="grid-card-meta">${anime.year||''} â€¢ ${anime.genre||''}</div>
       <div class="grid-card-actions">
-        <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">▶¶ Play</button>
+        <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">▶ Play</button>
         <button class="gc-play" style="background:rgba(109,109,110,0.7);color:white" onclick="showInfoModal_byId('${anime.id}')">â“˜ Info</button>
       </div>
     </div>`;
