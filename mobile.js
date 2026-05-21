@@ -523,20 +523,10 @@
         updateBackButton();
       }
     });
-
     function updateBackButton() {
       btn.style.display = (history[history.length-1] !== 'home') ? 'flex' : 'none';
     }
   }
-
-
-    init();
-  }
-
+  init();
+}
 })();
-
-
-
-
-
-
