@@ -1,12 +1,12 @@
 // ============================================================
-//  mobile.js  —  Runs ONLY on mobile & tablet devices
+//  mobile.js  â€”  Runs ONLY on mobile & tablet devices
 //  Load this after app.js in index.html
 // ============================================================
 
 (function () {
   const isMobile = /Mobi|Android|iPhone|iPad|Tablet/i.test(navigator.userAgent)
     || window.innerWidth <= 768;
-  if (!isMobile) return; // ← desktop sees nothing from this file
+  if (!isMobile) return; // â† desktop sees nothing from this file
 
   console.log('[mobile.js] Mobile mode active');
 
@@ -40,12 +40,12 @@
       <style>
         @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
       </style>
-      <a class="mob-nav-link" onclick="showPage('home');closeMobileNav()">🏠 Home</a>
-      <a class="mob-nav-link" onclick="showPage('search');closeMobileNav()">🔍 Search</a>
-      <a class="mob-nav-link" onclick="showPage('mylist');closeMobileNav()">📋 My List</a>
-      <a class="mob-nav-link" onclick="showPage('genres');closeMobileNav()">🎭 Genres</a>
+      <a class="mob-nav-link" onclick="showPage('home');closeMobileNav()">ðŸ  Home</a>
+      <a class="mob-nav-link" onclick="showPage('search');closeMobileNav()">ðŸ” Search</a>
+      <a class="mob-nav-link" onclick="showPage('mylist');closeMobileNav()">ðŸ“‹ My List</a>
+      <a class="mob-nav-link" onclick="showPage('genres');closeMobileNav()">ðŸŽ­ Genres</a>
       <hr style="border-color:#333;margin:0.2rem 0">
-      <a class="mob-nav-link" onclick="openAdminLogin();closeMobileNav()">⚙️ Admin</a>
+      <a class="mob-nav-link" onclick="openAdminLogin();closeMobileNav()">âš™ï¸ Admin</a>
     `;
 
     // Style nav links inside drawer
@@ -95,7 +95,7 @@
   }
 
   // ============================================================
-  //  2. VIDEO PLAYER — open HLS in best available way
+  //  2. VIDEO PLAYER â€” open HLS in best available way
   // ============================================================
   function initMobilePlayer() {
     // Override openPlayer for mobile
@@ -106,7 +106,7 @@
 
       const videoUrl = episodeUrl || anime.videoUrl || '';
 
-      // If HLS stream → show mobile player chooser
+      // If HLS stream â†’ show mobile player chooser
       if (videoUrl && videoUrl.includes('.m3u8')) {
         showMobilePlayerOptions(anime, videoUrl, episodeTitle);
         return;
@@ -132,7 +132,7 @@
       display:flex; align-items:flex-end; justify-content:center;
     `;
 
-    const title = episodeTitle ? `${anime.title} — ${episodeTitle}` : anime.title;
+    const title = episodeTitle ? `${anime.title} â€” ${episodeTitle}` : anime.title;
 
     sheet.innerHTML = `
       <div style="
@@ -159,11 +159,11 @@
             <div style="color:#aaa;font-size:0.8rem;margin-top:0.2rem">Choose how to watch</div>
           </div>
           <button onclick="document.getElementById('mobilePlayerSheet').remove()"
-            style="background:none;border:none;color:#aaa;font-size:1.4rem;cursor:pointer">✕</button>
+            style="background:none;border:none;color:#aaa;font-size:1.4rem;cursor:pointer">âœ•</button>
         </div>
 
         <button class="mob-player-btn" onclick="mobilePlayInApp('${videoUrl}', '${anime.title}')">
-          <span class="mob-player-icon">▶️</span>
+          <span class="mob-player-icon">â–¶ï¸</span>
           <div>
             <div>Play in App</div>
             <div style="color:#aaa;font-size:0.78rem">Uses built-in HLS player</div>
@@ -171,7 +171,7 @@
         </button>
 
         <button class="mob-player-btn" onclick="mobileOpenExternal('${videoUrl}')">
-          <span class="mob-player-icon">📱</span>
+          <span class="mob-player-icon">ðŸ“±</span>
           <div>
             <div>Open in External App</div>
             <div style="color:#aaa;font-size:0.78rem">VLC, MX Player, etc.</div>
@@ -179,7 +179,7 @@
         </button>
 
         <button class="mob-player-btn" onclick="mobileCopyLink('${videoUrl}')">
-          <span class="mob-player-icon">🔗</span>
+          <span class="mob-player-icon">ðŸ”—</span>
           <div>
             <div>Copy Stream Link</div>
             <div style="color:#aaa;font-size:0.78rem">Paste in any player</div>
@@ -236,7 +236,7 @@
         padding:0.8rem 1rem; background:#111;
       ">
         <button onclick="document.getElementById('mobileVideoOverlay').remove()"
-          style="background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer">←</button>
+          style="background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer">â†</button>
         <span style="color:#fff;font-size:0.9rem;font-weight:600;flex:1;
           white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</span>
       </div>
@@ -294,11 +294,11 @@
   //  4. TOUCH-FRIENDLY CARDS (tap to show buttons)
   // ============================================================
   function initTouchCards() {
-    // On mobile, card hover doesn't work — use tap instead
+    // On mobile, card hover doesn't work â€” use tap instead
     document.addEventListener('click', (e) => {
       const card = e.target.closest('.anime-card');
       if (!card) {
-        // Tap outside — close all open cards
+        // Tap outside â€” close all open cards
         document.querySelectorAll('.anime-card.mob-active').forEach(c => {
           c.classList.remove('mob-active');
           const h = c.querySelector('.card-hover');
@@ -359,7 +359,7 @@
   }
 
   // ============================================================
-  //  6. EPISODE SIDEBAR — bottom drawer on mobile
+  //  6. EPISODE SIDEBAR â€” bottom drawer on mobile
   // ============================================================
   function initMobileEpisodeDrawer() {
     const style = document.createElement('style');
@@ -409,7 +409,7 @@
   };
 
   // ============================================================
-  //  8. HERO BANNER — mobile layout fix
+  //  8. HERO BANNER â€” mobile layout fix
   // ============================================================
   function initMobileHero() {
     const style = document.createElement('style');
@@ -428,7 +428,7 @@
 
   
   // ============================================================
-  //  9. MOBILE SEARCH BAR � below navbar on home screen
+  //  9. MOBILE SEARCH BAR — below navbar on home screen
   // ============================================================
   function initMobileSearchBar() {
     const style = document.createElement('style');
@@ -477,7 +477,7 @@
     initMobileEpisodeDrawer();
     initMobileHero();
     initMobileSearchBar();
-    console.log('[mobile.js] All mobile enhancements loaded ✅');
+    console.log('[mobile.js] All mobile enhancements loaded âœ…');
   }
 
   if (document.readyState === 'loading') {

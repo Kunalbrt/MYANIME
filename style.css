@@ -1,5 +1,5 @@
 /* ============================================
-   MYANIME — Netflix-Clone CSS (Enhanced)
+   MYANIME â€” Netflix-Clone CSS (Enhanced)
    ============================================ */
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -451,7 +451,7 @@ select.admin-input { cursor: pointer; }
   .otp-box { width: 40px; height: 48px; font-size: 1.2rem; }
 }
 
-/* ── Episode Sidebar ─────────────────────── */
+/* â”€â”€ Episode Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .player-body {
   display: flex;
   flex: 1;
