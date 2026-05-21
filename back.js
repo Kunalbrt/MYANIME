@@ -22,9 +22,9 @@
     background: rgba(0,0,0,0.7);
     border: none;
     color: #fff;
-    font-size: 1.3rem;
-    width: 36px;
-    height: 36px;
+    font-size: 1.6rem;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     cursor: pointer;
     display: none;
@@ -94,3 +94,4 @@
   }
 
 })();
+
