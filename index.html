@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MyAnime</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>âš”️</text></svg>"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️️</text></svg>"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <!-- EmailJS for 2FA OTP emails -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -17,7 +17,7 @@
 <nav class="navbar" id="navbar">
   <div class="nav-left">
     <div class="logo" onclick="showPage('home')">
-      <span class="logo-icon">âš”️</span>
+      <span class="logo-icon">⚔️️</span>
       <span class="logo-text">MyAnime</span>
     </div>
     <ul class="nav-links" id="navLinks">
@@ -29,7 +29,7 @@
   </div>
   <div class="nav-right">
     <div class="search-bar">
-      <span class="search-icon">ðŸ”</span>
+      <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="Search anime..." onkeyup="handleSearch(event)"/>
     </div>
     <!--LOGIN BUTTON -->
@@ -49,7 +49,7 @@
     <div class="hero-bg" id="heroBg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content" id="heroContent">
-      <div class="hero-badge">âš”️ Featured Anime</div>
+      <div class="hero-badge">⚔️️ Featured Anime</div>
       <h1 class="hero-title" id="heroTitle">ONE PIECE</h1>
       <p class="hero-desc" id="heroDesc">Follow Monkey D. Luffy and his pirate crew in search of the world's ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.</p>
       <div class="hero-meta" id="heroMeta">
@@ -58,8 +58,8 @@
         <span class="meta-year" id="heroYear">2023</span>
       </div>
       <div class="hero-buttons">
-        <button class="btn-play" onclick="playHeroAnime()">â–¶ Play</button>
-        <button class="btn-info" onclick="showInfoModal(0)">â„¹ More Info</button>
+        <button class="btn-play" onclick="playHeroAnime()">▶¶ Play</button>
+        <button class="btn-info" onclick="showInfoModal(0)">âℹ️ More Info</button>
       </div>
     </div>
     <div class="hero-scroll-indicator">â†“</div>
@@ -292,7 +292,7 @@
             <div class="stat-label">Total Plays</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon">ðŸ”</div>
+            <div class="stat-icon">🔍</div>
             <div class="stat-number" id="statSearches">0</div>
             <div class="stat-label">Searches</div>
           </div>
@@ -359,7 +359,7 @@
             </div>
             <div class="form-group">
               <label>Logo Emoji / Icon</label>
-              <input type="text" id="edit_logoEmoji" class="admin-input" placeholder="âš”️" maxlength="4" oninput="liveEditSite()"/>
+              <input type="text" id="edit_logoEmoji" class="admin-input" placeholder="⚔️️" maxlength="4" oninput="liveEditSite()"/>
             </div>
           </div>
           <div class="form-row">
@@ -389,7 +389,7 @@
           <h4>🎬 Hero Section</h4>
           <div class="form-group">
             <label>Hero Badge Text</label>
-            <input type="text" id="edit_heroBadge" class="admin-input" placeholder="âš”️ Featured Anime" oninput="liveEditHero()"/>
+            <input type="text" id="edit_heroBadge" class="admin-input" placeholder="⚔️️ Featured Anime" oninput="liveEditHero()"/>
           </div>
           <div class="form-group">
             <label>Hero Subtitle / Tagline (below title)</label>
@@ -398,11 +398,11 @@
           <div class="form-row">
             <div class="form-group">
               <label>Play Button Label</label>
-              <input type="text" id="edit_playBtn" class="admin-input" placeholder="â–¶ Play" oninput="liveEditHero()"/>
+              <input type="text" id="edit_playBtn" class="admin-input" placeholder="▶¶ Play" oninput="liveEditHero()"/>
             </div>
             <div class="form-group">
               <label>Info Button Label</label>
-              <input type="text" id="edit_infoBtn" class="admin-input" placeholder="â„¹ More Info" oninput="liveEditHero()"/>
+              <input type="text" id="edit_infoBtn" class="admin-input" placeholder="âℹ️ More Info" oninput="liveEditHero()"/>
             </div>
           </div>
         </div>
@@ -434,7 +434,7 @@
 
         <!-- Search Bar Editor -->
         <div class="editor-section">
-          <h4>ðŸ” Search Bar</h4>
+          <h4>🔍 Search Bar</h4>
           <div class="form-group">
             <label>Search Placeholder Text</label>
             <input type="text" id="edit_searchPlaceholder" class="admin-input" placeholder="Search anime..." oninput="liveEditSearch()"/>
@@ -592,7 +592,7 @@
           <h4>ðŸ”¤ Site Title & Branding</h4>
           <div class="form-row">
             <div class="form-group"><label>Site Title</label><input type="text" id="siteTitle" class="admin-input" placeholder="MyAnime" onchange="applyBranding()"/></div>
-            <div class="form-group"><label>Logo Icon (emoji)</label><input type="text" id="siteIcon" class="admin-input" placeholder="âš”️" maxlength="4" onchange="applyBranding()"/></div>
+            <div class="form-group"><label>Logo Icon (emoji)</label><input type="text" id="siteIcon" class="admin-input" placeholder="⚔️️" maxlength="4" onchange="applyBranding()"/></div>
           </div>
         </div>
 
@@ -793,7 +793,7 @@
           <span id="modalType"></span>
         </div>
         <div class="modal-actions">
-          <button class="btn-play" onclick="playFromModal()">â–¶ Play</button>
+          <button class="btn-play" onclick="playFromModal()">▶¶ Play</button>
           <button class="btn-mylist" id="mylistBtn" onclick="toggleMyList()">+ My List</button>
         </div>
       </div>
@@ -857,7 +857,7 @@
   <div class="modal admin-login-modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeAdminLogin()">âœ•</button>
     <div class="admin-login-header">
-      <div style="font-size:2.5rem">âš”️</div>
+      <div style="font-size:2.5rem">⚔️️</div>
       <h2>Admin Access</h2>
       <p>Enter your admin password to continue</p>
     </div>
@@ -1170,6 +1170,7 @@
 <script src="mobile.js"></script>
 </body>
 </html>
+
 
 
 

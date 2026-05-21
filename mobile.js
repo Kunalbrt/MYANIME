@@ -41,7 +41,7 @@
         @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
       </style>
       <a class="mob-nav-link" onclick="showPage('home');closeMobileNav()">ðŸ  Home</a>
-      <a class="mob-nav-link" onclick="showPage('search');closeMobileNav()">ðŸ” Search</a>
+      <a class="mob-nav-link" onclick="showPage('search');closeMobileNav()">🔍 Search</a>
       <a class="mob-nav-link" onclick="showPage('mylist');closeMobileNav()">ðŸ“‹ My List</a>
       <a class="mob-nav-link" onclick="showPage('genres');closeMobileNav()">🎭 Genres</a>
       <hr style="border-color:#333;margin:0.2rem 0">
@@ -163,7 +163,7 @@
         </div>
 
         <button class="mob-player-btn" onclick="mobilePlayInApp('${videoUrl}', '${anime.title}')">
-          <span class="mob-player-icon">â–¶ï¸</span>
+          <span class="mob-player-icon">▶¶ï¸</span>
           <div>
             <div>Play in App</div>
             <div style="color:#aaa;font-size:0.78rem">Uses built-in HLS player</div>
@@ -487,6 +487,7 @@
   }
 
 })();
+
 
 
 

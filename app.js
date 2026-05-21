@@ -16,11 +16,11 @@ const removeUser = () => localStorage.removeItem('user');
 
 // â”€â”€ Demo Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const DEMO_ANIME = [
-  { id:'d1',title:'One Piece',type:'series',genre:'adventure',year:'1999',rating:'TV-14',desc:'Follow Monkey D. Luffy and his pirate crew in search of the world\'s ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.',thumb:'',videoUrl:'',emoji:'âš”ï¸',trending:true,topRated:true },
+  { id:'d1',title:'One Piece',type:'series',genre:'adventure',year:'1999',rating:'TV-14',desc:'Follow Monkey D. Luffy and his pirate crew in search of the world\'s ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.',thumb:'',videoUrl:'',emoji:'⚔️ï¸',trending:true,topRated:true },
   { id:'d2',title:'Attack on Titan',type:'series',genre:'action',year:'2013',rating:'TV-MA',desc:'Humanity lives inside cities surrounded by enormous walls due to the Titans, gigantic humanoid beings who devour humans seemingly without reason.',thumb:'',videoUrl:'',emoji:'ðŸ—¡ï¸',trending:true,topRated:true },
   { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'🔥',trending:true,topRated:false },
   { id:'d4',title:'Spirited Away',type:'movie',genre:'fantasy',year:'2001',rating:'PG',desc:'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.',thumb:'',videoUrl:'',emoji:'ðŸŒ¸',trending:false,topRated:true },
-  { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'ðŸ¥',trending:false,topRated:true },
+  { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'🔍¥',trending:false,topRated:true },
   { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'âœ¨',trending:true,topRated:true },
   { id:'d7',title:'Fullmetal Alchemist',type:'series',genre:'adventure',year:'2009',rating:'TV-14',desc:'Two brothers search for a Philosopher\'s Stone after an attempt to revive their deceased mother goes wrong.',thumb:'',videoUrl:'',emoji:'âš—ï¸',trending:false,topRated:true },
   { id:'d8',title:'Dragon Ball Z',type:'series',genre:'action',year:'1989',rating:'TV-PG',desc:'The adventures of Earth\'s martial arts defender, Son Goku, continues with a new family and the revelation of his alien origin.',thumb:'',videoUrl:'',emoji:'ðŸ”µ',trending:false,topRated:false },
@@ -270,7 +270,7 @@ async function addAnime() {
     });
     const data = await res.json();
     if (data.success) {
-      const emoji = { action:'âš”ï¸', adventure:'ðŸ—ºï¸', romance:'ðŸ’–', fantasy:'âœ¨', thriller:'ðŸ”ª' }[genre] || '🎬';
+      const emoji = { action:'⚔️ï¸', adventure:'ðŸ—ºï¸', romance:'ðŸ’–', fantasy:'âœ¨', thriller:'ðŸ”ª' }[genre] || '🎬';
       animeLibrary.unshift({
         id:       data.anime._id,
         title, desc, type, genre,
@@ -415,7 +415,7 @@ function refreshAnalytics() {
           <div class="top-list-item">
             <div class="top-list-rank">${idx+1}</div>
             <div class="top-list-bar-wrap">
-              <div class="top-list-name">ðŸ” ${term}</div>
+              <div class="top-list-name">🔍 ${term}</div>
               <div class="top-list-bar" style="width:${(cnt/maxS)*100}%"></div>
             </div>
             <div class="top-list-count">${cnt}</div>
@@ -919,7 +919,7 @@ function createCard(anime) {
       ${hoverThumbHtml}
       <div class="card-hover-body">
         <div class="card-hover-actions">
-          <button class="card-play-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))" title="Play">â–¶</button>
+          <button class="card-play-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))" title="Play">▶¶</button>
           <button class="card-list-btn ${inList?'added':''}" id="listbtn-${anime.id}" onclick="toggleListById('${anime.id}',this)" title="My List">${inList?'âœ“':'+'}</button>
           <button class="card-info-btn" onclick="showInfoModal_byId('${anime.id}')" title="More Info">â“˜</button>
         </div>
@@ -948,7 +948,7 @@ function renderGrid(containerId, items) {
   container.innerHTML = '';
   const edits = getSiteEdits();
   if (items.length === 0) {
-    container.innerHTML = `<div class="empty-list"><div style="font-size:3rem">ðŸ”</div><p>${edits.noResults || 'No content found.'}</p></div>`;
+    container.innerHTML = `<div class="empty-list"><div style="font-size:3rem">🔍</div><p>${edits.noResults || 'No content found.'}</p></div>`;
     return;
   }
   items.forEach(anime => container.appendChild(createGridCard(anime)));
@@ -966,7 +966,7 @@ function createGridCard(anime) {
       <div class="grid-card-title">${anime.title}</div>
       <div class="grid-card-meta">${anime.year||''} â€¢ ${anime.genre||''}</div>
       <div class="grid-card-actions">
-        <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">â–¶ Play</button>
+        <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">▶¶ Play</button>
         <button class="gc-play" style="background:rgba(109,109,110,0.7);color:white" onclick="showInfoModal_byId('${anime.id}')">â“˜ Info</button>
       </div>
     </div>`;
@@ -1372,7 +1372,7 @@ function applyEffects() {
 function resetTheme() {
   applyThemePreset('netflix');
   document.querySelector('.logo-text').textContent = 'MyAnime';
-  document.querySelector('.logo-icon').textContent = 'âš”ï¸';
+  document.querySelector('.logo-icon').textContent = '⚔️ï¸';
   document.title = 'MyAnime';
   document.getElementById('siteTitle').value = '';
   document.getElementById('siteIcon').value  = '';
@@ -1487,7 +1487,7 @@ function resetSiteEdits() {
   localStorage.removeItem('myanime_siteedits');
   applyAllSiteEdits({}); populateSiteEditorFields();
   document.querySelector('.logo-text').textContent = 'MyAnime';
-  document.querySelector('.logo-icon').textContent = 'âš”ï¸';
+  document.querySelector('.logo-icon').textContent = '⚔️ï¸';
   document.title = 'MyAnime';
   document.getElementById('announcementBanner').style.display = 'none';
   showToast('â†º Site edits reset.');
@@ -1588,7 +1588,7 @@ function renderLibraryTab() {
       </div>
       <div class="library-actions">
         <button class="lib-btn edit" onclick="openEditModal('${anime.id}')">âœï¸</button>
-        <button class="lib-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">â–¶</button>
+        <button class="lib-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">▶¶</button>
         <button class="lib-btn del" onclick="deleteAnime('${anime.id}')">ðŸ—‘</button>
       </div>`;
     grid.appendChild(item);
@@ -1808,5 +1808,6 @@ function showToast(msg) {
 //   START
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 document.addEventListener('DOMContentLoaded', init);
+
 
 
