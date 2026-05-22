@@ -1885,6 +1885,66 @@ function updateNavForAuth() {
   }
 }
 
+
+// ════════════════════════════════════════════
+//   MOBILE SEARCH PAGE
+// ════════════════════════════════════════════
+function openMobileSearch() {
+  showPage('search');
+  renderMspTrending();
+  setTimeout(() => document.getElementById('mspInput')?.focus(), 200);
+}
+
+function renderMspTrending() {
+  const container = document.getElementById('mspTrending');
+  if (!container) return;
+  const trending = animeLibrary.filter(a => a.trending).slice(0, 5);
+  const all = trending.length > 0 ? trending : animeLibrary.slice(0, 5);
+  container.innerHTML = all.map((a, i) => {
+    const thumb = hasValidThumb(a)
+      ? `<img class="msp-thumb" src="${a.thumb}" alt="${a.title}"/>`
+      : `<div class="msp-thumb">${a.emoji||'🎬'}</div>`;
+    const rank = i === 0 ? '🔥 #1' : '#' + (i + 1);
+    return `<div class="msp-item" onclick="openPlayer(animeLibrary.find(x=>x.id==='${a.id}'))">
+      ${thumb}
+      <div>
+        <p class="msp-item-title">${a.title}</p>
+        <p class="msp-item-meta">${a.type} • ${a.year||''}</p>
+      </div>
+      <span class="msp-rank">${rank}</span>
+    </div>`;
+  }).join('');
+}
+
+function mspSearch(q) {
+  const grid = document.getElementById('mspGrid');
+  const results = document.getElementById('mspResults');
+  if (!q || q.length < 2) {
+    grid.style.display = 'none';
+    results.style.display = 'block';
+    return;
+  }
+  trackSearch(q);
+  const found = animeLibrary.filter(a =>
+    a.title.toLowerCase().includes(q.toLowerCase()) ||
+    (a.genre||'').toLowerCase().includes(q.toLowerCase())
+  );
+  results.style.display = 'none';
+  grid.style.display = '';
+  renderGrid('mspGrid', found);
+}
+
+function mspFill(val) {
+  const input = document.getElementById('mspInput');
+  if (input) { input.value = val; mspSearch(val); }
+}
+
+function mspClear() {
+  const input = document.getElementById('mspInput');
+  if (input) { input.value = ''; }
+  document.getElementById('mspGrid').style.display = 'none';
+  document.getElementById('mspResults').style.display = 'block';
+}
 // ════════════════════════════════════════════
 //   TOAST
 // ════════════════════════════════════════════

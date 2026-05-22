@@ -132,11 +132,30 @@
   </div>
 </div>
 
-<!-- SEARCH RESULTS PAGE -->
+<!-- SEARCH PAGE -->
 <div id="searchPage" class="page">
-  <div class="browse-page">
-    <h1 class="browse-title">Search Results</h1>
-    <div class="browse-grid" id="searchGrid"></div>
+  <div class="mobile-search-page">
+    <div class="msp-header">
+      <div class="msp-input-wrap">
+        <span class="msp-icon">??</span>
+        <input type="text" id="mspInput" placeholder="Search anime, genres..."
+          oninput="mspSearch(this.value)" autofocus/>
+        <button class="msp-clear" onclick="mspClear()">?</button>
+      </div>
+    </div>
+    <div id="mspResults" class="msp-results">
+      <p class="msp-section-label">Popular searches</p>
+      <div class="msp-tags">
+        <span class="msp-tag" onclick="mspFill('Action')">Action</span>
+        <span class="msp-tag" onclick="mspFill('Romance')">Romance</span>
+        <span class="msp-tag" onclick="mspFill('Fantasy')">Fantasy</span>
+        <span class="msp-tag" onclick="mspFill('Adventure')">Adventure</span>
+        <span class="msp-tag" onclick="mspFill('Thriller')">Thriller</span>
+      </div>
+      <p class="msp-section-label" style="margin-top:1.5rem">Trending now</p>
+      <div id="mspTrending" class="msp-list"></div>
+    </div>
+    <div id="mspGrid" class="browse-grid" style="display:none;padding:1rem"></div>
   </div>
 </div>
 

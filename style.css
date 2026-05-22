@@ -538,3 +538,24 @@ select.admin-input { cursor: pointer; }
 
 /* -- Movies Home Grid -- */
 
+
+/* ?? Mobile Search Page ?? */
+.mobile-search-page { min-height: 100vh; background: var(--dark, #0d0d0d); padding-bottom: 2rem; }
+.msp-header { padding: 1rem; position: sticky; top: 0; background: var(--dark, #0d0d0d); z-index: 10; }
+.msp-input-wrap { display: flex; align-items: center; background: #1e1e1e; border-radius: 12px; padding: 12px 16px; gap: 10px; border: 1.5px solid var(--red, #e50914); }
+.msp-input-wrap input { flex: 1; background: none; border: none; outline: none; color: #fff; font-size: 0.95rem; }
+.msp-input-wrap input::placeholder { color: #555; }
+.msp-icon { font-size: 1.1rem; }
+.msp-clear { background: none; border: none; color: var(--red, #e50914); font-size: 0.9rem; font-weight: 700; cursor: pointer; padding: 0; }
+.msp-results { padding: 0 1rem; }
+.msp-section-label { color: #666; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px; }
+.msp-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.msp-tag { background: #1e1e1e; color: #ccc; border: 1px solid #333; border-radius: 999px; padding: 6px 14px; font-size: 0.82rem; cursor: pointer; }
+.msp-tag:hover { border-color: var(--red, #e50914); color: #fff; }
+.msp-list { display: flex; flex-direction: column; gap: 10px; }
+.msp-item { display: flex; align-items: center; gap: 12px; background: #1a1a1a; border-radius: 10px; padding: 10px; cursor: pointer; }
+.msp-item:hover { background: #222; }
+.msp-thumb { width: 48px; height: 48px; border-radius: 8px; background: #333; object-fit: cover; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+.msp-item-title { color: #fff; font-size: 0.88rem; font-weight: 600; margin: 0 0 2px; }
+.msp-item-meta { color: #888; font-size: 0.75rem; margin: 0; }
+.msp-rank { margin-left: auto; color: var(--red, #e50914); font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
