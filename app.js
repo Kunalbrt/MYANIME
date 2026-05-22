@@ -1675,13 +1675,19 @@ async function deleteAnime(id) {
   const anime = animeLibrary.find(a => a.id === id);
   if (!anime || !confirm(`Delete "${anime.title}"?`)) return;
   try {
+    const token = getToken();
     await fetch(`${API}/admin/anime/${id}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${getToken()}` }
+      headers: { Authorization: `Bearer ${token}` }
     });
   } catch(err) {
     console.log('Backend delete failed:', err.message);
   }
+  animeLibrary = animeLibrary.filter(a => a.id !== id);
+  myList       = myList.filter(m => m.id !== id);
+  saveToStorage(); renderAll();
+  showToast(`🗑️ "${anime.title}" deleted.`);
+}
   animeLibrary = animeLibrary.filter(a => a.id !== id);
   myList       = myList.filter(m => m.id !== id);
   saveToStorage(); renderAll();
