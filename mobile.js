@@ -1,5 +1,5 @@
 // ============================================================
-//  mobile.js  â€”  Runs ONLY on mobile & tablet devices
+//  mobile.js  —  Runs ONLY on mobile & tablet devices
 //  Load this after app.js in index.html
 // ============================================================
 
@@ -95,7 +95,7 @@
   }
 
   // ============================================================
-  //  2. VIDEO PLAYER â€” open HLS in best available way
+  //  2. VIDEO PLAYER — open HLS in best available way
   // ============================================================
   function initMobilePlayer() {
     // Override openPlayer for mobile
@@ -106,7 +106,7 @@
 
       const videoUrl = episodeUrl || anime.videoUrl || '';
 
-      // If HLS stream â†’ show mobile player chooser
+      // If HLS stream → show mobile player chooser
       if (videoUrl && videoUrl.includes('.m3u8')) {
         showMobilePlayerOptions(anime, videoUrl, episodeTitle);
         return;
@@ -132,7 +132,7 @@
       display:flex; align-items:flex-end; justify-content:center;
     `;
 
-    const title = episodeTitle ? `${anime.title} â€” ${episodeTitle}` : anime.title;
+    const title = episodeTitle ? `${anime.title} — ${episodeTitle}` : anime.title;
 
     sheet.innerHTML = `
       <div style="
@@ -171,7 +171,7 @@
         </button>
 
         <button class="mob-player-btn" onclick="mobileOpenExternal('${videoUrl}')">
-          <span class="mob-player-icon">ðŸ“±</span>
+          <span class="mob-player-icon">📱</span>
           <div>
             <div>Open in External App</div>
             <div style="color:#aaa;font-size:0.78rem">VLC, MX Player, etc.</div>
@@ -179,7 +179,7 @@
         </button>
 
         <button class="mob-player-btn" onclick="mobileCopyLink('${videoUrl}')">
-          <span class="mob-player-icon">ðŸ”—</span>
+          <span class="mob-player-icon">🔗</span>
           <div>
             <div>Copy Stream Link</div>
             <div style="color:#aaa;font-size:0.78rem">Paste in any player</div>
@@ -294,11 +294,11 @@
   //  4. TOUCH-FRIENDLY CARDS (tap to show buttons)
   // ============================================================
   function initTouchCards() {
-    // On mobile, card hover doesn't work â€” use tap instead
+    // On mobile, card hover doesn't work — use tap instead
     document.addEventListener('click', (e) => {
       const card = e.target.closest('.anime-card');
       if (!card) {
-        // Tap outside â€” close all open cards
+        // Tap outside — close all open cards
         document.querySelectorAll('.anime-card.mob-active').forEach(c => {
           c.classList.remove('mob-active');
           const h = c.querySelector('.card-hover');
@@ -359,7 +359,7 @@
   }
 
   // ============================================================
-  //  6. EPISODE SIDEBAR â€” bottom drawer on mobile
+  //  6. EPISODE SIDEBAR — bottom drawer on mobile
   // ============================================================
   function initMobileEpisodeDrawer() {
     const style = document.createElement('style');
@@ -409,7 +409,7 @@
   };
 
   // ============================================================
-  //  8. HERO BANNER â€” mobile layout fix
+  //  8. HERO BANNER — mobile layout fix
   // ============================================================
   function initMobileHero() {
     const style = document.createElement('style');
@@ -479,7 +479,7 @@
     initMobileSearchBar();
     initBackButton();
 
-    console.log('[mobile.js] All mobile enhancements loaded âœ…');
+    console.log('[mobile.js] All mobile enhancements loaded ✅');
   }
 
   if (document.readyState === 'loading') {

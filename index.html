@@ -84,8 +84,7 @@
     </div>
     <div class="anime-row">
       <h2 class="row-title">🎬 Movies</h2>
-      <div class="movies-home-grid" id="moviesRowHome"></div>
-    <div class="movies-poster-grid" id="moviesPosterGrid"></div>
+      <div class="row-track" id="moviesRowHome"></div>
     </div>
   </div>
 </div>
@@ -142,7 +141,7 @@
 </div>
 
 <!-- ═══════════════════════════════════════════
-     ADMIN PAGE â€” FULL FEATURED
+     ADMIN PAGE — FULL FEATURED
 ═══════════════════════════════════════════ -->
 <div id="adminPage" class="page">
   <div class="admin-container">
@@ -164,7 +163,7 @@
       <button class="admin-tab" onclick="switchAdminTab('episodes'); loadEpAnimeList()">Episodes</button>
     </div>
 
-    <!-- â”€â”€ UPLOAD TAB â”€â”€ -->
+    <!-- ── UPLOAD TAB ── -->
     <div class="admin-tab-content active" id="uploadTab">
       <div class="upload-grid">
         <div class="upload-card">
@@ -250,21 +249,21 @@
           <div class="provider-card" onclick="showCloudGuide('cloudinary')"><div class="provider-icon">☁️</div><span>Cloudinary</span><span class="provider-status connected">Guide</span></div>
           <div class="provider-card" onclick="showCloudGuide('backblaze')"><div class="provider-icon">🔥</div><span>Backblaze B2</span><span class="provider-status">Guide</span></div>
           <div class="provider-card" onclick="showCloudGuide('wasabi')"><div class="provider-icon">🌿</div><span>Wasabi</span><span class="provider-status">Guide</span></div>
-          <div class="provider-card" onclick="showCloudGuide('jiocloud')"><div class="provider-icon">ðŸ‡®ðŸ‡³</div><span>Jio Cloud</span><span class="provider-status connected">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('jiocloud')"><div class="provider-icon">🇮🇳</div><span>Jio Cloud</span><span class="provider-status connected">Guide</span></div>
         </div>
       </div>
     </div>
 
-    <!-- â”€â”€ LIBRARY TAB â”€â”€ -->
+    <!-- ── LIBRARY TAB ── -->
     <div class="admin-tab-content" id="libraryTab">
       <div class="library-header">
-        <h3>ðŸ“š Content Library (<span id="libraryCount">0</span> items)</h3>
+        <h3>📚 Content Library (<span id="libraryCount">0</span> items)</h3>
         <button class="btn-danger" onclick="clearLibrary()">ðŸ—‘️ Clear All</button>
       </div>
       <div class="library-grid" id="libraryGrid"></div>
     </div>
 
-    <!-- â”€â”€ ANALYTICS TAB â”€â”€ -->
+    <!-- ── ANALYTICS TAB ── -->
     <div class="admin-tab-content" id="analyticsTab">
       <div class="analytics-dashboard">
         <h3>📊 Website Analytics</h3>
@@ -283,7 +282,7 @@
             <div class="stat-label">Total Visits</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon">ðŸ“…</div>
+            <div class="stat-icon">📅</div>
             <div class="stat-number" id="statTodayVisits">0</div>
             <div class="stat-label">Visits Today</div>
           </div>
@@ -306,7 +305,7 @@
 
         <!-- Sessions Over Time (mini chart) -->
         <div class="analytics-section">
-          <h4>ðŸ“ˆ Visit Activity (Last 7 Days)</h4>
+          <h4>📈 Visit Activity (Last 7 Days)</h4>
           <div class="bar-chart-wrap">
             <div class="bar-chart" id="visitBarChart"></div>
             <div class="bar-labels" id="visitBarLabels"></div>
@@ -320,7 +319,7 @@
             <div id="topAnimeList" class="top-list"></div>
           </div>
           <div class="analytics-section">
-            <h4>ðŸ”Ž Top Search Terms</h4>
+            <h4>🔎 Top Search Terms</h4>
             <div id="topSearchList" class="top-list"></div>
           </div>
         </div>
@@ -328,7 +327,7 @@
         <!-- Device & Browser -->
         <div class="analytics-two-col">
           <div class="analytics-section">
-            <h4>ðŸ“± Device Types</h4>
+            <h4>📱 Device Types</h4>
             <div id="deviceList" class="top-list"></div>
           </div>
           <div class="analytics-section">
@@ -338,17 +337,17 @@
         </div>
 
         <div style="display:flex;gap:1rem;margin-top:1rem">
-          <button class="btn-add-anime" style="max-width:180px" onclick="refreshAnalytics()">ðŸ”„ Refresh</button>
+          <button class="btn-add-anime" style="max-width:180px" onclick="refreshAnalytics()">🔄 Refresh</button>
           <button class="btn-danger" onclick="resetAnalytics()">ðŸ—‘️ Reset Stats</button>
         </div>
       </div>
     </div>
 
-    <!-- â”€â”€ SITE EDITOR TAB â”€â”€ -->
+    <!-- ── SITE EDITOR TAB ── -->
     <div class="admin-tab-content" id="siteeditorTab">
       <div class="home-editor">
         <h3>🖊️ Full Website Editor</h3>
-        <p class="cloud-desc">Edit every visible part of your website â€” navbar, hero, footer text, page titles, and more.</p>
+        <p class="cloud-desc">Edit every visible part of your website — navbar, hero, footer text, page titles, and more.</p>
 
         <!-- Navbar Editor -->
         <div class="editor-section">
@@ -410,7 +409,7 @@
 
         <!-- Page Titles Editor -->
         <div class="editor-section">
-          <h4>ðŸ“„ Page Titles</h4>
+          <h4>📄 Page Titles</h4>
           <div class="form-row">
             <div class="form-group">
               <label>Movies Page Title</label>
@@ -444,7 +443,7 @@
 
         <!-- Announcement Banner -->
         <div class="editor-section">
-          <h4>ðŸ“¢ Announcement Banner</h4>
+          <h4>📢 Announcement Banner</h4>
           <p style="color:#aaa;font-size:0.85rem;margin-bottom:0.8rem">Show a banner at the top of the site for news or updates.</p>
           <div class="row-toggle-item" style="margin-bottom:1rem">
             <span>Enable Announcement Banner</span>
@@ -480,7 +479,7 @@
 
         <!-- Empty States Editor -->
         <div class="editor-section">
-          <h4>ðŸ“­ Empty State Messages</h4>
+          <h4>📭 Empty State Messages</h4>
           <div class="form-group">
             <label>My List Empty Message</label>
             <input type="text" id="edit_emptyList" class="admin-input" placeholder="Your list is empty. Add anime to watch later!" oninput="liveEditEmptyStates()"/>
@@ -498,11 +497,11 @@
       </div>
     </div>
 
-    <!-- â”€â”€ HOME EDITOR TAB â”€â”€ -->
+    <!-- ── HOME EDITOR TAB ── -->
     <div class="admin-tab-content" id="homeTab">
       <div class="home-editor">
         <h3>🏠 Home Page Editor</h3>
-        <p class="cloud-desc">Control what appears on the homepage â€” featured hero, row visibility, and row titles.</p>
+        <p class="cloud-desc">Control what appears on the homepage — featured hero, row visibility, and row titles.</p>
 
         <div class="editor-section">
           <h4>🎬 Featured Hero Anime</h4>
@@ -545,7 +544,7 @@
       </div>
     </div>
 
-    <!-- â”€â”€ RECOMMENDATIONS TAB â”€â”€ -->
+    <!-- ── RECOMMENDATIONS TAB ── -->
     <div class="admin-tab-content" id="recommendTab">
       <div class="home-editor">
         <h3>Recommendations Manager</h3>
@@ -562,7 +561,7 @@
       </div>
     </div>
 
-    <!-- â”€â”€ THEME TAB â”€â”€ -->
+    <!-- ── THEME TAB ── -->
     <div class="admin-tab-content" id="themeTab">
       <div class="home-editor">
         <h3>Theme & Appearance</h3>
@@ -590,7 +589,7 @@
         </div>
 
         <div class="editor-section">
-          <h4>ðŸ”¤ Site Title & Branding</h4>
+          <h4>🔤 Site Title & Branding</h4>
           <div class="form-row">
             <div class="form-group"><label>Site Title</label><input type="text" id="siteTitle" class="admin-input" placeholder="MyAnime" onchange="applyBranding()"/></div>
             <div class="form-group"><label>Logo Icon (emoji)</label><input type="text" id="siteIcon" class="admin-input" placeholder="⚔️️" maxlength="4" onchange="applyBranding()"/></div>
@@ -609,7 +608,7 @@
       </div>
     </div>
 
-    <!-- â”€â”€ CLOUD TAB â”€â”€ -->
+    <!-- ── CLOUD TAB ── -->
     <div class="admin-tab-content" id="cloudTab">
       <div class="cloud-config">
         <h3>Cloud Storage Configuration</h3>
@@ -639,7 +638,7 @@
       </div>
     </div>
 
-    <!-- â”€â”€ SECURITY TAB â”€â”€ -->
+    <!-- ── SECURITY TAB ── -->
     <div class="admin-tab-content" id="securityTab">
       <div class="home-editor">
         <h3>Security Settings</h3>
@@ -670,7 +669,7 @@
 
         <!-- 2FA Settings -->
         <div class="editor-section">
-          <h4>ðŸ“§ Two-Step Authentication (2FA)</h4>
+          <h4>📧 Two-Step Authentication (2FA)</h4>
           <p style="color:#aaa;font-size:0.85rem;margin-bottom:1rem">When enabled, every admin login requires a one-time code sent to your email.</p>
           <div class="row-toggle-item" style="margin-bottom:1.2rem">
             <span>Enable 2FA Email Verification</span>
@@ -680,9 +679,9 @@
             </label>
           </div>
           <div class="twofa-info">
-            <div class="twofa-info-row"><span class="twofa-label">ðŸ“§ Admin Email</span><span class="twofa-value">bhartikunal172@gmail.com</span></div>
+            <div class="twofa-info-row"><span class="twofa-label">📧 Admin Email</span><span class="twofa-value">bhartikunal172@gmail.com</span></div>
             <div class="twofa-info-row"><span class="twofa-label">⏱️ OTP Expires</span><span class="twofa-value">5 minutes</span></div>
-            <div class="twofa-info-row"><span class="twofa-label">ðŸ”„ Max Attempts</span><span class="twofa-value">3 per login</span></div>
+            <div class="twofa-info-row"><span class="twofa-label">🔄 Max Attempts</span><span class="twofa-value">3 per login</span></div>
             <div class="twofa-info-row"><span class="twofa-label">🚫 Lockout After</span><span class="twofa-value">3 failed attempts (30 min)</span></div>
           </div>
           <div class="emailjs-config" style="margin-top:1.2rem">
@@ -704,7 +703,7 @@
             </div>
             <p style="color:#555;font-size:0.75rem;margin-bottom:0.8rem">Template variables needed: <code style="background:#222;padding:2px 6px;border-radius:3px;color:#4caf50">{{otp_code}}</code> <code style="background:#222;padding:2px 6px;border-radius:3px;color:#4caf50">{{to_email}}</code></p>
             <button class="btn-add-anime" style="max-width:200px" onclick="saveEmailJSConfig()">💾 Save EmailJS Config</button>
-            <button class="btn-test" style="margin-left:0.8rem" onclick="testEmailJS()">ðŸ“§ Send Test OTP</button>
+            <button class="btn-test" style="margin-left:0.8rem" onclick="testEmailJS()">📧 Send Test OTP</button>
           </div>
         </div>
 
@@ -720,8 +719,8 @@
           <h4>⚠️ Danger Zone</h4>
           <p style="color:#aaa;font-size:0.85rem;margin-bottom:1rem">Irreversible actions. Use with extreme care.</p>
           <div style="display:flex;gap:1rem;flex-wrap:wrap">
-            <button class="btn-danger" onclick="lockAdminNow()">ðŸ”’ Lock Admin Now</button>
-            <button class="btn-danger" onclick="resetAllData()">ðŸ’¥ Reset All Site Data</button>
+            <button class="btn-danger" onclick="lockAdminNow()">🔒 Lock Admin Now</button>
+            <button class="btn-danger" onclick="resetAllData()">💥 Reset All Site Data</button>
           </div>
         </div>
       </div>
@@ -730,7 +729,7 @@
   </div><!-- /admin-container -->
 </div><!-- /adminPage -->
 
-<!-- â”€â”€â”€ EDIT ANIME MODAL â”€â”€â”€ -->
+<!-- ─── EDIT ANIME MODAL ─── -->
 <div class="modal-overlay" id="editAnimeModal" onclick="closeEditModal()">
   <div class="modal" onclick="event.stopPropagation()" style="max-width:700px">
     <button class="modal-close" onclick="closeEditModal()">✕</button>
@@ -853,7 +852,7 @@
   </div>
 </div>
 
-<!-- â”€â”€â”€ ADMIN LOGIN MODAL (Step 1: Password) â”€â”€â”€ -->
+<!-- ─── ADMIN LOGIN MODAL (Step 1: Password) ─── -->
 <div class="modal-overlay" id="adminLoginModal">
   <div class="modal admin-login-modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeAdminLogin()">✕</button>
@@ -865,17 +864,17 @@
     <div class="admin-login-body">
       <div id="loginAttemptInfo" style="display:none;background:rgba(229,9,20,0.1);border:1px solid rgba(229,9,20,0.3);border-radius:6px;padding:0.6rem 1rem;color:#e57373;font-size:0.82rem;text-align:center;margin-bottom:0.5rem"></div>
       <input type="password" id="adminPasswordInput" class="admin-input" placeholder="Enter admin password..." oninput="onPasswordTyped()" onkeydown="if(event.key==='Enter')checkAdminPassword()"/>
-      <button class="btn-add-anime" onclick="checkAdminPassword()">ðŸ”“ Login</button>
+      <button class="btn-add-anime" onclick="checkAdminPassword()">🔓 Login</button>
       <p id="adminError" style="display:none;color:#e57373;text-align:center;margin-top:0.5rem">❌ Wrong password. Try again.</p>
     </div>
   </div>
 </div>
 
-<!-- â”€â”€â”€ 2FA OTP MODAL (Step 2) â”€â”€â”€ -->
+<!-- ─── 2FA OTP MODAL (Step 2) ─── -->
 <div class="modal-overlay" id="otpModal">
   <div class="modal admin-login-modal" onclick="event.stopPropagation()" style="max-width:420px">
     <div class="admin-login-header">
-      <div style="font-size:2.5rem">ðŸ“§</div>
+      <div style="font-size:2.5rem">📧</div>
       <h2>Verify Your Identity</h2>
       <p>A one-time code was sent to<br><strong style="color:white">bhartikunal172@gmail.com</strong></p>
     </div>
@@ -887,9 +886,9 @@
           onkeydown="if(event.key==='Enter')verifyOTP()"/>
       </div>
       <div id="otpTimer" style="text-align:center;color:#aaa;font-size:0.85rem;margin-top:0.5rem">Code expires in <span id="otpTimerCount">5:00</span></div>
-      <button class="btn-add-anime" onclick="verifyOTP()" id="otpVerifyBtn">âœ… Verify Code</button>
+      <button class="btn-add-anime" onclick="verifyOTP()" id="otpVerifyBtn">✅ Verify Code</button>
       <p id="otpError" style="display:none;color:#e57373;text-align:center;margin-top:0.5rem"></p>
-      <button onclick="resendOTP()" id="resendBtn" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.85rem;margin-top:0.5rem;display:block;width:100%;text-align:center" disabled>ðŸ”„ Resend Code (wait...)</button>
+      <button onclick="resendOTP()" id="resendBtn" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.85rem;margin-top:0.5rem;display:block;width:100%;text-align:center" disabled>🔄 Resend Code (wait...)</button>
     </div>
   </div>
 </div>
@@ -1124,24 +1123,24 @@
 </div>
 
 
-    <!-- â”€â”€ EPISODES TAB â”€â”€ -->
+    <!-- ── EPISODES TAB ── -->
     <div class="admin-tab-content" id="episodesTab">
       <div class="ep-manager">
         <div class="ep-header">
           <h2>🎬 Episode Manager</h2>
-          <button class="btn-primary" onclick="loadEpAnimeList()">ðŸ”„ Refresh Anime List</button>
+          <button class="btn-primary" onclick="loadEpAnimeList()">🔄 Refresh Anime List</button>
         </div>
 
         <div class="ep-section">
           <label class="ep-label">Select Anime</label>
           <select id="epAnimeSelect" class="admin-input" onchange="loadAnimeSeasons()">
-            <option value="">â€” Loading anime list... â€”</option>
+            <option value="">— Loading anime list... —</option>
           </select>
         </div>
 
         <div class="ep-section" id="seasonSection" style="display:none">
           <div class="ep-section-header">
-            <h3>ðŸ“… Seasons</h3>
+            <h3>📅 Seasons</h3>
           </div>
           <div id="seasonsList" class="ep-list"></div>
           <div class="ep-add-form">
@@ -1153,7 +1152,7 @@
 
         <div class="ep-section" id="episodeSection" style="display:none">
           <div class="ep-section-header">
-            <h3>Episodes â€” <span id="currentSeasonLabel" style="color:var(--red)"></span></h3>
+            <h3>Episodes — <span id="currentSeasonLabel" style="color:var(--red)"></span></h3>
           </div>
           <div id="episodesList" class="ep-list"></div>
           <div class="ep-add-form ep-add-form--episodes">
@@ -1172,6 +1171,7 @@
 <script src="back.js"></script>
 </body>
 </html>
+
 
 
 
