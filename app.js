@@ -1877,10 +1877,14 @@ function updateNavForAuth() {
   const avatar   = document.getElementById('userAvatar');
   if (user) {
     if (loginBtn) loginBtn.style.display = 'none';
+    const signupBtn = document.getElementById('signupBtn');
+    if (signupBtn) signupBtn.style.display = 'none';
     if (avatar) { avatar.style.display = 'flex'; avatar.textContent = user.username[0].toUpperCase(); }
     if (user.role === 'admin') document.getElementById('adminBtn').style.display = 'flex';
   } else {
     if (loginBtn) loginBtn.style.display = 'block';
+    const signupBtn2 = document.getElementById('signupBtn');
+    if (signupBtn2) signupBtn2.style.display = 'block';
     if (avatar)   avatar.style.display = 'none';
   }
 }
