@@ -39,8 +39,8 @@
   // Show/hide based on current page
   function updateBtn() {
     const active = document.querySelector('.page.active');
-    console.log("[back.js] active page:", active?.id); const isHome = !active || active.id === 'homePage';
-    btn.style.display = "flex"; // forced
+    const isHome = !active || active.id === 'homePage';
+    btn.style.display = isHome ? 'none' : 'flex';
   }
 
   // Override showPage once it's available
