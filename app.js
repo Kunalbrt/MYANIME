@@ -1316,8 +1316,8 @@ function saveRecommendations() {
 async function saveSettingsToBackend(patch) {
   try {
     const token = localStorage.getItem('token');
-    if (!token) return; // only save if logged in as admin
-    await fetch('/api/admin/settings', {
+    if (!token) return;
+    await fetch('https://myanime-backend-2vc9.onrender.com/api/admin/settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify(patch)
@@ -1327,7 +1327,7 @@ async function saveSettingsToBackend(patch) {
 
 async function loadSettingsFromBackend() {
   try {
-    const res  = await fetch('/api/admin/settings');
+    const res = await fetch('https://myanime-backend-2vc9.onrender.com/api/admin/settings');
     const data = await res.json();
     if (!data.success) return;
     const s = data.settings;
