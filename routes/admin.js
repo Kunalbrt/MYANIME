@@ -82,7 +82,7 @@ router.post('/settings', protect, requireAdmin, async (req, res) => {
     if (effects !== undefined) update.effects = effects;
     const settings = await Settings.findOneAndUpdate(
       { key: 'global' },
-      { ['']: update },
+      { '': update },
       { upsert: true, new: true }
     );
     res.json({ success: true, settings });
@@ -115,7 +115,7 @@ router.post('/settings', protect, requireAdmin, async (req, res) => {
     if (effects !== undefined) update.effects = effects;
     const settings = await Settings.findOneAndUpdate(
       { key: 'global' },
-      { ['']: update },
+      { '': update },
       { upsert: true, new: true }
     );
     res.json({ success: true, settings });
@@ -148,7 +148,7 @@ router.post('/settings', protect, requireAdmin, async (req, res) => {
     if (effects !== undefined) update.effects = effects;
     const settings = await Settings.findOneAndUpdate(
       { key: 'global' },
-      { ['']: update },
+      { '': update },
       { upsert: true, new: true }
     );
     res.json({ success: true, settings });
