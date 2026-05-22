@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 //   MYANIME â€” App Logic (Optimized & Debugged)
 // ============================================
 
@@ -92,6 +92,8 @@ function init() {
   loadRowSettings();
   loadSecuritySettings();
   loadSavedTheme();
+  loadSettingsFromBackend();   // pull latest from DB on load
+  startSettingsPolling();      // sync every 30s
   loadSiteEdits();
   renderAll();
       if (!featuredHeroId && animeLibrary.length > 0) { featuredHeroId = animeLibrary[0].id; }
@@ -249,7 +251,7 @@ async function addAnime() {
 
   // Step 2 â€” Save anime to MongoDB
   try {
-    showToast('â³ Saving anime...');
+    howToast('â³ Saving anime...');
     const res = await fetch(`${API}/anime`, {
       method: 'POST',
       headers: {
@@ -1247,10 +1249,11 @@ function populateHomeEditor() {
   });
   updateHeroPreview();
 }
-
+ 
 function setFeaturedHero(id) {
   featuredHeroId = id;
   localStorage.setItem('myanime_hero', id);
+  saveSettingsToBackend({ hero: id });
   updateHeroPreview(); renderHero();
 }
 
@@ -1304,6 +1307,67 @@ function saveRecommendations() {
   showToast('âœ… Recommendations saved!');
 }
 
+
+
+// ════════════════════════════════════════════
+//   BACKEND SETTINGS SYNC
+// ════════════════════════════════════════════
+
+async function saveSettingsToBackend(patch) {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) return; // only save if logged in as admin
+    await fetch('/api/admin/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify(patch)
+    });
+  } catch(err) { /* silent fail — localStorage is fallback */ }
+}
+
+async function loadSettingsFromBackend() {
+  try {
+    const res  = await fetch('/api/admin/settings');
+    const data = await res.json();
+    if (!data.success) return;
+    const s = data.settings;
+
+    // Theme
+    if (s.theme) {
+      localStorage.setItem('myanime_theme', JSON.stringify(s.theme));
+    }
+    // Branding
+    if (s.branding) {
+      localStorage.setItem('myanime_branding', JSON.stringify(s.branding));
+    }
+    // Hero
+    if (s.hero) {
+      localStorage.setItem('myanime_hero', s.hero);
+      featuredHeroId = s.hero;
+    }
+    // Site edits
+    if (s.siteedits && Object.keys(s.siteedits).length > 0) {
+      localStorage.setItem('myanime_siteedits', JSON.stringify(s.siteedits));
+    }
+    // Effects
+    if (s.effects) {
+      localStorage.setItem('myanime_effects', JSON.stringify(s.effects));
+    }
+
+    // Apply everything
+    loadSavedTheme();
+    loadSiteEdits();
+  } catch(err) { /* fall back to localStorage */ }
+}
+
+// Poll every 30 seconds — keeps all devices in sync
+let _settingsPollInterval = null;
+function startSettingsPolling() {
+  if (_settingsPollInterval) return;
+  _settingsPollInterval = setInterval(loadSettingsFromBackend, 30000);
+}
+
+
 // ════════════════════════════════════════════
 //   THEME MANAGER
 // ════════════════════════════════════════════
@@ -1316,7 +1380,8 @@ const THEMES = {
   sakura:  { red:'#ff6b9d', dark:'#140810', dark2:'#1a0c16', dark3:'#20101c', dark4:'#261422', card:'#180a14' },
 };
 
-function applyThemePreset(name) {
+
+  function applyThemePreset(name) {
   const t = THEMES[name]; if (!t) return;
   const vars = { '--red':t.red, '--red-hover':t.red, '--dark':t.dark, '--dark2':t.dark2, '--dark3':t.dark3, '--dark4':t.dark4, '--card-bg':t.card };
   Object.entries(vars).forEach(([k,v]) => document.documentElement.style.setProperty(k, v));
@@ -1329,11 +1394,15 @@ function applyThemePreset(name) {
   const hEl = document.getElementById('accentHex'); if (hEl) hEl.textContent = t.red;
   const bEl = document.getElementById('bgHex');     if (bEl) bEl.textContent = t.dark;
   const cEl = document.getElementById('cardHex');   if (cEl) cEl.textContent = t.card;
-  localStorage.setItem('myanime_theme', JSON.stringify({ name, ...t }));
-  showToast(`âœ… Theme: ${name}`);
+  const themeData = JSON.stringify({ name, ...t });
+  localStorage.setItem('myanime_theme', themeData);
+  saveSettingsToBackend({ theme: { name, ...t } });
+  showToast(`✅ Theme: ${name}`);
 }
 
-function applyCustomColor() {
+
+
+  function applyCustomColor() {
   const accent = document.getElementById('accentColor').value;
   const bg     = document.getElementById('bgColor').value;
   const card   = document.getElementById('cardColor').value;
@@ -1345,15 +1414,29 @@ function applyCustomColor() {
   document.getElementById('bgHex').textContent     = bg;
   document.getElementById('cardHex').textContent   = card;
   document.querySelectorAll('.theme-preset').forEach(p => p.classList.remove('active'));
-  localStorage.setItem('myanime_theme', JSON.stringify({ name:'custom', red:accent, dark:bg, card }));
+  const themeData = { name:'custom', red:accent, dark:bg, card };
+  localStorage.setItem('myanime_theme', JSON.stringify(themeData));
+  saveSettingsToBackend({ theme: themeData });
 }
+ 
 
-function applyBranding() {
+ 
+  function applyBranding() {
   const title = document.getElementById('siteTitle').value.trim();
   const icon  = document.getElementById('siteIcon').value.trim();
   if (title) { document.querySelector('.logo-text').textContent = title; document.title = title; }
   if (icon)  document.querySelector('.logo-icon').textContent = icon;
-  localStorage.setItem('myanime_branding', JSON.stringify({ title, icon }));
+  const brandData = { title, icon };
+  localStorage.setItem('myanime_branding', JSON.stringify(brandData));
+  saveSettingsToBackend({ branding: brandData });
+}
+
+function saveAllSiteEdits() {
+  const e = collectSiteEdits();
+  saveSiteEdits(e);
+  applyAllSiteEdits(e);
+  saveSettingsToBackend({ siteedits: e });
+  showToast('💾 Site edits saved!');
 }
 
 function applyEffects() {
@@ -1366,18 +1449,21 @@ function applyEffects() {
     ${!hover      ? '.anime-card:hover { transform: none !important; }' : ''}
     ${!transition ? '.page { animation: none !important; }' : ''}
   `;
-  localStorage.setItem('myanime_effects', JSON.stringify({ hover, transition }));
+  const effectData = { hover, transition };
+  localStorage.setItem('myanime_effects', JSON.stringify(effectData));
+  saveSettingsToBackend({ effects: effectData });
 }
 
 function resetTheme() {
   applyThemePreset('netflix');
   document.querySelector('.logo-text').textContent = 'MyAnime';
-  document.querySelector('.logo-icon').textContent = '⚔️ï¸';
+  document.querySelector('.logo-icon').textContent = '⚔️';
   document.title = 'MyAnime';
   document.getElementById('siteTitle').value = '';
   document.getElementById('siteIcon').value  = '';
   localStorage.removeItem('myanime_theme');
   localStorage.removeItem('myanime_branding');
+  saveSettingsToBackend({ theme: null, branding: null });
   showToast('↺ Theme reset to default');
 }
 
@@ -1480,7 +1566,6 @@ function liveEditBanner()     { const enabled = document.getElementById('edit_ba
 function liveEditFooter()      {}
 function liveEditEmptyStates() {}
 
-function saveAllSiteEdits() { const e = collectSiteEdits(); saveSiteEdits(e); applyAllSiteEdits(e); showToast('💾 Site edits saved!'); }
 
 function resetSiteEdits() {
   if (!confirm('Reset all site text edits to defaults?')) return;
