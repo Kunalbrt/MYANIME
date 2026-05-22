@@ -92,7 +92,7 @@ router.post('/settings', protect, requireAdmin, async (req, res) => {
 });
 
 
-const Settings = require('../models/Settings');
+
 
 router.get('/settings', async (req, res) => {
   try {
