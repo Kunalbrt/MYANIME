@@ -1671,13 +1671,21 @@ async function saveAnimeEdit() {
 }
 
 
-function deleteAnime(id) {
+async function deleteAnime(id) {
   const anime = animeLibrary.find(a => a.id === id);
   if (!anime || !confirm(`Delete "${anime.title}"?`)) return;
+  try {
+    await fetch(`${API}/admin/anime/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+  } catch(err) {
+    console.log('Backend delete failed:', err.message);
+  }
   animeLibrary = animeLibrary.filter(a => a.id !== id);
   myList       = myList.filter(m => m.id !== id);
   saveToStorage(); renderAll();
-  showToast(`ðŸ—‘ï¸ "${anime.title}" deleted.`);
+  showToast(`🗑️ "${anime.title}" deleted.`);
 }
 
 function clearLibrary() {
