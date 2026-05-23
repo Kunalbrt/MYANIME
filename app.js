@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 //   MYANIME — App Logic (Optimized & Debugged)
 // ============================================
 
@@ -254,7 +254,7 @@ async function addAnime() {
 
   // Step 2 — Save anime to MongoDB
   try {
-    howToast('⏳ Saving anime...');
+    showToast('⏳ Saving anime...');
     const res = await fetch(`${API}/anime`, {
       method: 'POST',
       headers: {
