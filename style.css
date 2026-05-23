@@ -133,7 +133,7 @@ body {
 .anime-row { padding: 1.5rem 4% 0.5rem; position: relative; }
 .row-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.8rem; color: var(--white); cursor: pointer; }
 .row-title:hover { color: #aaa; }
-.row-track { display: flex; gap: 0.4rem; overflow-x: auto; overflow-y: visible; padding: 0.5rem 0; scroll-behavior: smooth; scrollbar-width: none; }
+.row-track { display: flex; gap: 0.4rem; overflow-x: auto; overflow-y: visible; padding-bottom: 1rem; padding: 0.5rem 0; scroll-behavior: smooth; scrollbar-width: none; }
 .row-track::-webkit-scrollbar { display: none; }
 
 /* ============ ANIME CARD ============ */
@@ -593,6 +593,8 @@ select.admin-input { cursor: pointer; }
   text-overflow: ellipsis;
   max-width: 200px;
 }
+
+
 
 
 
