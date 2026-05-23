@@ -186,6 +186,9 @@ async function fetchAnimeFromBackend() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (data.success && Array.isArray(data.anime) && data.anime.length > 0) {
+      const savedLib = JSON.parse(localStorage.getItem('myanime_library') || '[]');
+      const savedMap = {};
+      savedLib.forEach(a => { savedMap[a.id] = a; });
       animeLibrary = data.anime.map(a => ({
         id:       a._id,
         title:    a.title,
@@ -198,8 +201,8 @@ async function fetchAnimeFromBackend() {
         thumb:    a.thumbnailUrl || '',
         videoUrl: a.videoUrl     || '',
         emoji:    '??',
-        trending: a.isTrending  || false,
-        topRated: a.isTopRated  || false,
+        trending: savedMap[a._id] !== undefined ? savedMap[a._id].trending : (a.isTrending || false),
+        topRated: savedMap[a._id] !== undefined ? savedMap[a._id].topRated : (a.isTopRated || false),
       }));
       saveToStorage();
       renderAll();
@@ -1965,6 +1968,7 @@ function showToast(msg) {
 //   START
 // --------------------------------------------
 document.addEventListener('DOMContentLoaded', init);
+
 
 
 
