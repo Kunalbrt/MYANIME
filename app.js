@@ -20,7 +20,7 @@ const DEMO_ANIME = [
   { id:'d2',title:'Attack on Titan',type:'series',genre:'action',year:'2013',rating:'TV-MA',desc:'Humanity lives inside cities surrounded by enormous walls due to the Titans, gigantic humanoid beings who devour humans seemingly without reason.',thumb:'',videoUrl:'',emoji:'🗡️',trending:true,topRated:true },
   { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'??',trending:true,topRated:false },
   { id:'d4',title:'Spirited Away',type:'movie',genre:'fantasy',year:'2001',rating:'PG',desc:'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.',thumb:'',videoUrl:'',emoji:'🌸',trending:false,topRated:true },
-  { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'??�',trending:false,topRated:true },
+  { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'??�',trending:false,topRated:true },
   { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'?',trending:true,topRated:true },
   { id:'d7',title:'Fullmetal Alchemist',type:'series',genre:'adventure',year:'2009',rating:'TV-14',desc:'Two brothers search for a Philosopher\'s Stone after an attempt to revive their deceased mother goes wrong.',thumb:'',videoUrl:'',emoji:'⚗️',trending:false,topRated:true },
   { id:'d8',title:'Dragon Ball Z',type:'series',genre:'action',year:'1989',rating:'TV-PG',desc:'The adventures of Earth\'s martial arts defender, Son Goku, continues with a new family and the revelation of his alien origin.',thumb:'',videoUrl:'',emoji:'🔵',trending:false,topRated:false },
@@ -775,7 +775,7 @@ function renderLoginHistory() {
 function clearLoginHistory() {
   localStorage.removeItem('myanime_loginhistory');
   renderLoginHistory();
-  showToast('🗑️ Login history cleared.');
+  showToast('&#128465;️ Login history cleared.');
 }
 
 // --------------------------------------------
@@ -966,7 +966,7 @@ function createGridCard(anime) {
   div.innerHTML = `${innerHtml}
     <div class="grid-card-overlay">
       <div class="grid-card-title">${anime.title}</div>
-      <div class="grid-card-meta">${anime.year||''} • ${anime.genre||''}</div>
+      <div class="grid-card-meta">${anime.year||''} &bull; ${anime.genre||''}</div>
       <div class="grid-card-actions">
         <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">? Play</button>
         <button class="gc-play" style="background:rgba(109,109,110,0.7);color:white" onclick="showInfoModal_byId('${anime.id}')">ⓘ Info</button>
@@ -1082,7 +1082,7 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   const displayTitle = episodeTitle ? `${anime.title} - ${episodeTitle}` : anime.title;
   document.getElementById('playerTitle').textContent     = displayTitle;
   document.getElementById('playerInfoTitle').textContent = anime.title;
-  document.getElementById('playerInfoMeta').textContent  = ` • ${anime.year||''} • ${anime.genre||''} • ${anime.rating||''}`;
+  document.getElementById('playerInfoMeta').textContent  = ` &bull; ${anime.year||''} &bull; ${anime.genre||''} &bull; ${anime.rating||''}`;
 
   // Build episode list if series has seasons
   const episodeListEl = document.getElementById('episodeList');
@@ -1264,7 +1264,7 @@ function updateHeroPreview() {
   if (!anime) { card.innerHTML = ''; return; }
   card.innerHTML = `<div class="hero-preview-mini">
     <div class="mini-emoji">${anime.emoji||'??'}</div>
-    <div><strong>${anime.title}</strong><span>${anime.year||''} • ${anime.type} • ${anime.genre||''}</span></div>
+    <div><strong>${anime.title}</strong><span>${anime.year||''} &bull; ${anime.type} &bull; ${anime.genre||''}</span></div>
   </div>`;
 }
 
@@ -1288,7 +1288,7 @@ function renderRecommendGrid(containerId, field) {
         onchange="toggleRecommend('${field}','${anime.id}',this)"/>
       <div class="recommend-item-info">
         <strong>${anime.emoji||'??'} ${anime.title}</strong>
-        <span>${anime.type} • ${anime.year||''}</span>
+        <span>${anime.type} &bull; ${anime.year||''}</span>
       </div>`;
     item.onclick = e => { if (e.target.tagName !== 'INPUT') item.querySelector('input').click(); };
     container.appendChild(item);
@@ -1322,7 +1322,7 @@ async function saveSettingsToBackend(patch) {
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify(patch)
     });
-  } catch(err) { /* silent fail � localStorage is fallback */ }
+  } catch(err) { /* silent fail � localStorage is fallback */ }
 }
 
 async function loadSettingsFromBackend() {
@@ -1360,7 +1360,7 @@ async function loadSettingsFromBackend() {
   } catch(err) { /* fall back to localStorage */ }
 }
 
-// Poll every 30 seconds � keeps all devices in sync
+// Poll every 30 seconds � keeps all devices in sync
 let _settingsPollInterval = null;
 function startSettingsPolling() {
   if (_settingsPollInterval) return;
@@ -1666,15 +1666,15 @@ function renderLibraryTab() {
       ${thumbHtml}
       <div class="library-info">
         <strong>${anime.title}</strong>
-        <span>${anime.type} • ${anime.year||'N/A'} • ${anime.genre||''}</span>
+        <span>${anime.type} &bull; ${anime.year||'N/A'} &bull; ${anime.genre||''}</span>
         <span style="color:${anime.videoUrl?'#4caf50':'#e57373'};font-size:0.7rem">
-          ${anime.videoUrl ? '✅ Has video source' : '⚠️ No video source'}
+          ${anime.videoUrl ? '&#10003; Has video source' : '&#9888; No video source'}
         </span>
       </div>
       <div class="library-actions">
-        <button class="lib-btn edit" onclick="openEditModal('${anime.id}')">✏️</button>
-        <button class="lib-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">?�</button>
-        <button class="lib-btn del" onclick="deleteAnime('${anime.id}')">🗑</button>
+        <button class="lib-btn edit" onclick="openEditModal('${anime.id}')">&#9998;</button>
+        <button class="lib-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">&#9654;</button>
+        <button class="lib-btn del" onclick="deleteAnime('${anime.id}')">&#128465;</button>
       </div>`;
     grid.appendChild(item);
   });
@@ -1913,7 +1913,7 @@ function renderMspTrending() {
       ${thumb}
       <div>
         <p class="msp-item-title">${a.title}</p>
-        <p class="msp-item-meta">${a.type} � ${a.year||''}</p>
+        <p class="msp-item-meta">${a.type} � ${a.year||''}</p>
       </div>
       <span class="msp-rank">${rank}</span>
     </div>`;
@@ -1965,6 +1965,7 @@ function showToast(msg) {
 //   START
 // --------------------------------------------
 document.addEventListener('DOMContentLoaded', init);
+
 
 
 
