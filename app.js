@@ -363,7 +363,7 @@ function refreshAnalytics() {
   el('statPlays').textContent       = analytics.plays;
   el('statSearches').textContent    = analytics.searches;
   el('statMyListAdds').textContent  = analytics.myListAdds;
-  el('statLiveUsers').textContent = analytics.totalVisits;
+  el('statLiveUsers').textContent = analytics.liveUsers || 1;
 
   // Weekly bar chart
   const maxV   = Math.max(...analytics.weeklyVisits, 1);
