@@ -1,12 +1,12 @@
-﻿// ============================================
-//   MYANIME â€” App Logic (Optimized & Debugged)
+// ============================================
+//   MYANIME — App Logic (Optimized & Debugged)
 // ============================================
 
-// â”€â”€ API Base URL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// âœ… FIX: removed leading space and added /api suffix
+// ── API Base URL ─────────────────────────────
+// ✅ FIX: removed leading space and added /api suffix
 const API ='https://myanime-backend-2vc9.onrender.com/api';
 
-// â”€â”€ Auth Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Auth Helpers ─────────────────────────────
 const getToken = () => localStorage.getItem('token');
 const setToken = t => localStorage.setItem('token', t);
 const removeToken = () => localStorage.removeItem('token');
@@ -14,23 +14,23 @@ const getUser = () => JSON.parse(localStorage.getItem('user') || 'null');
 const setUser = u => localStorage.setItem('user', JSON.stringify(u));
 const removeUser = () => localStorage.removeItem('user');
 
-// â”€â”€ Demo Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Demo Data ────────────────────────────────
 const DEMO_ANIME = [
-  { id:'d1',title:'One Piece',type:'series',genre:'adventure',year:'1999',rating:'TV-14',desc:'Follow Monkey D. Luffy and his pirate crew in search of the world\'s ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.',thumb:'',videoUrl:'',emoji:'⚔️ï¸',trending:true,topRated:true },
-  { id:'d2',title:'Attack on Titan',type:'series',genre:'action',year:'2013',rating:'TV-MA',desc:'Humanity lives inside cities surrounded by enormous walls due to the Titans, gigantic humanoid beings who devour humans seemingly without reason.',thumb:'',videoUrl:'',emoji:'ðŸ—¡ï¸',trending:true,topRated:true },
-  { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'🔥',trending:true,topRated:false },
-  { id:'d4',title:'Spirited Away',type:'movie',genre:'fantasy',year:'2001',rating:'PG',desc:'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.',thumb:'',videoUrl:'',emoji:'ðŸŒ¸',trending:false,topRated:true },
-  { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'🔍¥',trending:false,topRated:true },
-  { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'✨',trending:true,topRated:true },
-  { id:'d7',title:'Fullmetal Alchemist',type:'series',genre:'adventure',year:'2009',rating:'TV-14',desc:'Two brothers search for a Philosopher\'s Stone after an attempt to revive their deceased mother goes wrong.',thumb:'',videoUrl:'',emoji:'âš—ï¸',trending:false,topRated:true },
-  { id:'d8',title:'Dragon Ball Z',type:'series',genre:'action',year:'1989',rating:'TV-PG',desc:'The adventures of Earth\'s martial arts defender, Son Goku, continues with a new family and the revelation of his alien origin.',thumb:'',videoUrl:'',emoji:'ðŸ”µ',trending:false,topRated:false },
-  { id:'d9',title:'Princess Mononoke',type:'movie',genre:'fantasy',year:'1997',rating:'PG-13',desc:'On a journey to find the cure for a Tatarigami\'s curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara.',thumb:'',videoUrl:'',emoji:'ðŸº',trending:false,topRated:true },
-  { id:'d10',title:'Hunter x Hunter',type:'series',genre:'adventure',year:'2011',rating:'TV-14',desc:'Gon Freecss aspires to become a Hunter, an exceptional being capable of greatness.',thumb:'',videoUrl:'',emoji:'ðŸŽ¯',trending:true,topRated:false },
-  { id:'d11',title:'Jujutsu Kaisen',type:'series',genre:'action',year:'2020',rating:'TV-MA',desc:'A boy swallows a cursed talisman and becomes host to a powerful demon. Now he must battle demons and allies alike to avoid being killed.',thumb:'',videoUrl:'',emoji:'ðŸ‘ï¸',trending:true,topRated:true },
-  { id:'d12',title:'Sword Art Online',type:'series',genre:'fantasy',year:'2012',rating:'TV-14',desc:'In the near future, a virtual reality massive multiplayer online role-playing game called Sword Art Online is released.',thumb:'',videoUrl:'',emoji:'ðŸ—¡ï¸',trending:false,topRated:false },
+  { id:'d1',title:'One Piece',type:'series',genre:'adventure',year:'1999',rating:'TV-14',desc:'Follow Monkey D. Luffy and his pirate crew in search of the world\'s ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.',thumb:'',videoUrl:'',emoji:'??️',trending:true,topRated:true },
+  { id:'d2',title:'Attack on Titan',type:'series',genre:'action',year:'2013',rating:'TV-MA',desc:'Humanity lives inside cities surrounded by enormous walls due to the Titans, gigantic humanoid beings who devour humans seemingly without reason.',thumb:'',videoUrl:'',emoji:'🗡️',trending:true,topRated:true },
+  { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'??',trending:true,topRated:false },
+  { id:'d4',title:'Spirited Away',type:'movie',genre:'fantasy',year:'2001',rating:'PG',desc:'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.',thumb:'',videoUrl:'',emoji:'🌸',trending:false,topRated:true },
+  { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'??�',trending:false,topRated:true },
+  { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'?',trending:true,topRated:true },
+  { id:'d7',title:'Fullmetal Alchemist',type:'series',genre:'adventure',year:'2009',rating:'TV-14',desc:'Two brothers search for a Philosopher\'s Stone after an attempt to revive their deceased mother goes wrong.',thumb:'',videoUrl:'',emoji:'⚗️',trending:false,topRated:true },
+  { id:'d8',title:'Dragon Ball Z',type:'series',genre:'action',year:'1989',rating:'TV-PG',desc:'The adventures of Earth\'s martial arts defender, Son Goku, continues with a new family and the revelation of his alien origin.',thumb:'',videoUrl:'',emoji:'🔵',trending:false,topRated:false },
+  { id:'d9',title:'Princess Mononoke',type:'movie',genre:'fantasy',year:'1997',rating:'PG-13',desc:'On a journey to find the cure for a Tatarigami\'s curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara.',thumb:'',videoUrl:'',emoji:'🐺',trending:false,topRated:true },
+  { id:'d10',title:'Hunter x Hunter',type:'series',genre:'adventure',year:'2011',rating:'TV-14',desc:'Gon Freecss aspires to become a Hunter, an exceptional being capable of greatness.',thumb:'',videoUrl:'',emoji:'🎯',trending:true,topRated:false },
+  { id:'d11',title:'Jujutsu Kaisen',type:'series',genre:'action',year:'2020',rating:'TV-MA',desc:'A boy swallows a cursed talisman and becomes host to a powerful demon. Now he must battle demons and allies alike to avoid being killed.',thumb:'',videoUrl:'',emoji:'👁️',trending:true,topRated:true },
+  { id:'d12',title:'Sword Art Online',type:'series',genre:'fantasy',year:'2012',rating:'TV-14',desc:'In the near future, a virtual reality massive multiplayer online role-playing game called Sword Art Online is released.',thumb:'',videoUrl:'',emoji:'🗡️',trending:false,topRated:false },
 ];
 
-// â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── State ─────────────────────────────────────
 let animeLibrary = [];
 let myList = [];
 let currentModalAnime = null;
@@ -41,7 +41,7 @@ let currentFilterPage = 'movies';
 let editThumbBlob = null;
 let featuredHeroId = null;
 
-// â”€â”€ Admin Auth State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Admin Auth State ──────────────────────────
 let ADMIN_PASSWORD = 'myanime2024';
 let adminUnlocked = false;
 let loginAttempts = 0;
@@ -50,7 +50,7 @@ const MAX_ATTEMPTS = 3;
 const LOCKOUT_DURATION = 30 * 60 * 1000;
 const ADMIN_EMAIL = 'bhartikunal172@gmail.com';
 
-// â”€â”€ 2FA OTP State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── 2FA OTP State ─────────────────────────────
 let otpCode = '';
 let otpExpiry = 0;
 let otpAttempts = 0;
@@ -59,7 +59,7 @@ let otpPrepared = false;
 let twoFAEnabled = false;
 let emailJSConfig = { pubkey: '', service: '', template: '' };
 
-// â”€â”€ Analytics State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Analytics State ───────────────────────────
 let analytics = {
   totalVisits: 0, todayVisits: 0, lastVisitDate: '',
   plays: 0, searches: 0, myListAdds: 0,
@@ -68,23 +68,23 @@ let analytics = {
   liveUsers: 1, devices: {}, browsers: {}
 };
 
-// â”€â”€ Row Settings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Row Settings ──────────────────────────────
 let rowSettings = {
-  trending: { visible:true, title:'🔥 Trending Now' },
-  topRated: { visible:true, title:'⭐ Top Rated' },
-  recent:   { visible:true, title:'ðŸ†• Recently Added' },
-  series:   { visible:true, title:'ðŸ“º Series' },
-  movies:   { visible:true, title:'🎬 Movies' },
+  trending: { visible:true, title:'?? Trending Now' },
+  topRated: { visible:true, title:'? Top Rated' },
+  recent:   { visible:true, title:'🆕 Recently Added' },
+  series:   { visible:true, title:'📺 Series' },
+  movies:   { visible:true, title:'?? Movies' },
 };
 
-// â”€â”€ Secret Shortcut â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Secret Shortcut ───────────────────────────
 document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') openAdminLogin();
 });
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   INIT
-// ════════════════════════════════════════════
+// --------------------------------------------
 function init() {
   loadFromStorage();
   if (animeLibrary.length === 0) { animeLibrary = [...DEMO_ANIME]; saveToStorage(); }
@@ -112,9 +112,9 @@ function init() {
   if (np) np.addEventListener('input', checkPasswordStrength);
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   STORAGE
-// ════════════════════════════════════════════
+// --------------------------------------------
 function loadFromStorage() {
   try {
     const lib = localStorage.getItem('myanime_library');
@@ -177,9 +177,9 @@ function renderAll() {
   renderLibraryTab();
 }
 
-// ════════════════════════════════════════════
-//   FETCH ANIME FROM BACKEND  ← BUGS FIXED
-// ════════════════════════════════════════════
+// --------------------------------------------
+//   FETCH ANIME FROM BACKEND  ? BUGS FIXED
+// --------------------------------------------
 async function fetchAnimeFromBackend() {
   try {
     const res = await fetch(`${API}/anime`);
@@ -194,10 +194,10 @@ async function fetchAnimeFromBackend() {
         genre:    Array.isArray(a.genre) ? a.genre[0] : a.genre,
         year:     String(a.year || ''),
         rating:   a.rating,
-        // âœ… FIX: was checking startsWith('data:') which blocked Cloudinary https:// URLs
+        // ✅ FIX: was checking startsWith('data:') which blocked Cloudinary https:// URLs
         thumb:    a.thumbnailUrl || '',
         videoUrl: a.videoUrl     || '',
-        emoji:    '🎬',
+        emoji:    '??',
         trending: a.isTrending  || false,
         topRated: a.isTopRated  || false,
       }));
@@ -210,9 +210,9 @@ async function fetchAnimeFromBackend() {
   }
 }
 
-// ════════════════════════════════════════════
-//   ADD ANIME  ← FULLY FIXED (saves to MongoDB + Cloudinary)
-// ════════════════════════════════════════════
+// --------------------------------------------
+//   ADD ANIME  ? FULLY FIXED (saves to MongoDB + Cloudinary)
+// --------------------------------------------
 async function addAnime() {
   const title    = document.getElementById('animeTitle').value.trim();
   const desc     = document.getElementById('animeDesc').value.trim();
@@ -222,13 +222,13 @@ async function addAnime() {
   const rating   = document.getElementById('animeRating').value.trim() || 'TV-14';
   const cloudUrl = document.getElementById('cloudUrl').value.trim();
 
-  if (!title) { showToast('âš ï¸ Title is required!'); return; }
+  if (!title) { showToast('⚠️ Title is required!'); return; }
 
-  // Step 1 â€” Upload thumbnail to Cloudinary if a local image was selected
+  // Step 1 — Upload thumbnail to Cloudinary if a local image was selected
   let thumbnailUrl = '';
   if (uploadedThumbBlob && uploadedThumbBlob.startsWith('data:')) {
     try {
-      showToast('â³ Uploading thumbnail...');
+      showToast('⏳ Uploading thumbnail...');
       const formData = new FormData();
       const blob = await fetch(uploadedThumbBlob).then(r => r.blob());
       formData.append('thumbnail', blob, 'thumbnail.jpg');
@@ -241,17 +241,17 @@ async function addAnime() {
       if (thumbData.success) {
         thumbnailUrl = thumbData.thumbnailUrl;
       } else {
-        showToast('âš ï¸ Thumbnail upload failed: ' + thumbData.message);
+        showToast('⚠️ Thumbnail upload failed: ' + thumbData.message);
       }
     } catch (err) {
       console.log('Thumbnail upload error:', err.message);
-      showToast('âš ï¸ Thumbnail upload failed, saving without it.');
+      showToast('⚠️ Thumbnail upload failed, saving without it.');
     }
   }
 
-  // Step 2 â€” Save anime to MongoDB
+  // Step 2 — Save anime to MongoDB
   try {
-    howToast('â³ Saving anime...');
+    howToast('⏳ Saving anime...');
     const res = await fetch(`${API}/anime`, {
       method: 'POST',
       headers: {
@@ -272,7 +272,7 @@ async function addAnime() {
     });
     const data = await res.json();
     if (data.success) {
-      const emoji = { action:'⚔️ï¸', adventure:'ðŸ—ºï¸', romance:'ðŸ’–', fantasy:'✨', thriller:'ðŸ”ª' }[genre] || '🎬';
+      const emoji = { action:'??️', adventure:'🗺️', romance:'💖', fantasy:'?', thriller:'🔪' }[genre] || '??';
       animeLibrary.unshift({
         id:       data.anime._id,
         title, desc, type, genre,
@@ -286,7 +286,7 @@ async function addAnime() {
       });
       saveToStorage();
       renderAll();
-      showToast(`âœ… "${title}" saved to database!`);
+      showToast(`✅ "${title}" saved to database!`);
       // Reset form
       ['animeTitle','animeDesc','cloudUrl','animeRating'].forEach(id => {
         const el = document.getElementById(id); if (el) el.value = '';
@@ -298,17 +298,17 @@ async function addAnime() {
       uploadedVideoBlob = null;
       uploadedThumbBlob = null;
     } else {
-      showToast('❌ ' + data.message);
+      showToast('? ' + data.message);
     }
   } catch (err) {
-    showToast('❌ Cannot connect to server!');
+    showToast('? Cannot connect to server!');
     console.log('Save error:', err.message);
   }
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   ANALYTICS
-// ════════════════════════════════════════════
+// --------------------------------------------
 function trackVisit() {
   analytics.totalVisits++;
   const today = new Date().toDateString();
@@ -398,7 +398,7 @@ function refreshAnalytics() {
           return `<div class="top-list-item">
             <div class="top-list-rank">${idx+1}</div>
             <div class="top-list-bar-wrap">
-              <div class="top-list-name">${anime.emoji||'🎬'} ${anime.title}</div>
+              <div class="top-list-name">${anime.emoji||'??'} ${anime.title}</div>
               <div class="top-list-bar" style="width:${(cnt/maxA)*100}%"></div>
             </div>
             <div class="top-list-count">${cnt}</div>
@@ -417,7 +417,7 @@ function refreshAnalytics() {
           <div class="top-list-item">
             <div class="top-list-rank">${idx+1}</div>
             <div class="top-list-bar-wrap">
-              <div class="top-list-name">🔍 ${term}</div>
+              <div class="top-list-name">?? ${term}</div>
               <div class="top-list-bar" style="width:${(cnt/maxS)*100}%"></div>
             </div>
             <div class="top-list-count">${cnt}</div>
@@ -428,12 +428,12 @@ function refreshAnalytics() {
   const deviceList = el('deviceList');
   if (deviceList) {
     const devTotal = Object.values(analytics.devices).reduce((a,b)=>a+b,0)||1;
-    const icons = { Desktop:'ðŸ–¥ï¸', Mobile:'ðŸ“±', Tablet:'ðŸ“Ÿ' };
+    const icons = { Desktop:'🖥️', Mobile:'📱', Tablet:'📟' };
     deviceList.innerHTML = Object.keys(analytics.devices).length === 0
       ? '<p style="color:#555;font-size:0.85rem">No data yet.</p>'
       : Object.entries(analytics.devices).map(([name, cnt]) => `
           <div class="top-list-item">
-            <div class="top-list-rank">${icons[name]||'ðŸ’»'}</div>
+            <div class="top-list-rank">${icons[name]||'💻'}</div>
             <div class="top-list-bar-wrap">
               <div class="top-list-name">${name}</div>
               <div class="top-list-bar" style="width:${(cnt/devTotal)*100}%"></div>
@@ -446,12 +446,12 @@ function refreshAnalytics() {
   const browserList = el('browserList');
   if (browserList) {
     const brTotal = Object.values(analytics.browsers).reduce((a,b)=>a+b,0)||1;
-    const icons = { Chrome:'🌐', Firefox:'ðŸ¦Š', Safari:'🧭', Edge:'ðŸ”·' };
+    const icons = { Chrome:'??', Firefox:'🦊', Safari:'??', Edge:'🔷' };
     browserList.innerHTML = Object.keys(analytics.browsers).length === 0
       ? '<p style="color:#555;font-size:0.85rem">No data yet.</p>'
       : Object.entries(analytics.browsers).map(([name, cnt]) => `
           <div class="top-list-item">
-            <div class="top-list-rank">${icons[name]||'ðŸŒ'}</div>
+            <div class="top-list-rank">${icons[name]||'🌍'}</div>
             <div class="top-list-bar-wrap">
               <div class="top-list-name">${name}</div>
               <div class="top-list-bar" style="width:${(cnt/brTotal)*100}%"></div>
@@ -460,26 +460,26 @@ function refreshAnalytics() {
           </div>`).join('');
   }
 
-  showToast('ðŸ“Š Analytics refreshed');
+  showToast('📊 Analytics refreshed');
 }
 
 function resetAnalytics() {
   if (!confirm('Reset all analytics data? This cannot be undone.')) return;
   analytics = { totalVisits:0, todayVisits:0, lastVisitDate:'', plays:0, searches:0, myListAdds:0, animeViews:{}, searchTerms:{}, weeklyVisits:[0,0,0,0,0,0,0], liveUsers:1, devices:{}, browsers:{} };
   saveAnalytics(); refreshAnalytics();
-  showToast('ðŸ“Š Analytics reset.');
+  showToast('📊 Analytics reset.');
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   ADMIN AUTH
-// ════════════════════════════════════════════
+// --------------------------------------------
 function openAdminLogin() {
   if (adminUnlocked) { showPage('admin'); return; }
   if (Date.now() < lockoutUntil) {
     const mins = Math.ceil((lockoutUntil - Date.now()) / 60000);
     const info = document.getElementById('loginAttemptInfo');
     info.style.display = 'block';
-    info.textContent = `ðŸ”’ Too many failed attempts. Try again in ${mins} minute(s).`;
+    info.textContent = `🔒 Too many failed attempts. Try again in ${mins} minute(s).`;
   }
   document.getElementById('adminLoginModal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -498,7 +498,7 @@ function closeAdminLogin() {
 function checkAdminPassword() {
   if (Date.now() < lockoutUntil) {
     const mins = Math.ceil((lockoutUntil - Date.now()) / 60000);
-    showToast(`ðŸ”’ Locked out for ${mins} more minute(s).`);
+    showToast(`🔒 Locked out for ${mins} more minute(s).`);
     return;
   }
   const input = document.getElementById('adminPasswordInput').value;
@@ -521,13 +521,13 @@ function checkAdminPassword() {
       document.getElementById('adminError').style.display = 'none';
       const info = document.getElementById('loginAttemptInfo');
       info.style.display = 'block';
-      info.textContent = 'ðŸ”’ Too many failed attempts! Locked for 30 minutes.';
+      info.textContent = '🔒 Too many failed attempts! Locked for 30 minutes.';
       document.getElementById('adminPasswordInput').value = '';
     } else {
       saveSecurity();
       const errEl = document.getElementById('adminError');
       errEl.style.display = 'block';
-      errEl.textContent = `❌ Wrong password. ${remaining} attempt(s) remaining.`;
+      errEl.textContent = `? Wrong password. ${remaining} attempt(s) remaining.`;
       document.getElementById('adminPasswordInput').value = '';
       document.getElementById('adminPasswordInput').focus();
     }
@@ -539,13 +539,13 @@ function grantAdminAccess() {
   closeAdminLogin(); closeOTPModal();
   document.getElementById('adminBtn').style.display = 'flex';
   showPage('admin');
-  addLoginEntry('success', 'âœ… Login successful');
-  showToast('âœ… Admin access granted!');
+  addLoginEntry('success', '✅ Login successful');
+  showToast('✅ Admin access granted!');
 }
 
-// ════════════════════════════════════════════
-//   2FA â€” OTP
-// ════════════════════════════════════════════
+// --------------------------------------------
+//   2FA — OTP
+// --------------------------------------------
 const OTP_POOL = ['2546','4896','47562','444444','85289','15679','47569','25489','12356','902714','56489','2035682'];
 function generateOTP() { return OTP_POOL[Math.floor(Math.random() * OTP_POOL.length)]; }
 
@@ -557,7 +557,7 @@ function onPasswordTyped() {
     otpExpiry = Date.now() + 5 * 60 * 1000;
     otpAttempts = 0;
     _sendOTPEmail(otpCode);
-    showToast('âš ï¸ Login attempt detected â€” OTP sent to your email!');
+    showToast('⚠️ Login attempt detected — OTP sent to your email!');
   }
 }
 
@@ -569,14 +569,14 @@ function _sendOTPEmail(code) {
       to_email: ADMIN_EMAIL,
       site_name: document.querySelector('.logo-text')?.textContent || 'MyAnime'
     }).then(() => {
-      showToast('ðŸ“§ OTP sent to ' + ADMIN_EMAIL);
+      showToast('📧 OTP sent to ' + ADMIN_EMAIL);
     }).catch(err => {
       console.error('EmailJS error:', err);
-      showToast('âš ï¸ Could not send OTP email. Check EmailJS config.');
+      showToast('⚠️ Could not send OTP email. Check EmailJS config.');
     });
   } else {
-    console.log('%cðŸ” DEV MODE OTP: ' + code, 'color:#e50914;font-size:20px;font-weight:bold;');
-    showToast('ðŸ“§ OTP: ' + code + ' (EmailJS not configured)');
+    console.log('%c🔐 DEV MODE OTP: ' + code, 'color:#e50914;font-size:20px;font-weight:bold;');
+    showToast('📧 OTP: ' + code + ' (EmailJS not configured)');
   }
 }
 
@@ -587,7 +587,7 @@ function initiate2FA() {
     otpAttempts = 0;
     _sendOTPEmail(otpCode);
   } else {
-    showToast('ðŸ“§ OTP already sent to ' + ADMIN_EMAIL);
+    showToast('📧 OTP already sent to ' + ADMIN_EMAIL);
   }
   otpPrepared = false;
   document.getElementById('otpModal').classList.add('active');
@@ -599,8 +599,8 @@ function initiate2FA() {
   setTimeout(() => { if (singleInput) singleInput.focus(); }, 100);
   const resendBtn = document.getElementById('resendBtn');
   resendBtn.disabled = true;
-  resendBtn.textContent = 'ðŸ”„ Resend Code (wait 30s...)';
-  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = 'ðŸ”„ Resend Code'; }, 30000);
+  resendBtn.textContent = '🔄 Resend Code (wait 30s...)';
+  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = '🔄 Resend Code'; }, 30000);
 }
 
 function startOTPTimer() {
@@ -614,7 +614,7 @@ function startOTPTimer() {
     if (left <= 0) {
       clearInterval(otpTimerInterval);
       const err = document.getElementById('otpError');
-      err.style.display = 'block'; err.textContent = 'â±ï¸ Code expired. Please try again.';
+      err.style.display = 'block'; err.textContent = '⏱️ Code expired. Please try again.';
       document.getElementById('otpVerifyBtn').disabled = true;
     }
   }, 1000);
@@ -630,8 +630,8 @@ function verifyOTP() {
   const singleInput = document.getElementById('otpSingleInput');
   const entered = singleInput ? singleInput.value.trim() : '';
   const errEl = document.getElementById('otpError');
-  if (!entered) { errEl.style.display = 'block'; errEl.textContent = 'âš ï¸ Please enter your OTP code.'; return; }
-  if (Date.now() > otpExpiry) { errEl.style.display = 'block'; errEl.textContent = 'â±ï¸ Code expired. Please resend.'; return; }
+  if (!entered) { errEl.style.display = 'block'; errEl.textContent = '⚠️ Please enter your OTP code.'; return; }
+  if (Date.now() > otpExpiry) { errEl.style.display = 'block'; errEl.textContent = '⏱️ Code expired. Please resend.'; return; }
   otpAttempts++;
   if (entered === otpCode) {
     grantAdminAccess();
@@ -641,10 +641,10 @@ function verifyOTP() {
       lockoutUntil = Date.now() + LOCKOUT_DURATION;
       saveSecurity();
       addLoginEntry('locked', 'Locked after 3 wrong OTP attempts');
-      showToast('ðŸ”’ Too many wrong codes. Locked for 30 min.');
+      showToast('🔒 Too many wrong codes. Locked for 30 min.');
     } else {
       errEl.style.display = 'block';
-      errEl.textContent = `❌ Wrong code. ${3 - otpAttempts} attempt(s) left.`;
+      errEl.textContent = `? Wrong code. ${3 - otpAttempts} attempt(s) left.`;
       if (singleInput) { singleInput.value = ''; singleInput.focus(); }
     }
   }
@@ -662,17 +662,17 @@ function resendOTP() {
   startOTPTimer();
   const resendBtn = document.getElementById('resendBtn');
   resendBtn.disabled = true;
-  resendBtn.textContent = 'ðŸ”„ Resend Code (wait 30s...)';
-  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = 'ðŸ”„ Resend Code'; }, 30000);
+  resendBtn.textContent = '🔄 Resend Code (wait 30s...)';
+  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = '🔄 Resend Code'; }, 30000);
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   SECURITY SETTINGS
-// ════════════════════════════════════════════
+// --------------------------------------------
 function toggle2FA() {
   twoFAEnabled = document.getElementById('twofa_enabled').checked;
   saveSecurity();
-  showToast(twoFAEnabled ? 'âœ… 2FA enabled' : 'âš ï¸ 2FA disabled');
+  showToast(twoFAEnabled ? '✅ 2FA enabled' : '⚠️ 2FA disabled');
 }
 
 function saveEmailJSConfig() {
@@ -682,34 +682,34 @@ function saveEmailJSConfig() {
     template: document.getElementById('ejs_template').value.trim()
   };
   saveSecurity();
-  showToast('💾 EmailJS config saved!');
+  showToast('?? EmailJS config saved!');
 }
 
 function testEmailJS() {
   const pk = document.getElementById('ejs_pubkey').value.trim();
   const sv = document.getElementById('ejs_service').value.trim();
   const tm = document.getElementById('ejs_template').value.trim();
-  if (!pk || !sv || !tm) { showToast('âš ï¸ Fill in all EmailJS fields first.'); return; }
-  if (typeof emailjs === 'undefined') { showToast('âš ï¸ EmailJS library not loaded.'); return; }
+  if (!pk || !sv || !tm) { showToast('⚠️ Fill in all EmailJS fields first.'); return; }
+  if (typeof emailjs === 'undefined') { showToast('⚠️ EmailJS library not loaded.'); return; }
   emailjs.init(pk);
   emailjs.send(sv, tm, { otp_code: generateOTP(), to_email: ADMIN_EMAIL, site_name: 'MyAnime' })
-    .then(() => showToast('âœ… Test OTP sent! Check ' + ADMIN_EMAIL))
-    .catch(() => showToast('❌ EmailJS send failed. Check your config.'));
+    .then(() => showToast('✅ Test OTP sent! Check ' + ADMIN_EMAIL))
+    .catch(() => showToast('? EmailJS send failed. Check your config.'));
 }
 
 function changeAdminPassword() {
   const current = document.getElementById('sec_currentPwd').value;
   const newPwd  = document.getElementById('sec_newPwd').value;
   const confirm = document.getElementById('sec_confirmPwd').value;
-  if (current !== ADMIN_PASSWORD) { showToast('❌ Current password is wrong.'); return; }
-  if (newPwd.length < 8) { showToast('âš ï¸ Password must be at least 8 characters.'); return; }
-  if (newPwd !== confirm) { showToast('❌ Passwords do not match.'); return; }
+  if (current !== ADMIN_PASSWORD) { showToast('? Current password is wrong.'); return; }
+  if (newPwd.length < 8) { showToast('⚠️ Password must be at least 8 characters.'); return; }
+  if (newPwd !== confirm) { showToast('? Passwords do not match.'); return; }
   ADMIN_PASSWORD = newPwd;
   localStorage.setItem('myanime_adminpwd', ADMIN_PASSWORD);
   ['sec_currentPwd','sec_newPwd','sec_confirmPwd'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.getElementById('pwdStrengthFill').style.width = '0%';
   document.getElementById('pwdStrengthLabel').textContent = '';
-  showToast('âœ… Password changed successfully!');
+  showToast('✅ Password changed successfully!');
 }
 
 function checkPasswordStrength() {
@@ -734,14 +734,14 @@ function lockAdminNow() {
   adminUnlocked = false;
   document.getElementById('adminBtn').style.display = 'none';
   showPage('home');
-  showToast('ðŸ”’ Admin locked.');
+  showToast('🔒 Admin locked.');
 }
 
 function resetAllData() {
-  if (!confirm('âš ï¸ This will reset ALL site data including library, settings, and analytics. Are you absolutely sure?')) return;
+  if (!confirm('⚠️ This will reset ALL site data including library, settings, and analytics. Are you absolutely sure?')) return;
   if (!confirm('Final confirmation: Delete everything?')) return;
   localStorage.clear();
-  showToast('ðŸ’¥ All data reset. Reloading...');
+  showToast('💥 All data reset. Reloading...');
   setTimeout(() => location.reload(), 1500);
 }
 
@@ -775,12 +775,12 @@ function renderLoginHistory() {
 function clearLoginHistory() {
   localStorage.removeItem('myanime_loginhistory');
   renderLoginHistory();
-  showToast('ðŸ—‘ï¸ Login history cleared.');
+  showToast('🗑️ Login history cleared.');
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   NAVBAR
-// ════════════════════════════════════════════
+// --------------------------------------------
 function setupNavScroll() {
   const nb = document.getElementById('navbar');
   window.addEventListener('scroll', () => nb.classList.toggle('scrolled', window.scrollY > 80));
@@ -805,9 +805,9 @@ function showPage(page) {
   }
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   HERO
-// ════════════════════════════════════════════
+// --------------------------------------------
 function renderHero() {
   const featured = (featuredHeroId && animeLibrary.find(a => a.id === featuredHeroId)) || animeLibrary.find(a => a.thumb && a.thumb.length > 10) || animeLibrary[0];
   if (!featured) return;
@@ -822,7 +822,7 @@ function renderHero() {
   if (playBtn && edits.playBtn) playBtn.textContent = edits.playBtn;
   if (infoBtn && edits.infoBtn) infoBtn.textContent = edits.infoBtn;
   const bg = document.getElementById('heroBg');
-  // âœ… FIX: support Cloudinary https:// URLs not just data: blobs
+  // ✅ FIX: support Cloudinary https:// URLs not just data: blobs
   if (featured.thumb && (featured.thumb.startsWith('data:') || featured.thumb.startsWith('http'))) {
     bg.style.background = `url(${featured.thumb}) center/cover no-repeat`;
     // backgroundSize handled above
@@ -849,9 +849,9 @@ function getGradient(id) {
   return gradients[idx >= 0 ? idx : 0];
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   ROWS & CARDS
-// ════════════════════════════════════════════
+// --------------------------------------------
 function loadRowSettings() {
   try {
     const s = localStorage.getItem('myanime_rowsettings');
@@ -882,7 +882,7 @@ function applyRowSettings() {
       if (titleEl) titleEl.textContent = rowSettings[key].title;
     }
   });
-  showToast('âœ… Home page updated!');
+  showToast('✅ Home page updated!');
 }
 
 function renderRows() {
@@ -900,7 +900,7 @@ function renderRow(containerId, items) {
   items.forEach((anime, i) => container.appendChild(createCard(anime, i)));
 }
 
-// âœ… FIX: helper so all render functions check http:// and https:// too
+// ✅ FIX: helper so all render functions check http:// and https:// too
 function hasValidThumb(anime) {
   return anime.thumb && (anime.thumb.startsWith('data:') || anime.thumb.startsWith('http'));
 }
@@ -912,17 +912,17 @@ function createCard(anime) {
   const thumbOk = hasValidThumb(anime);
   const thumbHtml = thumbOk
     ? `<img class="card-thumb" src="${anime.thumb}" alt="${anime.title}" loading="lazy"/>`
-    : `<div class="card-thumb-placeholder"><span style="font-size:2rem">${anime.emoji||'🎬'}</span><span>${anime.title}</span></div>`;
+    : `<div class="card-thumb-placeholder"><span style="font-size:2rem">${anime.emoji||'??'}</span><span>${anime.title}</span></div>`;
   const hoverThumbHtml = thumbOk
     ? `<img class="card-hover-img" src="${anime.thumb}" alt="${anime.title}"/>`
-    : `<div class="card-hover-img" style="background:${getGradient(anime.id)};display:flex;align-items:center;justify-content:center;font-size:2.5rem">${anime.emoji||'🎬'}</div>`;
+    : `<div class="card-hover-img" style="background:${getGradient(anime.id)};display:flex;align-items:center;justify-content:center;font-size:2.5rem">${anime.emoji||'??'}</div>`;
   div.innerHTML = `${thumbHtml}
     <div class="card-hover">
       ${hoverThumbHtml}
       <div class="card-hover-body">
         <div class="card-hover-actions">
-          <button class="card-play-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))" title="Play">▶¶</button>
-          <button class="card-list-btn ${inList?'added':''}" id="listbtn-${anime.id}" onclick="toggleListById('${anime.id}',this)" title="My List">${inList?'âœ“':'+'}</button>
+          <button class="card-play-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))" title="Play">&#9654;</button>
+          <button class="card-list-btn ${inList?'added':''}" id="listbtn-${anime.id}" onclick="toggleListById('${anime.id}',this)" title="My List">${inList?'✓':'+'}</button>
           <button class="card-info-btn" onclick="showInfoModal_byId('${anime.id}')" title="More Info">i
         </div>
         <div class="card-title">${anime.title}</div>
@@ -936,9 +936,9 @@ function createCard(anime) {
   return div;
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   BROWSE GRIDS
-// ════════════════════════════════════════════
+// --------------------------------------------
 function renderBrowsePages() {
   renderGrid('moviesGrid', animeLibrary.filter(a => a.type === 'movie'));
   renderGrid('seriesGrid', animeLibrary.filter(a => a.type === 'series'));
@@ -950,7 +950,7 @@ function renderGrid(containerId, items) {
   container.innerHTML = '';
   const edits = getSiteEdits();
   if (items.length === 0) {
-    container.innerHTML = `<div class="empty-list"><div style="font-size:3rem">🔍</div><p>${edits.noResults || 'No content found.'}</p></div>`;
+    container.innerHTML = `<div class="empty-list"><div style="font-size:3rem">??</div><p>${edits.noResults || 'No content found.'}</p></div>`;
     return;
   }
   items.forEach(anime => container.appendChild(createGridCard(anime)));
@@ -962,14 +962,14 @@ function createGridCard(anime) {
   const thumbOk = hasValidThumb(anime);
   const innerHtml = thumbOk
     ? `<img src="${anime.thumb}" alt="${anime.title}" loading="lazy"/>`
-    : `<div class="grid-card-placeholder" style="background:${getGradient(anime.id)}"><span>${anime.emoji||'🎬'}</span><span>${anime.title}</span></div>`;
+    : `<div class="grid-card-placeholder" style="background:${getGradient(anime.id)}"><span>${anime.emoji||'??'}</span><span>${anime.title}</span></div>`;
   div.innerHTML = `${innerHtml}
     <div class="grid-card-overlay">
       <div class="grid-card-title">${anime.title}</div>
-      <div class="grid-card-meta">${anime.year||''} â€¢ ${anime.genre||''}</div>
+      <div class="grid-card-meta">${anime.year||''} • ${anime.genre||''}</div>
       <div class="grid-card-actions">
-        <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">▶ Play</button>
-        <button class="gc-play" style="background:rgba(109,109,110,0.7);color:white" onclick="showInfoModal_byId('${anime.id}')">â“˜ Info</button>
+        <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">? Play</button>
+        <button class="gc-play" style="background:rgba(109,109,110,0.7);color:white" onclick="showInfoModal_byId('${anime.id}')">ⓘ Info</button>
       </div>
     </div>`;
   return div;
@@ -984,14 +984,14 @@ function filterContent(genre, type) {
   renderGrid(type === 'movies' ? 'moviesGrid' : 'seriesGrid', items);
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   MY LIST
-// ════════════════════════════════════════════
+// --------------------------------------------
 function renderMyList() {
   const grid = document.getElementById('mylistGrid');
   const edits = getSiteEdits();
   if (myList.length === 0) {
-    grid.innerHTML = `<div class="empty-list"><div style="font-size:4rem">ðŸ“‹</div><p>${edits.emptyList || 'Your list is empty. Add anime to watch later!'}</p></div>`;
+    grid.innerHTML = `<div class="empty-list"><div style="font-size:4rem">📋</div><p>${edits.emptyList || 'Your list is empty. Add anime to watch later!'}</p></div>`;
     return;
   }
   renderGrid('mylistGrid', myList);
@@ -1007,7 +1007,7 @@ function toggleListById(id, btn) {
     showToast(`Removed "${anime.title}" from My List`);
   } else {
     myList.push(anime);
-    if (btn) { btn.textContent = 'âœ“'; btn.classList.add('added'); }
+    if (btn) { btn.textContent = '✓'; btn.classList.add('added'); }
     trackMyListAdd();
     showToast(`Added "${anime.title}" to My List`);
   }
@@ -1018,12 +1018,12 @@ function updateMyListBtn() {
   if (!currentModalAnime) return;
   const btn = document.getElementById('mylistBtn');
   const inList = myList.some(m => m.id === currentModalAnime.id);
-  if (btn) { btn.textContent = inList ? 'âœ“ In My List' : '+ My List'; btn.classList.toggle('added', inList); }
+  if (btn) { btn.textContent = inList ? '✓ In My List' : '+ My List'; btn.classList.toggle('added', inList); }
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   INFO MODAL
-// ════════════════════════════════════════════
+// --------------------------------------------
 function showInfoModal(idx) {
   const anime = animeLibrary[idx];
   if (anime) showInfoModal_byId(anime.id);
@@ -1036,7 +1036,7 @@ function showInfoModal_byId(id) {
   document.getElementById('modalTitle').textContent  = anime.title;
   document.getElementById('modalYear').textContent   = anime.year || '';
   document.getElementById('modalRating').textContent = anime.rating || '';
-  document.getElementById('modalType').textContent   = anime.type === 'series' ? 'ðŸ“º Series' : '🎬 Movie';
+  document.getElementById('modalType').textContent   = anime.type === 'series' ? '📺 Series' : '?? Movie';
   document.getElementById('modalDesc').textContent   = anime.desc || 'No description available.';
   document.getElementById('modalGenre').textContent  = anime.genre || 'N/A';
   const thumb = document.getElementById('modalThumb');
@@ -1068,9 +1068,9 @@ function toggleMyList() {
   saveToStorage(); updateMyListBtn();
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   VIDEO PLAYER
-// ════════════════════════════════════════════
+// --------------------------------------------
 function openPlayer(anime, episodeUrl, episodeTitle) {
   if (!anime) return;
   currentPlayerAnime = anime;
@@ -1082,7 +1082,7 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   const displayTitle = episodeTitle ? `${anime.title} - ${episodeTitle}` : anime.title;
   document.getElementById('playerTitle').textContent     = displayTitle;
   document.getElementById('playerInfoTitle').textContent = anime.title;
-  document.getElementById('playerInfoMeta').textContent  = ` â€¢ ${anime.year||''} â€¢ ${anime.genre||''} â€¢ ${anime.rating||''}`;
+  document.getElementById('playerInfoMeta').textContent  = ` • ${anime.year||''} • ${anime.genre||''} • ${anime.rating||''}`;
 
   // Build episode list if series has seasons
   const episodeListEl = document.getElementById('episodeList');
@@ -1134,10 +1134,10 @@ function showNoVideoMessage() {
     msg = document.createElement('div');
     msg.className = 'no-video-msg';
     msg.style.cssText = 'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#111;color:#aaa;text-align:center;padding:2rem;';
-    msg.innerHTML = `<div style="font-size:4rem;margin-bottom:1rem">🎬</div>
+    msg.innerHTML = `<div style="font-size:4rem;margin-bottom:1rem">??</div>
       <h3 style="color:white;margin-bottom:0.5rem">${currentPlayerAnime?.title||'Video'}</h3>
       <p>No video source connected yet.</p>
-      <p style="margin-top:0.5rem;font-size:0.85rem">Go to <strong>Admin â†’ Upload Content</strong> and add a Cloud Video URL.</p>`;
+      <p style="margin-top:0.5rem;font-size:0.85rem">Go to <strong>Admin → Upload Content</strong> and add a Cloud Video URL.</p>`;
     wrap.style.position = 'relative';
     wrap.appendChild(msg);
   }
@@ -1166,9 +1166,9 @@ function playNext() {
   setTimeout(() => openPlayer(next), 200);
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   SEARCH
-// ════════════════════════════════════════════
+// --------------------------------------------
 function setupSearchListener() {
   const input = document.getElementById('searchInput');
   let timeout;
@@ -1203,9 +1203,9 @@ function handleSearch(e) {
   }
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   RESOLUTION SELECTOR
-// ════════════════════════════════════════════
+// --------------------------------------------
 let currentResolution = 'auto';
 
 function toggleResMenu() {
@@ -1215,10 +1215,10 @@ function toggleResMenu() {
 
 function setResolution(res) {
   currentResolution = res;
-  document.getElementById('resBtn').textContent = `âš™ï¸ ${res === 'auto' ? 'Auto' : res}`;
+  document.getElementById('resBtn').textContent = `⚙️ ${res === 'auto' ? 'Auto' : res}`;
   document.getElementById('resMenu').style.display = 'none';
   document.querySelectorAll('.res-option').forEach(o => o.classList.toggle('active', o.textContent.toLowerCase().includes(res)));
-  showToast(res === 'auto' ? 'âœ… Resolution: Auto' : `âš™ï¸ Resolution set to ${res}`);
+  showToast(res === 'auto' ? '✅ Resolution: Auto' : `⚙️ Resolution set to ${res}`);
 }
 
 document.addEventListener('click', e => {
@@ -1228,9 +1228,9 @@ document.addEventListener('click', e => {
   }
 });
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   HOME EDITOR
-// ════════════════════════════════════════════
+// --------------------------------------------
 function populateHomeEditor() {
   const sel = document.getElementById('heroPickSelect');
   if (!sel) return;
@@ -1263,14 +1263,14 @@ function updateHeroPreview() {
   const anime = animeLibrary.find(a => a.id === featuredHeroId);
   if (!anime) { card.innerHTML = ''; return; }
   card.innerHTML = `<div class="hero-preview-mini">
-    <div class="mini-emoji">${anime.emoji||'🎬'}</div>
-    <div><strong>${anime.title}</strong><span>${anime.year||''} â€¢ ${anime.type} â€¢ ${anime.genre||''}</span></div>
+    <div class="mini-emoji">${anime.emoji||'??'}</div>
+    <div><strong>${anime.title}</strong><span>${anime.year||''} • ${anime.type} • ${anime.genre||''}</span></div>
   </div>`;
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   RECOMMENDATIONS
-// ════════════════════════════════════════════
+// --------------------------------------------
 function populateRecommendations() {
   renderRecommendGrid('trendingManager', 'trending');
   renderRecommendGrid('topRatedManager', 'topRated');
@@ -1287,8 +1287,8 @@ function renderRecommendGrid(containerId, field) {
       <input type="checkbox" id="rec_${field}_${anime.id}" ${anime[field]?'checked':''}
         onchange="toggleRecommend('${field}','${anime.id}',this)"/>
       <div class="recommend-item-info">
-        <strong>${anime.emoji||'🎬'} ${anime.title}</strong>
-        <span>${anime.type} â€¢ ${anime.year||''}</span>
+        <strong>${anime.emoji||'??'} ${anime.title}</strong>
+        <span>${anime.type} • ${anime.year||''}</span>
       </div>`;
     item.onclick = e => { if (e.target.tagName !== 'INPUT') item.querySelector('input').click(); };
     container.appendChild(item);
@@ -1304,14 +1304,14 @@ function toggleRecommend(field, id, cb) {
 
 function saveRecommendations() {
   saveToStorage(); renderRows();
-  showToast('âœ… Recommendations saved!');
+  showToast('✅ Recommendations saved!');
 }
 
 
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   BACKEND SETTINGS SYNC
-// ════════════════════════════════════════════
+// --------------------------------------------
 
 async function saveSettingsToBackend(patch) {
   try {
@@ -1322,7 +1322,7 @@ async function saveSettingsToBackend(patch) {
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify(patch)
     });
-  } catch(err) { /* silent fail — localStorage is fallback */ }
+  } catch(err) { /* silent fail � localStorage is fallback */ }
 }
 
 async function loadSettingsFromBackend() {
@@ -1360,7 +1360,7 @@ async function loadSettingsFromBackend() {
   } catch(err) { /* fall back to localStorage */ }
 }
 
-// Poll every 30 seconds — keeps all devices in sync
+// Poll every 30 seconds � keeps all devices in sync
 let _settingsPollInterval = null;
 function startSettingsPolling() {
   if (_settingsPollInterval) return;
@@ -1368,9 +1368,9 @@ function startSettingsPolling() {
 }
 
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   THEME MANAGER
-// ════════════════════════════════════════════
+// --------------------------------------------
 const THEMES = {
   netflix: { red:'#e50914', dark:'#141414', dark2:'#1a1a1a', dark3:'#222',    dark4:'#2a2a2a', card:'#181818' },
   ocean:   { red:'#0066ff', dark:'#050d1a', dark2:'#071220', dark3:'#0a1828', dark4:'#0d1e30', card:'#081525' },
@@ -1397,7 +1397,7 @@ const THEMES = {
   const themeData = JSON.stringify({ name, ...t });
   localStorage.setItem('myanime_theme', themeData);
   saveSettingsToBackend({ theme: { name, ...t } });
-  showToast(`✅ Theme: ${name}`);
+  showToast(`? Theme: ${name}`);
 }
 
 
@@ -1436,7 +1436,7 @@ function saveAllSiteEdits() {
   saveSiteEdits(e);
   applyAllSiteEdits(e);
   saveSettingsToBackend({ siteedits: e });
-  showToast('💾 Site edits saved!');
+  showToast('?? Site edits saved!');
 }
 
 function applyEffects() {
@@ -1457,14 +1457,14 @@ function applyEffects() {
 function resetTheme() {
   applyThemePreset('netflix');
   document.querySelector('.logo-text').textContent = 'MyAnime';
-  document.querySelector('.logo-icon').textContent = '⚔️';
+  document.querySelector('.logo-icon').textContent = '??';
   document.title = 'MyAnime';
   document.getElementById('siteTitle').value = '';
   document.getElementById('siteIcon').value  = '';
   localStorage.removeItem('myanime_theme');
   localStorage.removeItem('myanime_branding');
   saveSettingsToBackend({ theme: null, branding: null });
-  showToast('↺ Theme reset to default');
+  showToast('? Theme reset to default');
 }
 
 function loadSavedTheme() {
@@ -1495,9 +1495,9 @@ function loadSavedTheme() {
   } catch(err) {}
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   SITE EDITOR
-// ════════════════════════════════════════════
+// --------------------------------------------
 function getSiteEdits() {
   try { const s = localStorage.getItem('myanime_siteedits'); return s ? JSON.parse(s) : {}; } catch(e) { return {}; }
 }
@@ -1572,10 +1572,10 @@ function resetSiteEdits() {
   localStorage.removeItem('myanime_siteedits');
   applyAllSiteEdits({}); populateSiteEditorFields();
   document.querySelector('.logo-text').textContent = 'MyAnime';
-  document.querySelector('.logo-icon').textContent = '⚔️ï¸';
+  document.querySelector('.logo-icon').textContent = '??️';
   document.title = 'MyAnime';
   document.getElementById('announcementBanner').style.display = 'none';
-  showToast('↺ Site edits reset.');
+  showToast('? Site edits reset.');
 }
 
 function loadSiteEdits() {
@@ -1583,9 +1583,9 @@ function loadSiteEdits() {
   if (Object.keys(e).length > 0) applyAllSiteEdits(e);
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   ADMIN TABS
-// ════════════════════════════════════════════
+// --------------------------------------------
 function switchAdminTab(tab) {
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
@@ -1598,9 +1598,9 @@ function switchAdminTab(tab) {
   if (tab === 'security')  { renderLoginHistory(); loadSecuritySettings(); }
 }
 
-// ════════════════════════════════════════════
-//   LIBRARY â€” FILE UPLOAD
-// ════════════════════════════════════════════
+// --------------------------------------------
+//   LIBRARY — FILE UPLOAD
+// --------------------------------------------
 function handleFileSelect(event, type) {
   const file = event.target.files[0]; if (file) handleFile(file, type);
 }
@@ -1640,16 +1640,16 @@ function simulateUpload(file) {
   }, 150);
   reader.onload = e => {
     clearInterval(interval);
-    fill.style.width = '100%'; percent.textContent = '100% âœ“';
+    fill.style.width = '100%'; percent.textContent = '100% ✓';
     uploadedVideoBlob = e.target.result;
-    showToast('âœ… Video loaded! Fill in details and click Add to Library.');
+    showToast('✅ Video loaded! Fill in details and click Add to Library.');
   };
   reader.readAsDataURL(file);
 }
 
-// ════════════════════════════════════════════
-//   LIBRARY â€” Edit / Delete
-// ════════════════════════════════════════════
+// --------------------------------------------
+//   LIBRARY — Edit / Delete
+// --------------------------------------------
 function renderLibraryTab() {
   const grid  = document.getElementById('libraryGrid');
   const count = document.getElementById('libraryCount');
@@ -1661,20 +1661,20 @@ function renderLibraryTab() {
     item.className = 'library-item';
     const thumbHtml = hasValidThumb(anime)
       ? `<img class="library-thumb" src="${anime.thumb}" alt="${anime.title}"/>`
-      : `<div class="library-thumb-placeholder">${anime.emoji||'🎬'}</div>`;
+      : `<div class="library-thumb-placeholder">${anime.emoji||'??'}</div>`;
     item.innerHTML = `
       ${thumbHtml}
       <div class="library-info">
         <strong>${anime.title}</strong>
-        <span>${anime.type} â€¢ ${anime.year||'N/A'} â€¢ ${anime.genre||''}</span>
+        <span>${anime.type} • ${anime.year||'N/A'} • ${anime.genre||''}</span>
         <span style="color:${anime.videoUrl?'#4caf50':'#e57373'};font-size:0.7rem">
-          ${anime.videoUrl ? 'âœ… Has video source' : 'âš ï¸ No video source'}
+          ${anime.videoUrl ? '✅ Has video source' : '⚠️ No video source'}
         </span>
       </div>
       <div class="library-actions">
-        <button class="lib-btn edit" onclick="openEditModal('${anime.id}')">âœï¸</button>
-        <button class="lib-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">▶¶</button>
-        <button class="lib-btn del" onclick="deleteAnime('${anime.id}')">ðŸ—‘</button>
+        <button class="lib-btn edit" onclick="openEditModal('${anime.id}')">✏️</button>
+        <button class="lib-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">?�</button>
+        <button class="lib-btn del" onclick="deleteAnime('${anime.id}')">🗑</button>
       </div>`;
     grid.appendChild(item);
   });
@@ -1752,7 +1752,7 @@ async function saveAnimeEdit() {
   }
 
   saveToStorage(); renderAll(); closeEditModal();
-  showToast(`âœ… "${anime.title}" updated!`);
+  showToast(`✅ "${anime.title}" updated!`);
 }
 
 
@@ -1770,7 +1770,7 @@ async function deleteAnime(id) {
   animeLibrary = animeLibrary.filter(a => a.id !== id);
   myList       = myList.filter(m => m.id !== id);
   saveToStorage(); renderAll();
-  showToast(`🗑️ "${anime.title}" deleted.`);
+  showToast(`??? "${anime.title}" deleted.`);
 }
 
 function clearLibrary() {
@@ -1780,17 +1780,17 @@ function clearLibrary() {
   showToast('Library reset to demo data.');
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   CLOUD GUIDE
-// ════════════════════════════════════════════
+// --------------------------------------------
 function showCloudGuide(provider) {
   const guides = {
-    gdrive:     { title:'ðŸ“ Google Drive Setup',  steps:[{title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},{title:'Make it public',desc:'Right-click â†’ Share â†’ Change to "Anyone with the link â†’ Viewer".'},{title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},{title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}]},
-    s3:         { title:'🪣 Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console â†’ S3 â†’ Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file â†’ Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
-    cloudinary: { title:'â˜ï¸ Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com â€” free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library â†’ Upload your video file.'},{title:'Get the URL',desc:'Click your video â†’ Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
-    backblaze:  { title:'🔥 Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 â€” free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video â†’ click file â†’ "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
-    wasabi:     { title:'🌿 Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com â€” $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
-    jiocloud:   { title:'ðŸ‡®ðŸ‡³ Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button â†’ Upload â†’ select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file â†’ tap <strong>Share</strong> â†’ select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin â†’ Upload tab â†’ paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip â€” Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
+    gdrive:     { title:'📁 Google Drive Setup',  steps:[{title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},{title:'Make it public',desc:'Right-click → Share → Change to "Anyone with the link → Viewer".'},{title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},{title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}]},
+    s3:         { title:'?? Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console → S3 → Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file → Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
+    cloudinary: { title:'☁️ Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com — free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library → Upload your video file.'},{title:'Get the URL',desc:'Click your video → Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
+    backblaze:  { title:'?? Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 — free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video → click file → "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
+    wasabi:     { title:'?? Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com — $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
+    jiocloud:   { title:'🇮🇳 Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button → Upload → select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file → tap <strong>Share</strong> → select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin → Upload tab → paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip — Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
   };
   const guide = guides[provider]; if (!guide) return;
   document.getElementById('guideTitle').textContent = guide.title;
@@ -1804,31 +1804,31 @@ function closeCloudGuide() { document.getElementById('cloudGuideModal').classLis
 
 function testVideoUrl() {
   const url = document.getElementById('testUrl').value.trim();
-  if (!url) { showToast('âš ï¸ Enter a URL to test'); return; }
+  if (!url) { showToast('⚠️ Enter a URL to test'); return; }
   const player = document.getElementById('testPlayer');
   player.src = url; player.style.display = 'block'; player.load();
-  player.oncanplay = () => showToast('âœ… Video URL works!');
-  player.onerror   = () => showToast('❌ Cannot load video. Check URL & CORS settings.');
+  player.oncanplay = () => showToast('✅ Video URL works!');
+  player.onerror   = () => showToast('? Cannot load video. Check URL & CORS settings.');
 }
 
 function convertGDriveUrl() {
   const url   = document.getElementById('gdriveInput').value.trim();
   const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
   const result = document.getElementById('gdriveResult');
-  if (!match) { showToast('âš ï¸ Invalid Google Drive URL format.'); return; }
+  if (!match) { showToast('⚠️ Invalid Google Drive URL format.'); return; }
   const fileId    = match[1];
   const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
   result.style.display = 'block';
   result.innerHTML = `
-    <p>âœ… Direct stream URL:</p>
+    <p>✅ Direct stream URL:</p>
     <code>${directUrl}</code>
-    <p style="margin-top:0.5rem;color:#e57373;font-size:0.78rem">âš ï¸ Note: Google Drive may block large video streaming due to CORS. Cloudinary or S3 work better.</p>
-    <button class="copy-url-btn" onclick="navigator.clipboard.writeText('${directUrl}');showToast('Copied!')">ðŸ“‹ Copy URL</button>`;
+    <p style="margin-top:0.5rem;color:#e57373;font-size:0.78rem">⚠️ Note: Google Drive may block large video streaming due to CORS. Cloudinary or S3 work better.</p>
+    <button class="copy-url-btn" onclick="navigator.clipboard.writeText('${directUrl}');showToast('Copied!')">📋 Copy URL</button>`;
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   USER AUTH
-// ════════════════════════════════════════════
+// --------------------------------------------
 function openUserAuth()  { document.getElementById('userAuthModal').classList.add('active');    document.body.style.overflow = 'hidden'; }
 function closeUserAuth() { document.getElementById('userAuthModal').classList.remove('active'); document.body.style.overflow = ''; }
 
@@ -1851,7 +1851,7 @@ async function handleLogin() {
     if (data.success) {
       setToken(data.accessToken); setUser(data.user);
       closeUserAuth(); updateNavForAuth();
-      showToast(`âœ… Welcome back, ${data.user.username}!`);
+      showToast(`✅ Welcome back, ${data.user.username}!`);
     } else { errEl.textContent = data.message; errEl.style.display = 'block'; }
   } catch(e) { errEl.textContent = 'Connection error. Is server running?'; errEl.style.display = 'block'; }
 }
@@ -1866,7 +1866,7 @@ async function handleSignup() {
   try {
     const res  = await fetch(`${API}/auth/signup`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username, email, password }) });
     const data = await res.json();
-    if (data.success) { closeUserAuth(); showToast('âœ… Account created! Check your email to verify.'); }
+    if (data.success) { closeUserAuth(); showToast('✅ Account created! Check your email to verify.'); }
     else { errEl.textContent = data.message; errEl.style.display = 'block'; }
   } catch(e) { errEl.textContent = 'Connection error. Is server running?'; errEl.style.display = 'block'; }
 }
@@ -1890,9 +1890,9 @@ function updateNavForAuth() {
 }
 
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   MOBILE SEARCH PAGE
-// ════════════════════════════════════════════
+// --------------------------------------------
 function openMobileSearch() {
   showPage('search');
   renderMspTrending();
@@ -1907,13 +1907,13 @@ function renderMspTrending() {
   container.innerHTML = all.map((a, i) => {
     const thumb = hasValidThumb(a)
       ? `<img class="msp-thumb" src="${a.thumb}" alt="${a.title}"/>`
-      : `<div class="msp-thumb">${a.emoji||'🎬'}</div>`;
-    const rank = i === 0 ? '🔥 #1' : '#' + (i + 1);
+      : `<div class="msp-thumb">${a.emoji||'??'}</div>`;
+    const rank = i === 0 ? '?? #1' : '#' + (i + 1);
     return `<div class="msp-item" onclick="openPlayer(animeLibrary.find(x=>x.id==='${a.id}'))">
       ${thumb}
       <div>
         <p class="msp-item-title">${a.title}</p>
-        <p class="msp-item-meta">${a.type} • ${a.year||''}</p>
+        <p class="msp-item-meta">${a.type} � ${a.year||''}</p>
       </div>
       <span class="msp-rank">${rank}</span>
     </div>`;
@@ -1949,9 +1949,9 @@ function mspClear() {
   document.getElementById('mspGrid').style.display = 'none';
   document.getElementById('mspResults').style.display = 'block';
 }
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   TOAST
-// ════════════════════════════════════════════
+// --------------------------------------------
 let toastTimeout;
 function showToast(msg) {
   const toast = document.getElementById('toast');
@@ -1961,9 +1961,9 @@ function showToast(msg) {
   toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// ════════════════════════════════════════════
+// --------------------------------------------
 //   START
-// ════════════════════════════════════════════
+// --------------------------------------------
 document.addEventListener('DOMContentLoaded', init);
 
 
