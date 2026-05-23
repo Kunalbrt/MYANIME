@@ -1,4 +1,4 @@
-const { getFreshEmbedUrl } = require('../utils/streamScraper');
+const { getFreshEmbedUrl } = require('../utils/streamScraper.disabled');
 
 /**
  * GET /api/stream/:slug/:episode
