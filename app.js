@@ -1169,6 +1169,7 @@ function playNext() {
 // ════════════════════════════════════════════
 function setupSearchListener() {
   const input = document.getElementById('searchInput');
+  if (!input) return;
   let timeout;
   input.addEventListener('input', e => {
     clearTimeout(timeout);
@@ -1176,13 +1177,10 @@ function setupSearchListener() {
       const q = e.target.value.trim();
       if (q.length >= 2) {
         trackSearch(q);
-        const results = animeLibrary.filter(a =>
-          a.title.toLowerCase().includes(q.toLowerCase()) ||
-          (a.genre||'').toLowerCase().includes(q.toLowerCase())
-        );
-       showPage('search');
+        showPage('search');
+        const mspInput = document.getElementById('mspInput');
+        if (mspInput) mspInput.value = q;
         mspSearch(q);
-       
       } else if (q.length === 0) {
         showPage('home');
       }
