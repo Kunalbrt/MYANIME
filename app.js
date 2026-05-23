@@ -920,6 +920,7 @@ function createCard(anime) {
     ? `<img class="card-hover-img" src="${anime.thumb}" alt="${anime.title}"/>`
     : `<div class="card-hover-img" style="background:${getGradient(anime.id)};display:flex;align-items:center;justify-content:center;font-size:2.5rem">${anime.emoji||'??'}</div>`;
   div.innerHTML = `${thumbHtml}
+    <div class="card-title-below">${anime.title}</div>
     <div class="card-hover">
       ${hoverThumbHtml}
       <div class="card-hover-body">

@@ -582,3 +582,14 @@ select.admin-input { cursor: pointer; }
   color: var(--red) !important;
 }
 .login-btn:hover { background: rgba(0,0,0,0.1) !important; }
+
+.card-title-below {
+  font-size: 0.75rem;
+  color: #fff;
+  text-align: center;
+  padding: 4px 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
