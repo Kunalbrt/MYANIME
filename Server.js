@@ -39,12 +39,13 @@ app.use(helmet({
 
 // ── CORS ─────────────────────────────────────
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL,
-    'http://localhost:3000',
-    'http://localhost:5173',
-    "https://billowing-glade-b0a8.bhartikunal886.workers.dev",
-  ],
+ origin: [
+  process.env.FRONTEND_URL,
+  'http://localhost:3000',
+  'http://localhost:5173',
+  "https://billowing-glade-b0a8.bhartikunal886.workers.dev",
+  "https://myanime-0wq.pages.dev",  // add this
+],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
