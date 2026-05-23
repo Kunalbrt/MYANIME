@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 //   MYANIME â€” App Logic (Optimized & Debugged)
 // ============================================
 
@@ -1182,7 +1182,8 @@ function setupSearchListener() {
         );
         showPage('search');
         renderGrid('searchGrid', results);
-        document.querySelector('#searchPage .browse-title').textContent = `Results for "${q}"`;
+        const browseTitle = document.querySelector('#searchPage .browse-title');
+  if (browseTitle) browseTitle.textContent = `Results for "${q}"`;
       } else if (q.length === 0) {
         showPage('home');
       }
