@@ -1111,18 +1111,42 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
 
   const videoUrl = episodeUrl || anime.videoUrl;
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  if (isMobile && videoUrl && videoUrl.includes(".m3u8")) { window.open(videoUrl, "_blank"); return; }
-  video.src = ""; loading.classList.remove("hidden");
-  if (videoUrl && videoUrl.trim()) {
-    if (Hls.isSupported() && videoUrl.includes(".m3u8")) { const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video); } else if (video.canPlayType("application/vnd.apple.mpegurl")) { video.src = videoUrl; video.load(); } else { video.src = videoUrl; video.load(); }
-    video.oncanplay = () => loading.classList.add('hidden');
-    video.onerror   = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
+ if (isMobile && videoUrl && videoUrl.includes(".m3u8")) { window.open(videoUrl, "_blank"); return; }
+
+video.src = ""; loading.classList.remove("hidden");
+
+if (videoUrl && videoUrl.trim()) {
+  // ✅ Handle embed URLs with iframe
+  if (videoUrl.includes('anikai.to/embed') || videoUrl.includes('/embed/')) {
+    loading.classList.add('hidden');
+    const wrap = video.parentElement;
+    video.style.display = 'none';
+    let iframe = wrap.querySelector('.embed-iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.className = 'embed-iframe';
+      iframe.style.cssText = 'width:100%;height:100%;border:none;position:absolute;inset:0;';
+      iframe.allowFullscreen = true;
+      iframe.allow = 'autoplay; fullscreen';
+      wrap.appendChild(iframe);
+    }
+    iframe.src = videoUrl;
+  } else if (Hls.isSupported() && videoUrl.includes(".m3u8")) {
+    video.style.display = 'block';
+    const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video);
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.style.display = 'block';
+    video.src = videoUrl; video.load();
   } else {
-    setTimeout(() => { loading.classList.add('hidden'); showNoVideoMessage(); }, 1200);
+    video.style.display = 'block';
+    video.src = videoUrl; video.load();
   }
-  overlay.classList.add("active");
-  document.body.style.overflow = 'hidden';
+  video.oncanplay = () => loading.classList.add('hidden');
+  video.onerror   = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
+} else {
+  setTimeout(() => { loading.classList.add('hidden'); showNoVideoMessage(); }, 1200);
 }
+
 
 function playEpisode(animeId, videoUrl, episodeTitle) {
   const anime = animeLibrary.find(a => a.id === animeId);
@@ -1149,12 +1173,16 @@ function showNoVideoMessage() {
 
 function closePlayer() {
   const video = document.getElementById('mainPlayer');
-  video.pause(); video.src = '';
+  video.pause(); video.src = ''; video.style.display = 'block';
+  // Remove iframe if exists
+  const iframe = document.querySelector('.embed-iframe');
+  if (iframe) iframe.remove();
   document.getElementById('playerOverlay').classList.remove('active');
   document.body.style.overflow = '';
   const msg = document.querySelector('.no-video-msg');
   if (msg) msg.remove();
 }
+
 
 function toggleFullscreen() {
   const el = document.getElementById('playerOverlay');
@@ -1992,4 +2020,4 @@ document.addEventListener('DOMContentLoaded', init);
 
 
 
-
+}

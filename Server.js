@@ -44,6 +44,7 @@ app.use(cors({
   'http://localhost:3000',
   'http://localhost:5173',
   "https://billowing-glade-b0a8.bhartikunal886.workers.dev",
+  
   "https://myanime-0wq.pages.dev",  // add this
 ],
   credentials: true,
