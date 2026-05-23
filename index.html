@@ -3,7 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MyAnime</title>
+
+  <!-- ═══ PRIMARY SEO ═══ -->
+  <title>MyAnime – Watch Free Anime Online | Movies & Series</title>
+  <meta name="description" content="MyAnime is your ultimate destination to watch free anime online. Stream the latest anime movies and series including One Piece, Attack on Titan, Demon Slayer, Jujutsu Kaisen and more in HD."/>
+  <meta name="keywords" content="watch anime online free, anime streaming, anime movies, anime series, one piece, attack on titan, demon slayer, jujutsu kaisen, naruto, dragon ball z, free anime, HD anime, best anime 2024, anime website"/>
+  <meta name="author" content="MyAnime"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="theme-color" content="#e50914"/>
+  <link rel="canonical" href="https://myanime-0wq.pages.dev/"/>
+
+  <!-- ═══ OPEN GRAPH (Facebook, WhatsApp, Discord) ═══ -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="MyAnime"/>
+  <meta property="og:title" content="MyAnime – Watch Free Anime Online | Movies & Series"/>
+  <meta property="og:description" content="Stream the best anime for free. Watch One Piece, Attack on Titan, Demon Slayer, Jujutsu Kaisen and hundreds more in HD quality."/>
+  <meta property="og:url" content="https://myanime-0wq.pages.dev/"/>
+  <meta property="og:image" content="https://myanime-0wq.pages.dev/og-image.jpg"/>
+  <meta property="og:locale" content="en_US"/>
+
+  <!-- ═══ TWITTER CARD ═══ -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="MyAnime – Watch Free Anime Online"/>
+  <meta name="twitter:description" content="Stream the best anime for free in HD. Movies, series, and more."/>
+  <meta name="twitter:image" content="https://myanime-0wq.pages.dev/og-image.jpg"/>
+
+  <!-- ═══ SCHEMA.ORG STRUCTURED DATA ═══ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "MyAnime",
+    "url": "https://myanime-0wq.pages.dev/",
+    "description": "Free anime streaming website with the latest movies and series in HD.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://myanime-0wq.pages.dev/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    "name": "Anime Streaming – MyAnime",
+    "description": "Watch the best anime series and movies online for free in HD quality.",
+    "thumbnailUrl": "https://myanime-0wq.pages.dev/og-image.jpg",
+    "uploadDate": "2024-01-01",
+    "contentUrl": "https://myanime-0wq.pages.dev/"
+  }
+  </script>
+
+  <!-- ═══ PERFORMANCE & PRECONNECT ═══ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preconnect" href="https://myanime-backend-2vc9.onrender.com"/>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️️</text></svg>"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <!-- EmailJS for 2FA OTP emails -->
@@ -221,7 +278,7 @@
         </div>
 
         <div class="upload-card upload-form-card">
-          <h3>ðŸ“ Anime Details</h3>
+          <h3>ðŸ" Anime Details</h3>
           <div class="form-group">
             <label>Title *</label>
             <input type="text" id="animeTitle" placeholder="e.g. Attack on Titan" class="admin-input"/>
@@ -271,7 +328,7 @@
       <div class="cloud-providers">
         <h3>☁️ Supported Cloud Storage Providers</h3>
         <div class="provider-grid">
-          <div class="provider-card" onclick="showCloudGuide('gdrive')"><div class="provider-icon">ðŸ“</div><span>Google Drive</span><span class="provider-status connected">Guide</span></div>
+          <div class="provider-card" onclick="showCloudGuide('gdrive')"><div class="provider-icon">ðŸ"</div><span>Google Drive</span><span class="provider-status connected">Guide</span></div>
           <div class="provider-card" onclick="showCloudGuide('s3')"><div class="provider-icon">🪣</div><span>Amazon S3</span><span class="provider-status connected">Guide</span></div>
           <div class="provider-card" onclick="showCloudGuide('cloudinary')"><div class="provider-icon">☁️</div><span>Cloudinary</span><span class="provider-status connected">Guide</span></div>
           <div class="provider-card" onclick="showCloudGuide('backblaze')"><div class="provider-icon">🔥</div><span>Backblaze B2</span><span class="provider-status">Guide</span></div>
@@ -285,7 +342,7 @@
     <div class="admin-tab-content" id="libraryTab">
       <div class="library-header">
         <h3>📚 Content Library (<span id="libraryCount">0</span> items)</h3>
-        <button class="btn-danger" onclick="clearLibrary()">ðŸ—‘️ Clear All</button>
+        <button class="btn-danger" onclick="clearLibrary()">ðŸ—'️ Clear All</button>
       </div>
       <div class="library-grid" id="libraryGrid"></div>
     </div>
@@ -365,7 +422,7 @@
 
         <div style="display:flex;gap:1rem;margin-top:1rem">
           <button class="btn-add-anime" style="max-width:180px" onclick="refreshAnalytics()">🔄 Refresh</button>
-          <button class="btn-danger" onclick="resetAnalytics()">ðŸ—‘️ Reset Stats</button>
+          <button class="btn-danger" onclick="resetAnalytics()">ðŸ—'️ Reset Stats</button>
         </div>
       </div>
     </div>
@@ -654,7 +711,7 @@
           <video id="testPlayer" controls style="display:none;width:100%;margin-top:1rem;border-radius:12px;background:#000;max-height:300px"></video>
         </div>
         <div class="gdrive-helper">
-          <h4>ðŸ“ Google Drive URL Converter</h4>
+          <h4>ðŸ" Google Drive URL Converter</h4>
           <p>Paste a Google Drive share link and get a direct streamable URL:</p>
           <div class="url-test-row">
             <input type="url" id="gdriveInput" placeholder="https://drive.google.com/file/d/.../view" class="admin-input"/>
@@ -738,7 +795,7 @@
         <div class="editor-section">
           <h4>📋 Recent Login Attempts</h4>
           <div id="loginHistory" class="login-history"></div>
-          <button class="btn-danger" style="margin-top:1rem;max-width:200px" onclick="clearLoginHistory()">ðŸ—‘️ Clear History</button>
+          <button class="btn-danger" style="margin-top:1rem;max-width:200px" onclick="clearLoginHistory()">ðŸ—'️ Clear History</button>
         </div>
 
         <!-- Danger Zone -->
@@ -1198,21 +1255,3 @@
 <script src="back.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
