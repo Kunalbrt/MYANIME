@@ -201,8 +201,8 @@ async function fetchAnimeFromBackend() {
         thumb:    a.thumbnailUrl || '',
         videoUrl: a.videoUrl     || '',
         emoji:    '??',
-        trending: savedMap[a._id] !== undefined ? savedMap[a._id].trending : (a.isTrending || false),
-        topRated: savedMap[a._id] !== undefined ? savedMap[a._id].topRated : (a.isTopRated || false),
+        trending: a.isTrending || false,
+        topRated: a.isTopRated || false,
       }));
       saveToStorage();
       renderAll();
@@ -1305,8 +1305,21 @@ function toggleRecommend(field, id, cb) {
   cb.closest('.recommend-item').classList.toggle('selected', cb.checked);
 }
 
-function saveRecommendations() {
+async function saveRecommendations() {
   saveToStorage(); renderRows();
+  // Sync to backend so all devices update
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      await Promise.all(animeLibrary.map(a =>
+        fetch(`${API}/anime/${a.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+          body: JSON.stringify({ isTrending: a.trending || false, isTopRated: a.topRated || false })
+        })
+      ));
+    }
+  } catch(err) { console.log("Backend sync failed:", err.message); }
   showToast('✅ Recommendations saved!');
 }
 
@@ -1968,6 +1981,9 @@ function showToast(msg) {
 //   START
 // --------------------------------------------
 document.addEventListener('DOMContentLoaded', init);
+
+
+
 
 
 

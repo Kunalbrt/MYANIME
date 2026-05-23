@@ -34,5 +34,20 @@ router.post('/', protect, requireAdmin, async (req, res) => {
   }
 });
 
+
+// ── Update anime (a// -- Update anime (admin only) --
+router.patch('/:id', protect, requireAdmin, async (req, res) => {
+  try {
+    const anime = await Anime.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    if (!anime) return res.status(404).json({ success: false, message: 'Anime not found' });
+    res.json({ success: true, anime });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;
-// ── Update anime (a
