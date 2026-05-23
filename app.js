@@ -1180,10 +1180,9 @@ function setupSearchListener() {
           a.title.toLowerCase().includes(q.toLowerCase()) ||
           (a.genre||'').toLowerCase().includes(q.toLowerCase())
         );
-        showPage('search');
-        renderGrid('searchGrid', results);
-        const browseTitle = document.querySelector('#searchPage .browse-title');
-  if (browseTitle) browseTitle.textContent = `Results for "${q}"`;
+       showPage('search');
+        mspSearch(q);
+       
       } else if (q.length === 0) {
         showPage('home');
       }
