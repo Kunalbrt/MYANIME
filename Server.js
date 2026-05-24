@@ -67,7 +67,8 @@ const authLimiter = rateLimit({
 app.use('/api/', limiter);
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/signup', authLimiter);
-app.use('/api/stream', require('./routes/streamRoutes.js'));
+app.use('/api/stream', require('./routes/streamRoutes'));
+app.use(express.static(__dirname)); 
 
 // ── Body Parsers ──────────────────────────────
 app.use(express.json({ limit: '10mb' }));
