@@ -13,38 +13,29 @@
     }
     #playBtn:hover { background: #c40812; }
     #playerContainer { display: none; margin-top: 16px; }
-    #videoPlayer { width: 100%; height: 500px; border: none; border-radius: 8px; }
     #hlsPlayer { width: 100%; height: 500px; border-radius: 8px; background: black; }
     #status { margin-top: 10px; color: #aaa; font-size: 14px; text-align: center; }
   </style>
-
-  <!-- HLS.js for m3u8 streams -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
 </head>
 <body>
 
 <div id="playerWrapper">
-  <h2 id="animeTitle">Naruto - Episode 1</h2>
-
+  <h2 id="animeTitle">Loading...</h2>
   <button id="playBtn" onclick="loadPlayer()">▶ Watch Now</button>
   <div id="status"></div>
-
   <div id="playerContainer">
-    <!-- Used for m3u8 HLS streams -->
     <video id="hlsPlayer" controls style="display:none;"></video>
-
-    <!-- Used for embed iframe fallback -->
     <iframe id="iframePlayer" style="display:none;"
       allowfullscreen allow="autoplay; fullscreen"></iframe>
   </div>
 </div>
 
 <script>
-  // ─── CONFIG ───────────────────────────────────────
-  // Set these dynamically from your backend/template
-  const ANIME_SLUG = 'naruto';   // e.g. passed from server
-  const EPISODE_INDEX = 0;       // 0 = episode 1
-  // ──────────────────────────────────────────────────
+  const params = new URLSearchParams(window.location.search);
+  const ANIME_SLUG = params.get('slug') || 'naruto';
+  const EPISODE_INDEX = parseInt(params.get('ep')) || 0;
+  document.getElementById('animeTitle').innerText = ANIME_SLUG.replace(/-/g, ' ');
 
   async function loadPlayer() {
     const btn = document.getElementById('playBtn');
@@ -55,7 +46,7 @@
     status.innerText = 'Fetching stream URL...';
 
     try {
-      const res = await fetch(`/api/stream/${ANIME_SLUG}/${EPISODE_INDEX}`);
+      const res = await fetch(`https://myanime-backend-2vc9.onrender.com/api/stream/${ANIME_SLUG}/${EPISODE_INDEX}`);
       const data = await res.json();
 
       if (!data.success) throw new Error('Stream fetch failed');
@@ -65,23 +56,18 @@
       status.innerText = '';
 
       if (data.type === 'm3u8') {
-        // Play HLS stream using HLS.js
         const video = document.getElementById('hlsPlayer');
         video.style.display = 'block';
-
         if (Hls.isSupported()) {
           const hls = new Hls();
           hls.loadSource(data.url);
           hls.attachMedia(video);
           hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          // Native HLS support (Safari)
           video.src = data.url;
           video.play();
         }
-
       } else {
-        // Fallback: embed iframe
         const iframe = document.getElementById('iframePlayer');
         iframe.style.display = 'block';
         iframe.style.width = '100%';
