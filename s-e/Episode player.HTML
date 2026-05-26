@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <!-- TOP NAV (minimal, attach your real nav here later) -->
+  <!-- TOP NAV -->
   <nav class="top-nav">
     <div class="nav-brand">h!anime</div>
     <div class="nav-breadcrumb">
@@ -68,7 +68,16 @@
             <p class="placeholder-text">Select an episode to start watching</p>
           </div>
         </div>
-        <iframe class="video-iframe hidden" id="videoIframe" allowfullscreen allow="autoplay; fullscreen"></iframe>
+
+        <!-- ✅ FIXED: using <video> instead of <iframe> for Cloudinary MP4 URLs -->
+        <video
+          class="video-iframe hidden"
+          id="videoIframe"
+          controls
+          autoplay
+          playsinline
+          preload="metadata"
+        ></video>
       </div>
 
       <!-- Episode Meta -->
