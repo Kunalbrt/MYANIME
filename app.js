@@ -1144,6 +1144,8 @@ function showNoVideoMessage() {
 function closePlayer() {
   const video = document.getElementById('mainPlayer');
   video.pause(); video.src = '';
+  const iframe = document.getElementById('embedPlayer');
+  if (iframe) iframe.src = '';
   document.getElementById('playerOverlay').classList.remove('active');
   document.body.style.overflow = '';
   const msg = document.querySelector('.no-video-msg');
@@ -1669,13 +1671,40 @@ async function saveAnimeEdit() {
 }
 
 
-function deleteAnime(id) {
+// ════════════════════════════════════════════
+//   FIXED deleteAnime — deletes from backend + frontend
+// ════════════════════════════════════════════
+async function deleteAnime(id) {
   const anime = animeLibrary.find(a => a.id === id);
   if (!anime || !confirm(`Delete "${anime.title}"?`)) return;
+
+  // Step 1 — Delete from backend (MongoDB)
+  try {
+    const res = await fetch(`${API}/anime/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getToken()}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      console.log('Backend delete failed:', data.message);
+      showToast(`❌ Backend delete failed: ${data.message}`);
+      return; // stop here — don't remove from UI if backend failed
+    }
+  } catch (err) {
+    console.log('Backend delete error:', err.message);
+    showToast('❌ Could not reach server. Anime NOT deleted.');
+    return;
+  }
+
+  // Step 2 — Remove from local state + UI
   animeLibrary = animeLibrary.filter(a => a.id !== id);
   myList       = myList.filter(m => m.id !== id);
-  saveToStorage(); renderAll();
-  showToast(`ðŸ—‘ï¸ "${anime.title}" deleted.`);
+  saveToStorage();
+  renderAll();
+  showToast(`🗑️ "${anime.title}" deleted from site and database!`);
 }
 
 function clearLibrary() {
