@@ -96,12 +96,21 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
+// ─── Start Server ───────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    logger.info(`🚀 Server running on port ${PORT} [${process.env.NODE_ENV}]`);
-  });
-});
 
-module.exports = app;
+const startServer = async () => {
+  await connectDB();               // connect MongoDB first
+  app.listen(PORT, () => {
+    logger.info(`🚀 Server running on port ${PORT}`);
+  });
+};
+
+startServer();
+
+module.exports = app; // keep this if you need it for tests
+
+
+
+
+
