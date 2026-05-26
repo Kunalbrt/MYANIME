@@ -1,16 +1,4 @@
-/**
- * episode-player.js
- * ─────────────────────────────────────────────
- * Standalone episode player controller.
- * Reads ?id=ANIME_ID from the URL and fetches
- * from your myanime backend API automatically.
- *
- * HOW TO ATTACH TO YOUR APP:
- *   Link to this page from any anime card with:
- *   <a href="episode-player.html?id=ANIME_MONGO_ID">Watch</a>
- *
- * API BASE — change this to your backend:
- */
+
 
 const API_BASE = 'https://myanime-backend-2vc9.onrender.com/api';
 
@@ -288,7 +276,7 @@ function loadDemoData() {
       "I'm Luffy! The Man Who's Gonna Be King of the Pirates!",
       'Enter the Great Swordsman! Pirate Hunter Roronoa Zoro!',
       'Morgan versus Luffy! Who Is the Winner?!',
-      'Luffy's Past! The Red-haired Shanks Appears!',
+      "Luffy's Past! The Red-haired Shanks Appears!",
       'A Terrifying Mysterious Power! Captain Buggy, the Clown Pirate!',
       'Desperate Situation! Beast Tamer Mohji vs. Luffy!',
       'Epic Showdown! Swordsman Zoro vs. Acrobat Cabaji!',

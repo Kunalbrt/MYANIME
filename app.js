@@ -1861,6 +1861,28 @@ function updateNavForAuth() {
   }
 }
 
+
+app.get('/api/anime/:id', async (req, res) => {
+  try {
+    const anime = await Anime.findById(req.params.id);
+    if (!anime) return res.status(404).json({ message: 'Not found' });
+    res.json({ anime });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+});
+
+// Optional: increment view count
+app.post('/api/anime/:id/view', async (req, res) => {
+  await Anime.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
+  res.json({ ok: true });
+});
+
+
+
+
+
+
 // ════════════════════════════════════════════
 //   TOAST
 // ════════════════════════════════════════════
