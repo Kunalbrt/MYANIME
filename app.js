@@ -1069,6 +1069,7 @@ function toggleMyList() {
 // ════════════════════════════════════════════
 //   VIDEO PLAYER
 // ════════════════════════════════════════════
+
 function openPlayer(anime, episodeUrl, episodeTitle) {
   if (!anime) return;
   currentPlayerAnime = anime;
@@ -1080,9 +1081,8 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   const displayTitle = episodeTitle ? `${anime.title} - ${episodeTitle}` : anime.title;
   document.getElementById('playerTitle').textContent     = displayTitle;
   document.getElementById('playerInfoTitle').textContent = anime.title;
-  document.getElementById('playerInfoMeta').textContent  = ` â€¢ ${anime.year||''} â€¢ ${anime.genre||''} â€¢ ${anime.rating||''}`;
+  document.getElementById('playerInfoMeta').textContent  = ` • ${anime.year||''} • ${anime.genre||''} • ${anime.rating||''}`;
 
-  // Build episode list if series has seasons
   const episodeListEl = document.getElementById('episodeList');
   if (episodeListEl) {
     if (anime.seasons && anime.seasons.length > 0) {
@@ -1106,17 +1106,59 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   const videoUrl = episodeUrl || anime.videoUrl;
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   if (isMobile && videoUrl && videoUrl.includes(".m3u8")) { window.open(videoUrl, "_blank"); return; }
-  video.src = ""; loading.classList.remove("hidden");
-  if (videoUrl && videoUrl.trim()) {
-    if (Hls.isSupported() && videoUrl.includes(".m3u8")) { const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video); } else if (video.canPlayType("application/vnd.apple.mpegurl")) { video.src = videoUrl; video.load(); } else { video.src = videoUrl; video.load(); }
+
+  video.src = "";
+  loading.classList.remove("hidden");
+
+  const isEmbedUrl = videoUrl && (
+    videoUrl.includes('megaplay.buzz') ||
+    videoUrl.includes('newplayer') ||
+    videoUrl.includes('/embed') ||
+    videoUrl.includes('gogoanime')
+  );
+
+  if (isEmbedUrl) {
+    let iframe = document.getElementById('embedPlayer');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.id = 'embedPlayer';
+      iframe.allowFullscreen = true;
+      iframe.allow = 'autoplay; fullscreen';
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:2;';
+      video.parentElement.style.position = 'relative';
+      video.parentElement.appendChild(iframe);
+    }
+    iframe.src = videoUrl;
+    iframe.style.display = 'block';
+    video.style.display = 'none';
+    loading.classList.add('hidden');
+  } else if (videoUrl && videoUrl.trim()) {
+    const iframe = document.getElementById('embedPlayer');
+    if (iframe) { iframe.src = ''; iframe.style.display = 'none'; }
+    video.style.display = 'block';
+    if (Hls.isSupported() && videoUrl.includes(".m3u8")) {
+      const hls = new Hls(); hls.loadSource(videoUrl); hls.attachMedia(video);
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = videoUrl; video.load();
+    } else {
+      video.src = videoUrl; video.load();
+    }
     video.oncanplay = () => loading.classList.add('hidden');
     video.onerror   = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
   } else {
     setTimeout(() => { loading.classList.add('hidden'); showNoVideoMessage(); }, 1200);
   }
+
   overlay.classList.add("active");
   document.body.style.overflow = 'hidden';
 }
+
+
+
+
+
+
+
 
 function playEpisode(animeId, videoUrl, episodeTitle) {
   const anime = animeLibrary.find(a => a.id === animeId);
