@@ -1,37 +1,38 @@
-const { getFreshEmbedUrl } = require('../utils/streamScraper.disabled');
+const Anime = require('../models/Anime');
 
 /**
  * GET /api/stream/:slug/:episode
- * Returns a fresh embed/stream URL for the given anime slug and episode number
+ * Returns the saved video URL from MongoDB for the given anime slug
  */
 async function getStreamUrl(req, res) {
-  const { slug, episode } = req.params;
-  const episodeIndex = parseInt(episode) || 0;
+  const { slug } = req.params;
 
   try {
-    const result = await getFreshEmbedUrl(slug, episodeIndex);
+    const anime = await Anime.findOne({ 
+      slug: { $regex: slug, $options: 'i' } 
+    });
 
-    if (result.success && result.embedUrl) {
-      return res.json({
-        success: true,
-        url: result.embedUrl,
-        type: 'm3u8' // HLS stream
-      });
+    if (!anime) {
+      return res.status(404).json({ success: false, message: 'Anime not found' });
     }
 
-    // Fallback to embed iframe URL
-    return res.json({
-      success: true,
-      url: result.fallbackUrl,
-      type: 'embed' // use as iframe src
-    });
+    const videoUrl = anime.videoUrl;
+
+    if (!videoUrl) {
+      return res.status(404).json({ success: false, message: 'No video URL available' });
+    }
+
+    let type = 'embed';
+    if (videoUrl.includes('.m3u8')) type = 'm3u8';
+    if (videoUrl.includes('.mp4'))  type = 'mp4';
+
+    console.log(`✅ Stream URL served for: ${anime.title} [${type}]`);
+
+    return res.json({ success: true, url: videoUrl, type, title: anime.title });
 
   } catch (err) {
     console.error('❌ streamController error:', err.message);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to get stream URL'
-    });
+    return res.status(500).json({ success: false, message: 'Failed to get stream URL' });
   }
 }
 
