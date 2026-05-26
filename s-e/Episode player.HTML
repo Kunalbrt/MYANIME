@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Episode Player</title>
+  <link rel="stylesheet" href="episode-player.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- TOP NAV (minimal, attach your real nav here later) -->
+  <nav class="top-nav">
+    <div class="nav-brand">h!anime</div>
+    <div class="nav-breadcrumb">
+      <a href="#" class="bc-link" id="bc-anime-title">One Piece</a>
+      <span class="bc-sep">›</span>
+      <span class="bc-current" id="bc-ep-label">Episode 1</span>
+    </div>
+    <button class="back-btn" onclick="history.back()">← Back to Details</button>
+  </nav>
+
+  <!-- MAIN LAYOUT -->
+  <div class="player-layout" id="playerLayout">
+
+    <!-- LEFT: Episode Sidebar -->
+    <aside class="ep-sidebar" id="epSidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">List of episodes:</span>
+        <button class="sidebar-toggle" id="sidebarToggle" title="Collapse sidebar">⟨</button>
+      </div>
+
+      <!-- Search + Range -->
+      <div class="sidebar-controls">
+        <div class="ep-search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" class="ep-search" id="epSearch" placeholder="Search episode..." />
+        </div>
+        <select class="ep-range-select" id="epRangeSelect"></select>
+      </div>
+
+      <!-- Season Tabs (hidden if only 1 season) -->
+      <div class="season-tabs" id="seasonTabs"></div>
+
+      <!-- Episode List -->
+      <div class="ep-list-scroll" id="epListScroll">
+        <ul class="ep-list" id="epList"></ul>
+      </div>
+    </aside>
+
+    <!-- SIDEBAR COLLAPSED TRIGGER -->
+    <button class="sidebar-expand-btn hidden" id="sidebarExpand" title="Show episodes">☰ Episodes</button>
+
+    <!-- RIGHT: Player Area -->
+    <main class="player-area" id="playerArea">
+
+      <!-- Video Frame -->
+      <div class="video-wrap" id="videoWrap">
+        <div class="video-placeholder" id="videoPlaceholder">
+          <div class="placeholder-content">
+            <div class="play-ring">
+              <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                <polygon points="32,24 60,40 32,56" fill="rgba(255,255,255,0.8)"/>
+              </svg>
+            </div>
+            <p class="placeholder-text">Select an episode to start watching</p>
+          </div>
+        </div>
+        <iframe class="video-iframe hidden" id="videoIframe" allowfullscreen allow="autoplay; fullscreen"></iframe>
+      </div>
+
+      <!-- Episode Meta -->
+      <div class="ep-meta" id="epMeta">
+        <div class="ep-meta-left">
+          <span class="ep-number-badge" id="epNumberBadge">EP 1</span>
+          <div class="ep-meta-text">
+            <h2 class="ep-title" id="epTitle">I'm Luffy! The Man Who's Gonna Be King of the Pirates!</h2>
+            <p class="ep-desc" id="epDesc">A young pirate sets sail to find the world's ultimate treasure.</p>
+          </div>
+        </div>
+        <div class="ep-meta-actions">
+          <button class="action-btn" id="prevBtn" title="Previous episode">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+            Prev
+          </button>
+          <button class="action-btn" id="nextBtn" title="Next episode">
+            Next
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2.5-6 5.5 3.9V8.1L8.5 12zM16 6h2v12h-2z"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="episode-player.js"></script>
+</body>
+</html>
