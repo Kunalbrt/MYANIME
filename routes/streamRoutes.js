@@ -28,8 +28,12 @@ router.get('/proxy', async (req, res) => {
     });
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: 'Upstream fetch failed' });
-    }
+  return res.status(response.status).json({ 
+    error: 'Upstream fetch failed',
+    status: response.status,
+    statusText: response.statusText
+  });
+}
 
     const contentType = response.headers.get('content-type') || 'application/octet-stream';
     res.setHeader('Content-Type', contentType);
