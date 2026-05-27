@@ -1081,9 +1081,12 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   loading.classList.remove("hidden");
 
   const isEmbedUrl = videoUrl && (
-    videoUrl.includes('megaplay.buzz') || videoUrl.includes('newplayer') ||
-    videoUrl.includes('/embed') || videoUrl.includes('gogoanime')
-  );
+  videoUrl.includes('megaplay.buzz') ||
+  videoUrl.includes('newplayer') ||
+  videoUrl.includes('gogoanime') ||
+  videoUrl.includes('gogoanime.me.uk') ||
+  videoUrl.includes('/embed')
+);
 
   if (isEmbedUrl) {
     let iframe = document.getElementById('embedPlayer');
