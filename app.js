@@ -8,10 +8,14 @@ const API = 'https://myanime-backend-2vc9.onrender.com/api';
 // -- Auth Helpers -----------------------------
 
 // -- Stream Proxy (fixes 403 hotlink protection on .m3u8 streams) --
-const PROXY = 'https://stream-proxy.bhartikunal886.workers.dev';
+//const PROXY = 'https://stream-proxy.bhartikunal886.workers.dev';
+const PROXY = 'https://myanime-backend-2vc9.onrender.com/api/stream';
 function proxyUrl(url) {
-  if (!url || !url.includes('.m3u8')) return url;
-  return `${PROXY}/proxy?url=${encodeURIComponent(url)}`;
+  if (!url) return url;
+  if (url.includes('.m3u8') || url.includes('.ts')) {
+    return `${PROXY}/proxy?url=${encodeURIComponent(url)}`;
+  }
+  return url;
 }
 const getToken = () => localStorage.getItem('token');
 const setToken = t => localStorage.setItem('token', t);
@@ -1071,7 +1075,7 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
 
   const videoUrl = episodeUrl || anime.videoUrl;
   const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
- if (isMobile && videoUrl && videoUrl.includes(".m3u8")) { window.open(proxyUrl(videoUrl), "_blank"); return; }
+ if (isMobile && videoUrl && videoUrl.includes(".m3u8")) {window.open(proxyUrl(videoUrl), "_blank"); }
 
   video.src = "";
   loading.classList.remove("hidden");
@@ -1098,7 +1102,8 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
     if (iframe) { iframe.src = ''; iframe.style.display = 'none'; }
     video.style.display = 'block';
    if (Hls.isSupported() && videoUrl.includes(".m3u8")) {
-  const hls = new Hls(); hls.loadSource(proxyUrl(videoUrl)); hls.attachMedia(video);
+  const hls = new Hls(); hls.loadSource(proxyUrl(videoUrl));
+ hls.attachMedia(video);
 } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
   video.src = proxyUrl(videoUrl); video.load();
 } else {
