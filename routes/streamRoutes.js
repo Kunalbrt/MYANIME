@@ -12,11 +12,18 @@ router.get('/proxy', async (req, res) => {
 
   try {
     const targetUrl = decodeURIComponent(url);
+
+    // Auto-detect origin from the target URL to spoof Referer
+    const parsedUrl = new URL(targetUrl);
+    const origin = `${parsedUrl.protocol}//${parsedUrl.hostname}`;
+
     const response = await fetch(targetUrl, {
       headers: {
-        'Referer': '',
-        'Origin': '',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        'Referer': origin + '/',
+        'Origin': origin,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.9',
       }
     });
 
