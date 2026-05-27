@@ -6,17 +6,17 @@ const mongoose = require('mongoose');
 
 const episodeSchema = new mongoose.Schema({
   episodeNumber: { type: Number, required: true },
-  title: { type: String, required: true },
-  description: { type: String, default: '' },
-  videoUrl: { type: String, required: true },       // Cloudinary URL
-  thumbnailUrl: { type: String, default: '' },
-  duration: { type: Number, default: 0 },           // seconds
+  title:         { type: String, required: true },
+  description:   { type: String, default: '' },
+  videoUrl:      { type: String, default: '' },  // ← remove required:true
+  thumbnailUrl:  { type: String, default: '' },
+  duration:      { type: Number, default: 0 },
   subtitles: [{
     language: String,
-    label: String,
-    url: String                                      // .vtt subtitle file
+    label:    String,
+    url:      String
   }],
-  views: { type: Number, default: 0 },
+  views:       { type: Number, default: 0 },
   releaseDate: { type: Date }
 }, { timestamps: true });
 

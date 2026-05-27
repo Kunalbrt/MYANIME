@@ -1,5 +1,5 @@
-// ============================================
-//   MYANIME – App Lgged)
+ï»¿// ============================================
+//   MYANIME ï¿½ App Lgged)
 // ============================================
 
 // -- API Base URL -----------------------------
@@ -513,7 +513,7 @@ function grantAdminAccess() {
 }
 
 // --------------------------------------------
-//   2FA – OTP
+//   2FA ï¿½ OTP
 // --------------------------------------------
 const OTP_POOL = ['2546','4896','47562','444444','85289','15679','47569','25489','12356','902714','56489','2035682'];
 function generateOTP() { return OTP_POOL[Math.floor(Math.random() * OTP_POOL.length)]; }
@@ -526,7 +526,7 @@ function onPasswordTyped() {
     otpExpiry = Date.now() + 5 * 60 * 1000;
     otpAttempts = 0;
     _sendOTPEmail(otpCode);
-    showToast('?? Login attempt detected – OTP sent to your email!');
+    showToast('?? Login attempt detected ï¿½ OTP sent to your email!');
   }
 }
 
@@ -927,7 +927,7 @@ function createGridCard(anime) {
   div.innerHTML = `${innerHtml}
     <div class="grid-card-overlay">
       <div class="grid-card-title">${anime.title}</div>
-      <div class="grid-card-meta">${anime.year||''} • ${anime.genre||''}</div>
+      <div class="grid-card-meta">${anime.year||''} ï¿½ ${anime.genre||''}</div>
       <div class="grid-card-actions">
         <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">? Play</button>
         <button class="gc-play" style="background:rgba(109,109,110,0.7);color:white" onclick="showInfoModal_byId('${anime.id}')">? Info</button>
@@ -1043,7 +1043,7 @@ function openPlayer(anime, episodeUrl, episodeTitle) {
   const displayTitle = episodeTitle ? `${anime.title} - ${episodeTitle}` : anime.title;
   document.getElementById('playerTitle').textContent     = displayTitle;
   document.getElementById('playerInfoTitle').textContent = anime.title;
-  document.getElementById('playerInfoMeta').textContent  = ` • ${anime.year||''} • ${anime.genre||''} • ${anime.rating||''}`;
+  document.getElementById('playerInfoMeta').textContent  = ` ï¿½ ${anime.year||''} ï¿½ ${anime.genre||''} ï¿½ ${anime.rating||''}`;
 
   const episodeListEl = document.getElementById('episodeList');
   if (episodeListEl) {
@@ -1249,7 +1249,7 @@ function updateHeroPreview() {
   if (!anime) { card.innerHTML = ''; return; }
   card.innerHTML = `<div class="hero-preview-mini">
     <div class="mini-emoji">${anime.emoji||'??'}</div>
-    <div><strong>${anime.title}</strong><span>${anime.year||''} • ${anime.type} • ${anime.genre||''}</span></div>
+    <div><strong>${anime.title}</strong><span>${anime.year||''} ï¿½ ${anime.type} ï¿½ ${anime.genre||''}</span></div>
   </div>`;
 }
 
@@ -1273,7 +1273,7 @@ function renderRecommendGrid(containerId, field) {
         onchange="toggleRecommend('${field}','${anime.id}',this)"/>
       <div class="recommend-item-info">
         <strong>${anime.emoji||'??'} ${anime.title}</strong>
-        <span>${anime.type} • ${anime.year||''}</span>
+        <span>${anime.type} ï¿½ ${anime.year||''}</span>
       </div>`;
     item.onclick = e => { if (e.target.tagName !== 'INPUT') item.querySelector('input').click(); };
     container.appendChild(item);
@@ -1500,7 +1500,7 @@ function switchAdminTab(tab) {
 }
 
 // --------------------------------------------
-//   LIBRARY – FILE UPLOAD
+//   LIBRARY ï¿½ FILE UPLOAD
 // --------------------------------------------
 function handleFileSelect(event, type) {
   const file = event.target.files[0]; if (file) handleFile(file, type);
@@ -1549,7 +1549,7 @@ function simulateUpload(file) {
 }
 
 // --------------------------------------------
-//   LIBRARY – Edit / Delete
+//   LIBRARY ï¿½ Edit / Delete
 // --------------------------------------------
 function renderLibraryTab() {
   const grid  = document.getElementById('libraryGrid');
@@ -1567,7 +1567,7 @@ function renderLibraryTab() {
       ${thumbHtml}
       <div class="library-info">
         <strong>${anime.title}</strong>
-        <span>${anime.type} • ${anime.year||'N/A'} • ${anime.genre||''}</span>
+        <span>${anime.type} ï¿½ ${anime.year||'N/A'} ï¿½ ${anime.genre||''}</span>
         <span style="color:${anime.videoUrl?'#4caf50':'#e57373'};font-size:0.7rem">
           ${anime.videoUrl ? '? Has video source' : '?? No video source'}
         </span>
@@ -1677,10 +1677,10 @@ function showCloudGuide(provider) {
   const guides = {
     gdrive:     { title:'?? Google Drive Setup',  steps:[{title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},{title:'Make it public',desc:'Right-click ? Share ? Change to "Anyone with the link ? Viewer".'},{title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},{title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}]},
     s3:         { title:'?? Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console ? S3 ? Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file ? Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
-    cloudinary: { title:'?? Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com – free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library ? Upload your video file.'},{title:'Get the URL',desc:'Click your video ? Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
-    backblaze:  { title:'?? Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 – free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video ? click file ? "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
-    wasabi:     { title:'?? Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com – $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
-    jiocloud:   { title:'???? Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button ? Upload ? select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file ? tap <strong>Share</strong> ? select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin ? Upload tab ? paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip – Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
+    cloudinary: { title:'?? Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com ï¿½ free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library ? Upload your video file.'},{title:'Get the URL',desc:'Click your video ? Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
+    backblaze:  { title:'?? Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 ï¿½ free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video ? click file ? "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
+    wasabi:     { title:'?? Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com ï¿½ $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
+    jiocloud:   { title:'???? Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button ? Upload ? select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file ? tap <strong>Share</strong> ? select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin ? Upload tab ? paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip ï¿½ Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
   };
   const guide = guides[provider]; if (!guide) return;
   document.getElementById('guideTitle').textContent = guide.title;
