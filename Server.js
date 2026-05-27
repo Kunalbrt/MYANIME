@@ -108,7 +108,7 @@ const startServer = async () => {
 
 startServer();
 
-module.exports = app; // keep this if you need it for tests
+module.exports = app; 
 
 
 
