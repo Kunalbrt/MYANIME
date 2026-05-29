@@ -41,18 +41,22 @@
 
     /* ── Controls bar ─────────────────────────────────────── */
     #controls {
-      display: none; /* shown once video loads */
+      display: none; /* switched to flex once video loads */
       position: absolute;
       bottom: 0; left: 0; right: 0;
       padding: 8px 14px 12px;
-      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      background: linear-gradient(transparent, rgba(0,0,0,0.88));
       flex-direction: column;
       gap: 6px;
-      transition: opacity 0.3s;
+      z-index: 10;
+      opacity: 1;
+      transition: opacity 0.4s;
+      pointer-events: auto;
     }
-    #videoShell:hover #controls,
-    #videoShell.paused #controls { opacity: 1; }
-    #videoShell.hide-controls #controls { opacity: 0; }
+    #videoShell.hide-controls #controls {
+      opacity: 0;
+      pointer-events: none;
+    }
 
     /* Progress bar */
     #progressWrap {
@@ -405,13 +409,17 @@
       if (e.code === 'ArrowDown')  { video.volume = Math.max(0, video.volume - 0.1); volSlider.value = video.volume; }
     });
 
-    // Auto-hide controls after 3s of no movement
+    // Always show controls when paused; hide after 3s when playing
+    video.addEventListener('pause', () => { shell.classList.remove('hide-controls'); clearTimeout(hideTimer); });
+    video.addEventListener('play',  () => resetHideTimer());
+
     let hideTimer;
-    shell.addEventListener('mousemove', () => {
+    function resetHideTimer() {
       shell.classList.remove('hide-controls');
       clearTimeout(hideTimer);
       if (!video.paused) hideTimer = setTimeout(() => shell.classList.add('hide-controls'), 3000);
-    });
+    }
+    shell.addEventListener('mousemove', resetHideTimer);
     shell.addEventListener('mouseleave', () => {
       if (!video.paused) shell.classList.add('hide-controls');
     });
