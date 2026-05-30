@@ -1,15 +1,10 @@
 ﻿// ============================================
-//   MYANIME � App Lgged)
+//   MYANIME — App
 // ============================================
 
-// -- API Base URL -----------------------------
 const API = 'https://myanime-backend-2vc9.onrender.com/api';
-
-// -- Auth Helpers -----------------------------
-
-// -- Stream Proxy (fixes 403 hotlink protection on .m3u8 streams) --
-//const PROXY = 'https://stream-proxy.bhartikunal886.workers.dev';
 const PROXY = 'https://myanime-backend-2vc9.onrender.com/api/stream';
+
 function proxyUrl(url) {
   if (!url) return url;
   if (url.includes('.m3u8') || url.includes('.ts')) {
@@ -17,27 +12,28 @@ function proxyUrl(url) {
   }
   return url;
 }
-const getToken = () => localStorage.getItem('token');
-const setToken = t => localStorage.setItem('token', t);
+
+const getToken  = () => localStorage.getItem('token');
+const setToken  = t  => localStorage.setItem('token', t);
 const removeToken = () => localStorage.removeItem('token');
-const getUser = () => JSON.parse(localStorage.getItem('user') || 'null');
-const setUser = u => localStorage.setItem('user', JSON.stringify(u));
+const getUser   = () => JSON.parse(localStorage.getItem('user') || 'null');
+const setUser   = u  => localStorage.setItem('user', JSON.stringify(u));
 const removeUser = () => localStorage.removeItem('user');
 
 // -- Demo Data ---------------------------------
 const DEMO_ANIME = [
-  { id:'d1',title:'One Piece',type:'series',genre:'adventure',year:'1999',rating:'TV-14',desc:'Follow Monkey D. Luffy and his pirate crew in search of the world\'s ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.',thumb:'',videoUrl:'',emoji:'??',trending:true,topRated:true },
-  { id:'d2',title:'Attack on Titan',type:'series',genre:'action',year:'2013',rating:'TV-MA',desc:'Humanity lives inside cities surrounded by enormous walls due to the Titans, gigantic humanoid beings who devour humans seemingly without reason.',thumb:'',videoUrl:'',emoji:'???',trending:true,topRated:true },
-  { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'??',trending:true,topRated:false },
-  { id:'d4',title:'Spirited Away',type:'movie',genre:'fantasy',year:'2001',rating:'PG',desc:'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.',thumb:'',videoUrl:'',emoji:'??',trending:false,topRated:true },
-  { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'??',trending:false,topRated:true },
-  { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'?',trending:true,topRated:true },
-  { id:'d7',title:'Fullmetal Alchemist',type:'series',genre:'adventure',year:'2009',rating:'TV-14',desc:'Two brothers search for a Philosopher\'s Stone after an attempt to revive their deceased mother goes wrong.',thumb:'',videoUrl:'',emoji:'??',trending:false,topRated:true },
-  { id:'d8',title:'Dragon Ball Z',type:'series',genre:'action',year:'1989',rating:'TV-PG',desc:'The adventures of Earth\'s martial arts defender, Son Goku, continues with a new family and the revelation of his alien origin.',thumb:'',videoUrl:'',emoji:'??',trending:false,topRated:false },
-  { id:'d9',title:'Princess Mononoke',type:'movie',genre:'fantasy',year:'1997',rating:'PG-13',desc:'On a journey to find the cure for a Tatarigami\'s curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara.',thumb:'',videoUrl:'',emoji:'??',trending:false,topRated:true },
-  { id:'d10',title:'Hunter x Hunter',type:'series',genre:'adventure',year:'2011',rating:'TV-14',desc:'Gon Freecss aspires to become a Hunter, an exceptional being capable of greatness.',thumb:'',videoUrl:'',emoji:'??',trending:true,topRated:false },
-  { id:'d11',title:'Jujutsu Kaisen',type:'series',genre:'action',year:'2020',rating:'TV-MA',desc:'A boy swallows a cursed talisman and becomes host to a powerful demon. Now he must battle demons and allies alike to avoid being killed.',thumb:'',videoUrl:'',emoji:'???',trending:true,topRated:true },
-  { id:'d12',title:'Sword Art Online',type:'series',genre:'fantasy',year:'2012',rating:'TV-14',desc:'In the near future, a virtual reality massive multiplayer online role-playing game called Sword Art Online is released.',thumb:'',videoUrl:'',emoji:'???',trending:false,topRated:false },
+  { id:'d1',title:'One Piece',type:'series',genre:'adventure',year:'1999',rating:'TV-14',desc:'Follow Monkey D. Luffy and his pirate crew in search of the world\'s ultimate treasure known as the "One Piece" in order to become the next King of the Pirates.',thumb:'',videoUrl:'',emoji:'🏴‍☠️',trending:true,topRated:true },
+  { id:'d2',title:'Attack on Titan',type:'series',genre:'action',year:'2013',rating:'TV-MA',desc:'Humanity lives inside cities surrounded by enormous walls due to the Titans, gigantic humanoid beings who devour humans seemingly without reason.',thumb:'',videoUrl:'',emoji:'⚔️',trending:true,topRated:true },
+  { id:'d3',title:'Demon Slayer',type:'series',genre:'action',year:'2019',rating:'TV-14',desc:'A young boy becomes a demon slayer after his family is slaughtered and his younger sister is turned into a demon.',thumb:'',videoUrl:'',emoji:'🗡️',trending:true,topRated:false },
+  { id:'d4',title:'Spirited Away',type:'movie',genre:'fantasy',year:'2001',rating:'PG',desc:'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits.',thumb:'',videoUrl:'',emoji:'🌊',trending:false,topRated:true },
+  { id:'d5',title:'Naruto',type:'series',genre:'action',year:'2002',rating:'TV-PG',desc:'A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.',thumb:'',videoUrl:'',emoji:'🍥',trending:false,topRated:true },
+  { id:'d6',title:'Your Name',type:'movie',genre:'romance',year:'2016',rating:'PG',desc:'Two strangers find themselves linked in a bizarre way. When a connection forms, will distance be the only thing to keep them apart?',thumb:'',videoUrl:'',emoji:'⭐',trending:true,topRated:true },
+  { id:'d7',title:'Fullmetal Alchemist',type:'series',genre:'adventure',year:'2009',rating:'TV-14',desc:'Two brothers search for a Philosopher\'s Stone after an attempt to revive their deceased mother goes wrong.',thumb:'',videoUrl:'',emoji:'⚗️',trending:false,topRated:true },
+  { id:'d8',title:'Dragon Ball Z',type:'series',genre:'action',year:'1989',rating:'TV-PG',desc:'The adventures of Earth\'s martial arts defender, Son Goku, continues with a new family and the revelation of his alien origin.',thumb:'',videoUrl:'',emoji:'🐉',trending:false,topRated:false },
+  { id:'d9',title:'Princess Mononoke',type:'movie',genre:'fantasy',year:'1997',rating:'PG-13',desc:'On a journey to find the cure for a Tatarigami\'s curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara.',thumb:'',videoUrl:'',emoji:'🐺',trending:false,topRated:true },
+  { id:'d10',title:'Hunter x Hunter',type:'series',genre:'adventure',year:'2011',rating:'TV-14',desc:'Gon Freecss aspires to become a Hunter, an exceptional being capable of greatness.',thumb:'',videoUrl:'',emoji:'🎯',trending:true,topRated:false },
+  { id:'d11',title:'Jujutsu Kaisen',type:'series',genre:'action',year:'2020',rating:'TV-MA',desc:'A boy swallows a cursed talisman and becomes host to a powerful demon. Now he must battle demons and allies alike to avoid being killed.',thumb:'',videoUrl:'',emoji:'👁️',trending:true,topRated:true },
+  { id:'d12',title:'Sword Art Online',type:'series',genre:'fantasy',year:'2012',rating:'TV-14',desc:'In the near future, a virtual reality massive multiplayer online role-playing game called Sword Art Online is released.',thumb:'',videoUrl:'',emoji:'⚔️',trending:false,topRated:false },
 ];
 
 // -- State -------------------------------------
@@ -50,7 +46,7 @@ let uploadedThumbBlob = null;
 let currentFilterPage = 'movies';
 let editThumbBlob = null;
 let featuredHeroId = null;
-let toastTimeout; // ? FIX: moved here from bottom to avoid TDZ error
+let toastTimeout;
 
 // -- Admin Auth State --------------------------
 let ADMIN_PASSWORD = 'myanime2024';
@@ -81,17 +77,29 @@ let analytics = {
 
 // -- Row Settings ------------------------------
 let rowSettings = {
-  trending: { visible:true, title:'?? Trending Now' },
-  topRated: { visible:true, title:'? Top Rated' },
-  recent:   { visible:true, title:'?? Recently Added' },
-  series:   { visible:true, title:'?? Series' },
-  movies:   { visible:true, title:'?? Movies' },
+  trending: { visible:true, title:'🔥 Trending Now' },
+  topRated: { visible:true, title:'⭐ Top Rated' },
+  recent:   { visible:true, title:'🆕 Recently Added' },
+  series:   { visible:true, title:'📺 Series' },
+  movies:   { visible:true, title:'🎬 Movies' },
 };
 
 // -- Secret Shortcut ---------------------------
 document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') openAdminLogin();
 });
+
+// ── WATCH PAGE REDIRECT ───────────────────────────────────────
+// Central function — all play/open actions call this instead of
+// opening the in-page player. Redirects to watch.html with the
+// anime's MongoDB _id and starting episode index (default 0).
+function goToWatch(anime, epIndex) {
+  if (!anime) return;
+  const idx = epIndex !== undefined ? epIndex : 0;
+  // Use MongoDB _id if available (backend anime), else fallback to local id
+  const id = anime._id || anime.id || '';
+  window.location.href = `/watch.html?id=${encodeURIComponent(id)}&ep=${idx}`;
+}
 
 // --------------------------------------------
 //   INIT
@@ -197,6 +205,7 @@ async function fetchAnimeFromBackend() {
     if (data.success && Array.isArray(data.anime) && data.anime.length > 0) {
       animeLibrary = data.anime.map(a => ({
         id:       a._id,
+        _id:      a._id,   // ← keep raw _id for watch.html redirect
         title:    a.title,
         desc:     a.description,
         type:     a.type,
@@ -205,7 +214,7 @@ async function fetchAnimeFromBackend() {
         rating:   a.rating,
         thumb:    a.thumbnailUrl || '',
         videoUrl: a.videoUrl     || '',
-        emoji:    '??',
+        emoji:    '🎬',
         trending: a.isTrending  || false,
         topRated: a.isTopRated  || false,
       }));
@@ -238,12 +247,12 @@ async function addAnime() {
   const rating   = document.getElementById('animeRating').value.trim() || 'TV-14';
   const cloudUrl = document.getElementById('cloudUrl').value.trim();
 
-  if (!title) { showToast('?? Title is required!'); return; }
+  if (!title) { showToast('⚠️ Title is required!'); return; }
 
   let thumbnailUrl = '';
   if (uploadedThumbBlob && uploadedThumbBlob.startsWith('data:')) {
     try {
-      showToast('? Uploading thumbnail...');
+      showToast('⏳ Uploading thumbnail...');
       const formData = new FormData();
       const blob = await fetch(uploadedThumbBlob).then(r => r.blob());
       formData.append('thumbnail', blob, 'thumbnail.jpg');
@@ -256,16 +265,16 @@ async function addAnime() {
       if (thumbData.success) {
         thumbnailUrl = thumbData.thumbnailUrl;
       } else {
-        showToast('?? Thumbnail upload failed: ' + thumbData.message);
+        showToast('⚠️ Thumbnail upload failed: ' + thumbData.message);
       }
     } catch (err) {
       console.log('Thumbnail upload error:', err.message);
-      showToast('?? Thumbnail upload failed, saving without it.');
+      showToast('⚠️ Thumbnail upload failed, saving without it.');
     }
   }
 
   try {
-    showToast('? Saving anime...');
+    showToast('⏳ Saving anime...');
     const res = await fetch(`${API}/anime`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
@@ -278,14 +287,14 @@ async function addAnime() {
     });
     const data = await res.json();
     if (data.success) {
-      const emoji = { action:'??', adventure:'???', romance:'??', fantasy:'?', thriller:'??' }[genre] || '??';
+      const emoji = { action:'⚔️', adventure:'🗺️', romance:'💕', fantasy:'✨', thriller:'🔪' }[genre] || '🎬';
       animeLibrary.unshift({
-        id: data.anime._id, title, desc, type, genre,
+        id: data.anime._id, _id: data.anime._id, title, desc, type, genre,
         year: String(year), rating, thumb: thumbnailUrl,
         videoUrl: cloudUrl, emoji, trending: false, topRated: false
       });
       saveToStorage(); renderAll();
-      showToast(`? "${title}" saved to database!`);
+      showToast(`✅ "${title}" saved to database!`);
       ['animeTitle','animeDesc','cloudUrl','animeRating'].forEach(id => {
         const el = document.getElementById(id); if (el) el.value = '';
       });
@@ -295,10 +304,10 @@ async function addAnime() {
       document.getElementById('thumbPreviewIcon').style.display = 'block';
       uploadedVideoBlob = null; uploadedThumbBlob = null;
     } else {
-      showToast('? ' + data.message);
+      showToast('❌ ' + data.message);
     }
   } catch (err) {
-    showToast('? Cannot connect to server!');
+    showToast('❌ Cannot connect to server!');
     console.log('Save error:', err.message);
   }
 }
@@ -381,7 +390,7 @@ function refreshAnalytics() {
           return `<div class="top-list-item">
             <div class="top-list-rank">${idx+1}</div>
             <div class="top-list-bar-wrap">
-              <div class="top-list-name">${anime.emoji||'??'} ${anime.title}</div>
+              <div class="top-list-name">${anime.emoji||'🎬'} ${anime.title}</div>
               <div class="top-list-bar" style="width:${(cnt/maxA)*100}%"></div>
             </div>
             <div class="top-list-count">${cnt}</div>
@@ -399,7 +408,7 @@ function refreshAnalytics() {
           <div class="top-list-item">
             <div class="top-list-rank">${idx+1}</div>
             <div class="top-list-bar-wrap">
-              <div class="top-list-name">?? ${term}</div>
+              <div class="top-list-name">🔎 ${term}</div>
               <div class="top-list-bar" style="width:${(cnt/maxS)*100}%"></div>
             </div>
             <div class="top-list-count">${cnt}</div>
@@ -409,12 +418,12 @@ function refreshAnalytics() {
   const deviceList = el('deviceList');
   if (deviceList) {
     const devTotal = Object.values(analytics.devices).reduce((a,b)=>a+b,0)||1;
-    const icons = { Desktop:'???', Mobile:'??', Tablet:'??' };
+    const icons = { Desktop:'🖥️', Mobile:'📱', Tablet:'📟' };
     deviceList.innerHTML = Object.keys(analytics.devices).length === 0
       ? '<p style="color:#555;font-size:0.85rem">No data yet.</p>'
       : Object.entries(analytics.devices).map(([name, cnt]) => `
           <div class="top-list-item">
-            <div class="top-list-rank">${icons[name]||'??'}</div>
+            <div class="top-list-rank">${icons[name]||'📊'}</div>
             <div class="top-list-bar-wrap">
               <div class="top-list-name">${name}</div>
               <div class="top-list-bar" style="width:${(cnt/devTotal)*100}%"></div>
@@ -426,12 +435,12 @@ function refreshAnalytics() {
   const browserList = el('browserList');
   if (browserList) {
     const brTotal = Object.values(analytics.browsers).reduce((a,b)=>a+b,0)||1;
-    const icons = { Chrome:'??', Firefox:'??', Safari:'??', Edge:'??' };
+    const icons = { Chrome:'🌐', Firefox:'🦊', Safari:'🧭', Edge:'🔷' };
     browserList.innerHTML = Object.keys(analytics.browsers).length === 0
       ? '<p style="color:#555;font-size:0.85rem">No data yet.</p>'
       : Object.entries(analytics.browsers).map(([name, cnt]) => `
           <div class="top-list-item">
-            <div class="top-list-rank">${icons[name]||'??'}</div>
+            <div class="top-list-rank">${icons[name]||'🌐'}</div>
             <div class="top-list-bar-wrap">
               <div class="top-list-name">${name}</div>
               <div class="top-list-bar" style="width:${(cnt/brTotal)*100}%"></div>
@@ -440,14 +449,14 @@ function refreshAnalytics() {
           </div>`).join('');
   }
 
-  showToast('?? Analytics refreshed');
+  showToast('📊 Analytics refreshed');
 }
 
 function resetAnalytics() {
   if (!confirm('Reset all analytics data? This cannot be undone.')) return;
   analytics = { totalVisits:0, todayVisits:0, lastVisitDate:'', plays:0, searches:0, myListAdds:0, animeViews:{}, searchTerms:{}, weeklyVisits:[0,0,0,0,0,0,0], liveUsers:1, devices:{}, browsers:{} };
   saveAnalytics(); refreshAnalytics();
-  showToast('?? Analytics reset.');
+  showToast('🗑️ Analytics reset.');
 }
 
 // --------------------------------------------
@@ -459,7 +468,7 @@ function openAdminLogin() {
     const mins = Math.ceil((lockoutUntil - Date.now()) / 60000);
     const info = document.getElementById('loginAttemptInfo');
     info.style.display = 'block';
-    info.textContent = `?? Too many failed attempts. Try again in ${mins} minute(s).`;
+    info.textContent = `🔒 Too many failed attempts. Try again in ${mins} minute(s).`;
   }
   document.getElementById('adminLoginModal').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -478,7 +487,7 @@ function closeAdminLogin() {
 function checkAdminPassword() {
   if (Date.now() < lockoutUntil) {
     const mins = Math.ceil((lockoutUntil - Date.now()) / 60000);
-    showToast(`?? Locked out for ${mins} more minute(s).`);
+    showToast(`🔒 Locked out for ${mins} more minute(s).`);
     return;
   }
   const input = document.getElementById('adminPasswordInput').value;
@@ -501,13 +510,13 @@ function checkAdminPassword() {
       document.getElementById('adminError').style.display = 'none';
       const info = document.getElementById('loginAttemptInfo');
       info.style.display = 'block';
-      info.textContent = '?? Too many failed attempts! Locked for 30 minutes.';
+      info.textContent = '🔒 Too many failed attempts! Locked for 30 minutes.';
       document.getElementById('adminPasswordInput').value = '';
     } else {
       saveSecurity();
       const errEl = document.getElementById('adminError');
       errEl.style.display = 'block';
-      errEl.textContent = `? Wrong password. ${remaining} attempt(s) remaining.`;
+      errEl.textContent = `❌ Wrong password. ${remaining} attempt(s) remaining.`;
       document.getElementById('adminPasswordInput').value = '';
       document.getElementById('adminPasswordInput').focus();
     }
@@ -519,12 +528,12 @@ function grantAdminAccess() {
   closeAdminLogin(); closeOTPModal();
   document.getElementById('adminBtn').style.display = 'flex';
   showPage('admin');
-  addLoginEntry('success', '? Login successful');
-  showToast('? Admin access granted!');
+  addLoginEntry('success', '✅ Login successful');
+  showToast('✅ Admin access granted!');
 }
 
 // --------------------------------------------
-//   2FA � OTP
+//   2FA / OTP
 // --------------------------------------------
 const OTP_POOL = ['2546','4896','47562','444444','85289','15679','47569','25489','12356','902714','56489','2035682'];
 function generateOTP() { return OTP_POOL[Math.floor(Math.random() * OTP_POOL.length)]; }
@@ -537,7 +546,7 @@ function onPasswordTyped() {
     otpExpiry = Date.now() + 5 * 60 * 1000;
     otpAttempts = 0;
     _sendOTPEmail(otpCode);
-    showToast('?? Login attempt detected � OTP sent to your email!');
+    showToast('📧 Login attempt detected – OTP sent to your email!');
   }
 }
 
@@ -547,11 +556,11 @@ function _sendOTPEmail(code) {
     emailjs.send(emailJSConfig.service, emailJSConfig.template, {
       otp_code: code, to_email: ADMIN_EMAIL,
       site_name: document.querySelector('.logo-text')?.textContent || 'MyAnime'
-    }).then(() => showToast('?? OTP sent to ' + ADMIN_EMAIL))
-      .catch(err => { console.error('EmailJS error:', err); showToast('?? Could not send OTP email. Check EmailJS config.'); });
+    }).then(() => showToast('📧 OTP sent to ' + ADMIN_EMAIL))
+      .catch(err => { console.error('EmailJS error:', err); showToast('⚠️ Could not send OTP email. Check EmailJS config.'); });
   } else {
-    console.log('%c?? DEV MODE OTP: ' + code, 'color:#e50914;font-size:20px;font-weight:bold;');
-    showToast('?? OTP: ' + code + ' (EmailJS not configured)');
+    console.log('%c🔑 DEV MODE OTP: ' + code, 'color:#e50914;font-size:20px;font-weight:bold;');
+    showToast('🔑 OTP: ' + code + ' (EmailJS not configured)');
   }
 }
 
@@ -562,7 +571,7 @@ function initiate2FA() {
     otpAttempts = 0;
     _sendOTPEmail(otpCode);
   } else {
-    showToast('?? OTP already sent to ' + ADMIN_EMAIL);
+    showToast('📧 OTP already sent to ' + ADMIN_EMAIL);
   }
   otpPrepared = false;
   document.getElementById('otpModal').classList.add('active');
@@ -574,8 +583,8 @@ function initiate2FA() {
   setTimeout(() => { if (singleInput) singleInput.focus(); }, 100);
   const resendBtn = document.getElementById('resendBtn');
   resendBtn.disabled = true;
-  resendBtn.textContent = '?? Resend Code (wait 30s...)';
-  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = '?? Resend Code'; }, 30000);
+  resendBtn.textContent = '🔄 Resend Code (wait 30s...)';
+  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = '🔄 Resend Code'; }, 30000);
 }
 
 function startOTPTimer() {
@@ -589,7 +598,7 @@ function startOTPTimer() {
     if (left <= 0) {
       clearInterval(otpTimerInterval);
       const err = document.getElementById('otpError');
-      err.style.display = 'block'; err.textContent = '?? Code expired. Please try again.';
+      err.style.display = 'block'; err.textContent = '⏰ Code expired. Please try again.';
       document.getElementById('otpVerifyBtn').disabled = true;
     }
   }, 1000);
@@ -605,8 +614,8 @@ function verifyOTP() {
   const singleInput = document.getElementById('otpSingleInput');
   const entered = singleInput ? singleInput.value.trim() : '';
   const errEl = document.getElementById('otpError');
-  if (!entered) { errEl.style.display = 'block'; errEl.textContent = '?? Please enter your OTP code.'; return; }
-  if (Date.now() > otpExpiry) { errEl.style.display = 'block'; errEl.textContent = '?? Code expired. Please resend.'; return; }
+  if (!entered) { errEl.style.display = 'block'; errEl.textContent = '⚠️ Please enter your OTP code.'; return; }
+  if (Date.now() > otpExpiry) { errEl.style.display = 'block'; errEl.textContent = '⏰ Code expired. Please resend.'; return; }
   otpAttempts++;
   if (entered === otpCode) {
     grantAdminAccess();
@@ -616,10 +625,10 @@ function verifyOTP() {
       lockoutUntil = Date.now() + LOCKOUT_DURATION;
       saveSecurity();
       addLoginEntry('locked', 'Locked after 3 wrong OTP attempts');
-      showToast('?? Too many wrong codes. Locked for 30 min.');
+      showToast('🔒 Too many wrong codes. Locked for 30 min.');
     } else {
       errEl.style.display = 'block';
-      errEl.textContent = `? Wrong code. ${3 - otpAttempts} attempt(s) left.`;
+      errEl.textContent = `❌ Wrong code. ${3 - otpAttempts} attempt(s) left.`;
       if (singleInput) { singleInput.value = ''; singleInput.focus(); }
     }
   }
@@ -637,8 +646,8 @@ function resendOTP() {
   startOTPTimer();
   const resendBtn = document.getElementById('resendBtn');
   resendBtn.disabled = true;
-  resendBtn.textContent = '?? Resend Code (wait 30s...)';
-  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = '?? Resend Code'; }, 30000);
+  resendBtn.textContent = '🔄 Resend Code (wait 30s...)';
+  setTimeout(() => { resendBtn.disabled = false; resendBtn.textContent = '🔄 Resend Code'; }, 30000);
 }
 
 // --------------------------------------------
@@ -647,7 +656,7 @@ function resendOTP() {
 function toggle2FA() {
   twoFAEnabled = document.getElementById('twofa_enabled').checked;
   saveSecurity();
-  showToast(twoFAEnabled ? '? 2FA enabled' : '?? 2FA disabled');
+  showToast(twoFAEnabled ? '✅ 2FA enabled' : '🔓 2FA disabled');
 }
 
 function saveEmailJSConfig() {
@@ -657,34 +666,34 @@ function saveEmailJSConfig() {
     template: document.getElementById('ejs_template').value.trim()
   };
   saveSecurity();
-  showToast('?? EmailJS config saved!');
+  showToast('💾 EmailJS config saved!');
 }
 
 function testEmailJS() {
   const pk = document.getElementById('ejs_pubkey').value.trim();
   const sv = document.getElementById('ejs_service').value.trim();
   const tm = document.getElementById('ejs_template').value.trim();
-  if (!pk || !sv || !tm) { showToast('?? Fill in all EmailJS fields first.'); return; }
-  if (typeof emailjs === 'undefined') { showToast('?? EmailJS library not loaded.'); return; }
+  if (!pk || !sv || !tm) { showToast('⚠️ Fill in all EmailJS fields first.'); return; }
+  if (typeof emailjs === 'undefined') { showToast('⚠️ EmailJS library not loaded.'); return; }
   emailjs.init(pk);
   emailjs.send(sv, tm, { otp_code: generateOTP(), to_email: ADMIN_EMAIL, site_name: 'MyAnime' })
-    .then(() => showToast('? Test OTP sent! Check ' + ADMIN_EMAIL))
-    .catch(() => showToast('? EmailJS send failed. Check your config.'));
+    .then(() => showToast('✅ Test OTP sent! Check ' + ADMIN_EMAIL))
+    .catch(() => showToast('❌ EmailJS send failed. Check your config.'));
 }
 
 function changeAdminPassword() {
   const current = document.getElementById('sec_currentPwd').value;
   const newPwd  = document.getElementById('sec_newPwd').value;
   const confirm = document.getElementById('sec_confirmPwd').value;
-  if (current !== ADMIN_PASSWORD) { showToast('? Current password is wrong.'); return; }
-  if (newPwd.length < 8) { showToast('?? Password must be at least 8 characters.'); return; }
-  if (newPwd !== confirm) { showToast('? Passwords do not match.'); return; }
+  if (current !== ADMIN_PASSWORD) { showToast('❌ Current password is wrong.'); return; }
+  if (newPwd.length < 8) { showToast('⚠️ Password must be at least 8 characters.'); return; }
+  if (newPwd !== confirm) { showToast('❌ Passwords do not match.'); return; }
   ADMIN_PASSWORD = newPwd;
   localStorage.setItem('myanime_adminpwd', ADMIN_PASSWORD);
   ['sec_currentPwd','sec_newPwd','sec_confirmPwd'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.getElementById('pwdStrengthFill').style.width = '0%';
   document.getElementById('pwdStrengthLabel').textContent = '';
-  showToast('? Password changed successfully!');
+  showToast('✅ Password changed successfully!');
 }
 
 function checkPasswordStrength() {
@@ -709,14 +718,14 @@ function lockAdminNow() {
   adminUnlocked = false;
   document.getElementById('adminBtn').style.display = 'none';
   showPage('home');
-  showToast('?? Admin locked.');
+  showToast('🔒 Admin locked.');
 }
 
 function resetAllData() {
-  if (!confirm('?? This will reset ALL site data including library, settings, and analytics. Are you absolutely sure?')) return;
+  if (!confirm('⚠️ This will reset ALL site data including library, settings, and analytics. Are you absolutely sure?')) return;
   if (!confirm('Final confirmation: Delete everything?')) return;
   localStorage.clear();
-  showToast('?? All data reset. Reloading...');
+  showToast('🗑️ All data reset. Reloading...');
   setTimeout(() => location.reload(), 1500);
 }
 
@@ -750,7 +759,7 @@ function renderLoginHistory() {
 function clearLoginHistory() {
   localStorage.removeItem('myanime_loginhistory');
   renderLoginHistory();
-  showToast('??? Login history cleared.');
+  showToast('🗑️ Login history cleared.');
 }
 
 // --------------------------------------------
@@ -804,10 +813,11 @@ function renderHero() {
   }
 }
 
+// ── FIX 1: Hero Play button → go to watch.html ───────────────
 function playHeroAnime() {
   const featured = (featuredHeroId && animeLibrary.find(a => a.id === featuredHeroId))
     || animeLibrary.find(a => a.topRated) || animeLibrary[0];
-  if (featured) openPlayer(featured);
+  if (featured) goToWatch(featured, 0);
 }
 
 function getGradient(id) {
@@ -855,7 +865,7 @@ function applyRowSettings() {
       if (titleEl) titleEl.textContent = rowSettings[key].title;
     }
   });
-  showToast('? Home page updated!');
+  showToast('✅ Home page updated!');
 }
 
 function renderRows() {
@@ -877,6 +887,7 @@ function hasValidThumb(anime) {
   return anime.thumb && (anime.thumb.startsWith('data:') || anime.thumb.startsWith('http'));
 }
 
+// ── FIX 2: Card play button → go to watch.html ───────────────
 function createCard(anime) {
   const div = document.createElement('div');
   div.className = 'anime-card';
@@ -884,17 +895,26 @@ function createCard(anime) {
   const thumbOk = hasValidThumb(anime);
   const thumbHtml = thumbOk
     ? `<img class="card-thumb" src="${anime.thumb}" alt="${anime.title}" loading="lazy"/>`
-    : `<div class="card-thumb-placeholder"><span style="font-size:2rem">${anime.emoji||'??'}</span><span>${anime.title}</span></div>`;
+    : `<div class="card-thumb-placeholder"><span style="font-size:2rem">${anime.emoji||'🎬'}</span><span>${anime.title}</span></div>`;
   const hoverThumbHtml = thumbOk
     ? `<img class="card-hover-img" src="${anime.thumb}" alt="${anime.title}"/>`
-    : `<div class="card-hover-img" style="background:${getGradient(anime.id)};display:flex;align-items:center;justify-content:center;font-size:2.5rem">${anime.emoji||'??'}</div>`;
+    : `<div class="card-hover-img" style="background:${getGradient(anime.id)};display:flex;align-items:center;justify-content:center;font-size:2.5rem">${anime.emoji||'🎬'}</div>`;
+
+  // Clicking the thumbnail itself also goes to watch.html
+  div.style.cursor = 'pointer';
+  div.addEventListener('click', (e) => {
+    // Don't navigate if user clicked a button inside the card
+    if (e.target.closest('button')) return;
+    goToWatch(anime, 0);
+  });
+
   div.innerHTML = `${thumbHtml}
     <div class="card-hover">
       ${hoverThumbHtml}
       <div class="card-hover-body">
         <div class="card-hover-actions">
-          <button class="card-play-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))" title="Play">?</button>
-          <button class="card-list-btn ${inList?'added':''}" id="listbtn-${anime.id}" onclick="toggleListById('${anime.id}',this)" title="My List">${inList?'?':'+'}</button>
+          <button class="card-play-btn" onclick="goToWatch(animeLibrary.find(a=>a.id==='${anime.id}'),0)" title="Play">▶</button>
+          <button class="card-list-btn ${inList?'added':''}" id="listbtn-${anime.id}" onclick="toggleListById('${anime.id}',this)" title="My List">${inList?'✓':'+'}</button>
           <button class="card-info-btn" onclick="showInfoModal_byId('${anime.id}')" title="More Info">i</button>
         </div>
         <div class="card-title">${anime.title}</div>
@@ -922,26 +942,34 @@ function renderGrid(containerId, items) {
   container.innerHTML = '';
   const edits = getSiteEdits();
   if (items.length === 0) {
-    container.innerHTML = `<div class="empty-list"><div style="font-size:3rem">??</div><p>${edits.noResults || 'No content found.'}</p></div>`;
+    container.innerHTML = `<div class="empty-list"><div style="font-size:3rem">📭</div><p>${edits.noResults || 'No content found.'}</p></div>`;
     return;
   }
   items.forEach(anime => container.appendChild(createGridCard(anime)));
 }
 
+// ── FIX 3: Grid card play button → go to watch.html ──────────
 function createGridCard(anime) {
   const div = document.createElement('div');
   div.className = 'grid-card';
+  div.style.cursor = 'pointer';
   const thumbOk = hasValidThumb(anime);
   const innerHtml = thumbOk
     ? `<img src="${anime.thumb}" alt="${anime.title}" loading="lazy"/>`
-    : `<div class="grid-card-placeholder" style="background:${getGradient(anime.id)}"><span>${anime.emoji||'??'}</span><span>${anime.title}</span></div>`;
+    : `<div class="grid-card-placeholder" style="background:${getGradient(anime.id)}"><span>${anime.emoji||'🎬'}</span><span>${anime.title}</span></div>`;
+
+  div.addEventListener('click', (e) => {
+    if (e.target.closest('button')) return;
+    goToWatch(anime, 0);
+  });
+
   div.innerHTML = `${innerHtml}
     <div class="grid-card-overlay">
       <div class="grid-card-title">${anime.title}</div>
-      <div class="grid-card-meta">${anime.year||''} � ${anime.genre||''}</div>
+      <div class="grid-card-meta">${anime.year||''} · ${anime.genre||''}</div>
       <div class="grid-card-actions">
-        <button class="gc-play" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">? Play</button>
-        <button class="gc-play" style="background:rgba(109,109,110,0.7);color:white" onclick="showInfoModal_byId('${anime.id}')">? Info</button>
+        <button class="gc-play" onclick="goToWatch(animeLibrary.find(a=>a.id==='${anime.id}'),0)">▶ Play</button>
+        <button class="gc-play" style="background:rgba(109,109,110,0.7);color:white" onclick="showInfoModal_byId('${anime.id}')">ℹ Info</button>
       </div>
     </div>`;
   return div;
@@ -963,7 +991,7 @@ function renderMyList() {
   const grid = document.getElementById('mylistGrid');
   const edits = getSiteEdits();
   if (myList.length === 0) {
-    grid.innerHTML = `<div class="empty-list"><div style="font-size:4rem">??</div><p>${edits.emptyList || 'Your list is empty. Add anime to watch later!'}</p></div>`;
+    grid.innerHTML = `<div class="empty-list"><div style="font-size:4rem">📋</div><p>${edits.emptyList || 'Your list is empty. Add anime to watch later!'}</p></div>`;
     return;
   }
   renderGrid('mylistGrid', myList);
@@ -979,7 +1007,7 @@ function toggleListById(id, btn) {
     showToast(`Removed "${anime.title}" from My List`);
   } else {
     myList.push(anime);
-    if (btn) { btn.textContent = '?'; btn.classList.add('added'); }
+    if (btn) { btn.textContent = '✓'; btn.classList.add('added'); }
     trackMyListAdd();
     showToast(`Added "${anime.title}" to My List`);
   }
@@ -990,7 +1018,7 @@ function updateMyListBtn() {
   if (!currentModalAnime) return;
   const btn = document.getElementById('mylistBtn');
   const inList = myList.some(m => m.id === currentModalAnime.id);
-  if (btn) { btn.textContent = inList ? '? In My List' : '+ My List'; btn.classList.toggle('added', inList); }
+  if (btn) { btn.textContent = inList ? '✓ In My List' : '+ My List'; btn.classList.toggle('added', inList); }
 }
 
 // --------------------------------------------
@@ -1008,7 +1036,7 @@ function showInfoModal_byId(id) {
   document.getElementById('modalTitle').textContent  = anime.title;
   document.getElementById('modalYear').textContent   = anime.year || '';
   document.getElementById('modalRating').textContent = anime.rating || '';
-  document.getElementById('modalType').textContent   = anime.type === 'series' ? '?? Series' : '?? Movie';
+  document.getElementById('modalType').textContent   = anime.type === 'series' ? '📺 Series' : '🎬 Movie';
   document.getElementById('modalDesc').textContent   = anime.desc || 'No description available.';
   document.getElementById('modalGenre').textContent  = anime.genre || 'N/A';
   const thumb = document.getElementById('modalThumb');
@@ -1029,7 +1057,11 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-function playFromModal() { closeModal(); if (currentModalAnime) openPlayer(currentModalAnime); }
+// ── FIX 4: Modal Play button → go to watch.html ──────────────
+function playFromModal() {
+  closeModal();
+  if (currentModalAnime) goToWatch(currentModalAnime, 0);
+}
 
 function toggleMyList() {
   if (!currentModalAnime) return;
@@ -1041,112 +1073,22 @@ function toggleMyList() {
 }
 
 // --------------------------------------------
-//   VIDEO PLAYER
+//   VIDEO PLAYER (kept for admin preview only)
 // --------------------------------------------
 function openPlayer(anime, episodeUrl, episodeTitle) {
   if (!anime) return;
-  currentPlayerAnime = anime;
-  trackPlay(anime.id);
-  const overlay = document.getElementById('playerOverlay');
-  const video   = document.getElementById('mainPlayer');
-  const loading = document.getElementById('playerLoading');
-
-  const displayTitle = episodeTitle ? `${anime.title} - ${episodeTitle}` : anime.title;
-  document.getElementById('playerTitle').textContent     = displayTitle;
-  document.getElementById('playerInfoTitle').textContent = anime.title;
-  document.getElementById('playerInfoMeta').textContent  = ` � ${anime.year||''} � ${anime.genre||''} � ${anime.rating||''}`;
-
-  const episodeListEl = document.getElementById('episodeList');
-  if (episodeListEl) {
-    if (anime.seasons && anime.seasons.length > 0) {
-      episodeListEl.innerHTML = anime.seasons.map(season => `
-        <div class="season-block">
-          <div class="season-title">Season ${season.seasonNumber} ${season.title ? '- ' + season.title : ''}</div>
-          ${season.episodes.map(ep => `
-            <div class="episode-item" onclick="playEpisode('${anime.id}', '${ep.videoUrl}', 'S${season.seasonNumber}E${ep.episodeNumber} - ${ep.title}')">
-              <span>EP ${ep.episodeNumber}</span><span>${ep.title}</span>
-            </div>`).join('')}
-        </div>`).join('');
-      episodeListEl.style.display = 'block';
-    } else {
-      episodeListEl.style.display = 'none';
-    }
-  }
-
-  const videoUrl = episodeUrl || anime.videoUrl;
-  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
- if (isMobile && videoUrl && videoUrl.includes(".m3u8")) {window.open(proxyUrl(videoUrl), "_blank"); }
-
-  video.src = "";
-  loading.classList.remove("hidden");
-
-  const isEmbedUrl = videoUrl && (
-  videoUrl.includes('megaplay.buzz') ||
-  videoUrl.includes('newplayer') ||
-  videoUrl.includes('gogoanime') ||
-  videoUrl.includes('gogoanime.me.uk') ||
-  videoUrl.includes('/embed')
-);
-
-  if (isEmbedUrl) {
-    let iframe = document.getElementById('embedPlayer');
-    if (!iframe) {
-      iframe = document.createElement('iframe');
-      iframe.id = 'embedPlayer'; iframe.allowFullscreen = true;
-      iframe.allow = 'autoplay; fullscreen';
-      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:2;';
-      video.parentElement.style.position = 'relative';
-      video.parentElement.appendChild(iframe);
-    }
-    iframe.src = videoUrl; iframe.style.display = 'block';
-    video.style.display = 'none'; loading.classList.add('hidden');
-  } else if (videoUrl && videoUrl.trim()) {
-    const iframe = document.getElementById('embedPlayer');
-    if (iframe) { iframe.src = ''; iframe.style.display = 'none'; }
-    video.style.display = 'block';
-   if (Hls.isSupported() && videoUrl.includes(".m3u8")) {
-  const hls = new Hls(); hls.loadSource(proxyUrl(videoUrl));
- hls.attachMedia(video);
-} else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-  video.src = proxyUrl(videoUrl); video.load();
-} else {
-  video.src = videoUrl; video.load();
-}
-    video.oncanplay = () => loading.classList.add('hidden');
-    video.onerror   = () => { loading.classList.add('hidden'); showNoVideoMessage(); };
-  } else {
-    setTimeout(() => { loading.classList.add('hidden'); showNoVideoMessage(); }, 1200);
-  }
-
-  overlay.classList.add("active");
-  document.body.style.overflow = 'hidden';
+  // Redirect to dedicated watch page instead of in-page player
+  goToWatch(anime, 0);
 }
 
 function playEpisode(animeId, videoUrl, episodeTitle) {
   const anime = animeLibrary.find(a => a.id === animeId);
-  if (anime) openPlayer(anime, videoUrl, episodeTitle);
-}
-
-function showNoVideoMessage() {
-  const video = document.getElementById('mainPlayer');
-  const wrap = video.parentElement;
-  let msg = wrap.querySelector('.no-video-msg');
-  if (!msg) {
-    msg = document.createElement('div');
-    msg.className = 'no-video-msg';
-    msg.style.cssText = 'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#111;color:#aaa;text-align:center;padding:2rem;';
-    msg.innerHTML = `<div style="font-size:4rem;margin-bottom:1rem">??</div>
-      <h3 style="color:white;margin-bottom:0.5rem">${currentPlayerAnime?.title||'Video'}</h3>
-      <p>No video source connected yet.</p>
-      <p style="margin-top:0.5rem;font-size:0.85rem">Go to <strong>Admin ? Upload Content</strong> and add a Cloud Video URL.</p>`;
-    wrap.style.position = 'relative';
-    wrap.appendChild(msg);
-  }
+  if (anime) goToWatch(anime, 0);
 }
 
 function closePlayer() {
   const video = document.getElementById('mainPlayer');
-  video.pause(); video.src = '';
+  if (video) { video.pause(); video.src = ''; }
   const iframe = document.getElementById('embedPlayer');
   if (iframe) iframe.src = '';
   document.getElementById('playerOverlay').classList.remove('active');
@@ -1165,8 +1107,7 @@ function playNext() {
   if (!currentPlayerAnime) return;
   const idx  = animeLibrary.findIndex(a => a.id === currentPlayerAnime.id);
   const next = animeLibrary[(idx + 1) % animeLibrary.length];
-  closePlayer();
-  setTimeout(() => openPlayer(next), 200);
+  goToWatch(next, 0);
 }
 
 // --------------------------------------------
@@ -1216,10 +1157,10 @@ function toggleResMenu() {
 
 function setResolution(res) {
   currentResolution = res;
-  document.getElementById('resBtn').textContent = `?? ${res === 'auto' ? 'Auto' : res}`;
+  document.getElementById('resBtn').textContent = `🎥 ${res === 'auto' ? 'Auto' : res}`;
   document.getElementById('resMenu').style.display = 'none';
   document.querySelectorAll('.res-option').forEach(o => o.classList.toggle('active', o.textContent.toLowerCase().includes(res)));
-  showToast(res === 'auto' ? '? Resolution: Auto' : `?? Resolution set to ${res}`);
+  showToast(res === 'auto' ? '✅ Resolution: Auto' : `🎥 Resolution set to ${res}`);
 }
 
 document.addEventListener('click', e => {
@@ -1263,8 +1204,8 @@ function updateHeroPreview() {
   const anime = animeLibrary.find(a => a.id === featuredHeroId);
   if (!anime) { card.innerHTML = ''; return; }
   card.innerHTML = `<div class="hero-preview-mini">
-    <div class="mini-emoji">${anime.emoji||'??'}</div>
-    <div><strong>${anime.title}</strong><span>${anime.year||''} � ${anime.type} � ${anime.genre||''}</span></div>
+    <div class="mini-emoji">${anime.emoji||'🎬'}</div>
+    <div><strong>${anime.title}</strong><span>${anime.year||''} · ${anime.type} · ${anime.genre||''}</span></div>
   </div>`;
 }
 
@@ -1287,8 +1228,8 @@ function renderRecommendGrid(containerId, field) {
       <input type="checkbox" id="rec_${field}_${anime.id}" ${anime[field]?'checked':''}
         onchange="toggleRecommend('${field}','${anime.id}',this)"/>
       <div class="recommend-item-info">
-        <strong>${anime.emoji||'??'} ${anime.title}</strong>
-        <span>${anime.type} � ${anime.year||''}</span>
+        <strong>${anime.emoji||'🎬'} ${anime.title}</strong>
+        <span>${anime.type} · ${anime.year||''}</span>
       </div>`;
     item.onclick = e => { if (e.target.tagName !== 'INPUT') item.querySelector('input').click(); };
     container.appendChild(item);
@@ -1304,7 +1245,7 @@ function toggleRecommend(field, id, cb) {
 
 function saveRecommendations() {
   saveToStorage(); renderRows();
-  showToast('? Recommendations saved!');
+  showToast('✅ Recommendations saved!');
 }
 
 // --------------------------------------------
@@ -1333,7 +1274,7 @@ function applyThemePreset(name) {
   const bEl = document.getElementById('bgHex');     if (bEl) bEl.textContent = t.dark;
   const cEl = document.getElementById('cardHex');   if (cEl) cEl.textContent = t.card;
   localStorage.setItem('myanime_theme', JSON.stringify({ name, ...t }));
-  showToast(`? Theme: ${name}`);
+  showToast(`✅ Theme: ${name}`);
 }
 
 function applyCustomColor() {
@@ -1375,13 +1316,13 @@ function applyEffects() {
 function resetTheme() {
   applyThemePreset('netflix');
   document.querySelector('.logo-text').textContent = 'MyAnime';
-  document.querySelector('.logo-icon').textContent = '??';
+  document.querySelector('.logo-icon').textContent = '⚔️';
   document.title = 'MyAnime';
   document.getElementById('siteTitle').value = '';
   document.getElementById('siteIcon').value  = '';
   localStorage.removeItem('myanime_theme');
   localStorage.removeItem('myanime_branding');
-  showToast('? Theme reset to default');
+  showToast('✅ Theme reset to default');
 }
 
 function loadSavedTheme() {
@@ -1481,17 +1422,17 @@ function liveEditBanner()     { const enabled = document.getElementById('edit_ba
 function liveEditFooter()      {}
 function liveEditEmptyStates() {}
 
-function saveAllSiteEdits() { const e = collectSiteEdits(); saveSiteEdits(e); applyAllSiteEdits(e); showToast('?? Site edits saved!'); }
+function saveAllSiteEdits() { const e = collectSiteEdits(); saveSiteEdits(e); applyAllSiteEdits(e); showToast('💾 Site edits saved!'); }
 
 function resetSiteEdits() {
   if (!confirm('Reset all site text edits to defaults?')) return;
   localStorage.removeItem('myanime_siteedits');
   applyAllSiteEdits({}); populateSiteEditorFields();
   document.querySelector('.logo-text').textContent = 'MyAnime';
-  document.querySelector('.logo-icon').textContent = '??';
+  document.querySelector('.logo-icon').textContent = '⚔️';
   document.title = 'MyAnime';
   document.getElementById('announcementBanner').style.display = 'none';
-  showToast('? Site edits reset.');
+  showToast('✅ Site edits reset.');
 }
 
 function loadSiteEdits() {
@@ -1515,7 +1456,7 @@ function switchAdminTab(tab) {
 }
 
 // --------------------------------------------
-//   LIBRARY � FILE UPLOAD
+//   LIBRARY / FILE UPLOAD
 // --------------------------------------------
 function handleFileSelect(event, type) {
   const file = event.target.files[0]; if (file) handleFile(file, type);
@@ -1556,15 +1497,15 @@ function simulateUpload(file) {
   }, 150);
   reader.onload = e => {
     clearInterval(interval);
-    fill.style.width = '100%'; percent.textContent = '100% ?';
+    fill.style.width = '100%'; percent.textContent = '100% ✅';
     uploadedVideoBlob = e.target.result;
-    showToast('? Video loaded! Fill in details and click Add to Library.');
+    showToast('✅ Video loaded! Fill in details and click Add to Library.');
   };
   reader.readAsDataURL(file);
 }
 
 // --------------------------------------------
-//   LIBRARY � Edit / Delete
+//   LIBRARY / Edit / Delete
 // --------------------------------------------
 function renderLibraryTab() {
   const grid  = document.getElementById('libraryGrid');
@@ -1577,20 +1518,20 @@ function renderLibraryTab() {
     item.className = 'library-item';
     const thumbHtml = hasValidThumb(anime)
       ? `<img class="library-thumb" src="${anime.thumb}" alt="${anime.title}"/>`
-      : `<div class="library-thumb-placeholder">${anime.emoji||'??'}</div>`;
+      : `<div class="library-thumb-placeholder">${anime.emoji||'🎬'}</div>`;
     item.innerHTML = `
       ${thumbHtml}
       <div class="library-info">
         <strong>${anime.title}</strong>
-        <span>${anime.type} � ${anime.year||'N/A'} � ${anime.genre||''}</span>
+        <span>${anime.type} · ${anime.year||'N/A'} · ${anime.genre||''}</span>
         <span style="color:${anime.videoUrl?'#4caf50':'#e57373'};font-size:0.7rem">
-          ${anime.videoUrl ? '? Has video source' : '?? No video source'}
+          ${anime.videoUrl ? '✅ Has video source' : '⚠️ No video source'}
         </span>
       </div>
       <div class="library-actions">
-        <button class="lib-btn edit" onclick="openEditModal('${anime.id}')">??</button>
-        <button class="lib-btn" onclick="openPlayer(animeLibrary.find(a=>a.id==='${anime.id}'))">?</button>
-        <button class="lib-btn del" onclick="deleteAnime('${anime.id}')">??</button>
+        <button class="lib-btn edit" onclick="openEditModal('${anime.id}')">✏️</button>
+        <button class="lib-btn" onclick="goToWatch(animeLibrary.find(a=>a.id==='${anime.id}'),0)">▶</button>
+        <button class="lib-btn del" onclick="deleteAnime('${anime.id}')">🗑️</button>
       </div>`;
     grid.appendChild(item);
   });
@@ -1655,7 +1596,7 @@ async function saveAnimeEdit() {
     });
   } catch(err) { console.log('Backend save failed:', err.message); }
   saveToStorage(); renderAll(); closeEditModal();
-  showToast(`? "${anime.title}" updated!`);
+  showToast(`✅ "${anime.title}" updated!`);
 }
 
 async function deleteAnime(id) {
@@ -1667,15 +1608,15 @@ async function deleteAnime(id) {
       headers: { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' }
     });
     const data = await res.json();
-    if (!res.ok) { showToast(`? Backend delete failed: ${data.message}`); return; }
+    if (!res.ok) { showToast(`❌ Backend delete failed: ${data.message}`); return; }
   } catch (err) {
-    showToast('? Could not reach server. Anime NOT deleted.');
+    showToast('❌ Could not reach server. Anime NOT deleted.');
     return;
   }
   animeLibrary = animeLibrary.filter(a => a.id !== id);
   myList       = myList.filter(m => m.id !== id);
   saveToStorage(); renderAll();
-  showToast(`??? "${anime.title}" deleted from site and database!`);
+  showToast(`🗑️ "${anime.title}" deleted from site and database!`);
 }
 
 function clearLibrary() {
@@ -1690,12 +1631,12 @@ function clearLibrary() {
 // --------------------------------------------
 function showCloudGuide(provider) {
   const guides = {
-    gdrive:     { title:'?? Google Drive Setup',  steps:[{title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},{title:'Make it public',desc:'Right-click ? Share ? Change to "Anyone with the link ? Viewer".'},{title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},{title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}]},
-    s3:         { title:'?? Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console ? S3 ? Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file ? Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
-    cloudinary: { title:'?? Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com � free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library ? Upload your video file.'},{title:'Get the URL',desc:'Click your video ? Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
-    backblaze:  { title:'?? Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 � free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video ? click file ? "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
-    wasabi:     { title:'?? Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com � $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
-    jiocloud:   { title:'???? Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button ? Upload ? select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file ? tap <strong>Share</strong> ? select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin ? Upload tab ? paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip � Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
+    gdrive:     { title:'📁 Google Drive Setup',  steps:[{title:'Upload your video',desc:'Go to drive.google.com and upload your video file.'},{title:'Make it public',desc:'Right-click → Share → Change to "Anyone with the link → Viewer".'},{title:'Get the File ID',desc:'Copy the ID from the URL: drive.google.com/file/d/<strong>FILE_ID</strong>/view',code:'https://drive.google.com/uc?export=download&id=FILE_ID'},{title:'Use the direct URL',desc:'Replace FILE_ID with your actual file ID and paste it in the Cloud Video URL field.'}]},
+    s3:         { title:'🪣 Amazon S3 Setup',      steps:[{title:'Create an S3 bucket',desc:'Go to AWS Console → S3 → Create Bucket. Uncheck "Block all public access".'},{title:'Upload your video',desc:'Upload your video file and make it publicly accessible.'},{title:'Get the URL',desc:'Click the file → Copy the Object URL.',code:'https://your-bucket.s3.amazonaws.com/video.mp4'}]},
+    cloudinary: { title:'☁️ Cloudinary Setup',     steps:[{title:'Create free account',desc:'Sign up at cloudinary.com – free tier supports up to 25GB.'},{title:'Upload video',desc:'Go to Media Library → Upload your video file.'},{title:'Get the URL',desc:'Click your video → Copy the URL from "Link"',code:'https://res.cloudinary.com/YOUR_CLOUD/video/upload/v.../video.mp4'}]},
+    backblaze:  { title:'🔥 Backblaze B2 Setup',   steps:[{title:'Create account',desc:'Sign up at backblaze.com/b2 – free 10GB storage.'},{title:'Create bucket',desc:'Create a new bucket and set it to "Public".'},{title:'Upload & get URL',desc:'Upload video → click file → "Friendly URL"',code:'https://f000.backblazeb2.com/file/bucket/video.mp4'}]},
+    wasabi:     { title:'🌿 Wasabi Setup',          steps:[{title:'Create account',desc:'Sign up at wasabi.com – $6.99/TB storage, no egress fees.'},{title:'Create bucket',desc:'Create a new bucket with public read policy.'},{title:'Get URL',desc:'Upload video and use the public endpoint URL.',code:'https://s3.wasabisys.com/your-bucket/video.mp4'}]},
+    jiocloud:   { title:'🇮🇳 Jio Cloud Setup',     steps:[{title:'Open JioCloud on your phone or PC',desc:'Download the JioCloud app or go to <strong>jiocloud.com</strong> and sign in with your Jio number.'},{title:'Upload your video',desc:'Tap the + button → Upload → select your video file (MP4 recommended).'},{title:'Share the file',desc:'Long-press the video file → tap <strong>Share</strong> → select <strong>Share Link</strong>. Make sure it is set to <strong>"Anyone with the link"</strong>.'},{title:'Get the direct link',desc:'Copy the shared link. It will look like:',code:'https://www.jiocloud.com/s/xxxxxxxxxx'},{title:'Paste into MyAnime',desc:'Go to Admin → Upload tab → paste the link in the <strong>Cloud Video URL</strong> field.'},{title:'Tip – Better streaming',desc:'For the smoothest playback, re-upload to <strong>Cloudinary (free 25GB)</strong> which offers proper video streaming support.'}]},
   };
   const guide = guides[provider]; if (!guide) return;
   document.getElementById('guideTitle').textContent = guide.title;
@@ -1709,26 +1650,26 @@ function closeCloudGuide() { document.getElementById('cloudGuideModal').classLis
 
 function testVideoUrl() {
   const url = document.getElementById('testUrl').value.trim();
-  if (!url) { showToast('?? Enter a URL to test'); return; }
+  if (!url) { showToast('⚠️ Enter a URL to test'); return; }
   const player = document.getElementById('testPlayer');
   player.src = url; player.style.display = 'block'; player.load();
-  player.oncanplay = () => showToast('? Video URL works!');
-  player.onerror   = () => showToast('? Cannot load video. Check URL & CORS settings.');
+  player.oncanplay = () => showToast('✅ Video URL works!');
+  player.onerror   = () => showToast('❌ Cannot load video. Check URL & CORS settings.');
 }
 
 function convertGDriveUrl() {
   const url   = document.getElementById('gdriveInput').value.trim();
   const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
   const result = document.getElementById('gdriveResult');
-  if (!match) { showToast('?? Invalid Google Drive URL format.'); return; }
+  if (!match) { showToast('⚠️ Invalid Google Drive URL format.'); return; }
   const fileId    = match[1];
   const directUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
   result.style.display = 'block';
   result.innerHTML = `
-    <p>? Direct stream URL:</p>
+    <p>✅ Direct stream URL:</p>
     <code>${directUrl}</code>
-    <p style="margin-top:0.5rem;color:#e57373;font-size:0.78rem">?? Note: Google Drive may block large video streaming due to CORS. Cloudinary or S3 work better.</p>
-    <button class="copy-url-btn" onclick="navigator.clipboard.writeText('${directUrl}');showToast('Copied!')">?? Copy URL</button>`;
+    <p style="margin-top:0.5rem;color:#e57373;font-size:0.78rem">⚠️ Note: Google Drive may block large video streaming due to CORS. Cloudinary or S3 work better.</p>
+    <button class="copy-url-btn" onclick="navigator.clipboard.writeText('${directUrl}');showToast('Copied!')">📋 Copy URL</button>`;
 }
 
 // --------------------------------------------
@@ -1756,7 +1697,7 @@ async function handleLogin() {
     if (data.success) {
       setToken(data.accessToken); setUser(data.user);
       closeUserAuth(); updateNavForAuth();
-      showToast(`? Welcome back, ${data.user.username}!`);
+      showToast(`✅ Welcome back, ${data.user.username}!`);
     } else { errEl.textContent = data.message; errEl.style.display = 'block'; }
   } catch(e) { errEl.textContent = 'Connection error. Is server running?'; errEl.style.display = 'block'; }
 }
@@ -1771,7 +1712,7 @@ async function handleSignup() {
   try {
     const res  = await fetch(`${API}/auth/signup`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username, email, password }) });
     const data = await res.json();
-    if (data.success) { closeUserAuth(); showToast('? Account created! You can now log in.'); }
+    if (data.success) { closeUserAuth(); showToast('✅ Account created! You can now log in.'); }
     else { errEl.textContent = data.message; errEl.style.display = 'block'; }
   } catch(e) { errEl.textContent = 'Connection error. Is server running?'; errEl.style.display = 'block'; }
 }
@@ -1805,3 +1746,5 @@ function showToast(msg) {
 //   START
 // --------------------------------------------
 document.addEventListener('DOMContentLoaded', init);
+
+

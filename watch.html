@@ -1,433 +1,541 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Watch Anime</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title id="pageTitle">Watch Anime</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
   <style>
-    body { background: #0f0f0f; color: white; font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-    #playerWrapper { width: 100%; max-width: 900px; margin: 0 auto; }
-    #playBtn {
-      display: block; width: 100%; padding: 16px;
-      background: #e50914; color: white; font-size: 18px;
-      border: none; border-radius: 8px; cursor: pointer;
+    :root {
+      --red:    #e50914;
+      --red2:   #c40812;
+      --bg:     #0a0a0f;
+      --bg2:    #13131a;
+      --bg3:    #1c1c26;
+      --border: rgba(255,255,255,0.07);
+      --text:   #e8e8f0;
+      --muted:  #6b6b80;
+      --font-display: 'Rajdhani', sans-serif;
+      --font-body:    'Nunito', sans-serif;
     }
-    #playBtn:hover { background: #c40812; }
-    #playerContainer { display: none; margin-top: 16px; }
-    #status { margin-top: 10px; color: #aaa; font-size: 14px; text-align: center; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; }
 
-    /* ── Custom Player Shell ──────────────────────────────── */
+    /* ── Top bar ── */
+    #topbar {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 24px;
+      background: var(--bg2); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    #backBtn {
+      display: flex; align-items: center; gap: 6px;
+      background: none; border: none; color: var(--muted);
+      font-family: var(--font-body); font-size: 14px; cursor: pointer; transition: color 0.2s;
+    }
+    #backBtn:hover { color: var(--text); }
+    #backBtn svg { width: 18px; height: 18px; fill: currentColor; }
+    #topbar h1 {
+      font-family: var(--font-display); font-size: 22px; font-weight: 700;
+      letter-spacing: 0.5px; flex: 1;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    #epIndicator {
+      font-size: 13px; color: var(--muted);
+      background: var(--bg3); padding: 4px 12px; border-radius: 20px; white-space: nowrap;
+    }
+
+    /* ── Layout ── */
+    #layout { max-width: 1200px; margin: 0 auto; padding: 20px 16px 40px; display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── Player ── */
     #videoShell {
-      position: relative;
-      background: #000;
-      border-radius: 10px;
-      overflow: hidden;
-      user-select: none;
+      position: relative; background: #000; border-radius: 12px;
+      overflow: hidden; aspect-ratio: 16/9; width: 100%; cursor: pointer;
     }
-    #hlsPlayer {
-      width: 100%;
-      height: 500px;
-      display: none;
-      background: black;
-    }
-    /* Hide native controls — we use our own */
+    #hlsPlayer { width: 100%; height: 100%; display: block; background: #000; }
     #hlsPlayer::-webkit-media-controls { display: none !important; }
+    #iframePlayer { display: none; width: 100%; height: 100%; border: none; }
 
-    #iframePlayer {
-      display: none;
-      width: 100%;
-      height: 500px;
-      border: none;
+    #spinnerOverlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.7); z-index: 5;
     }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid rgba(255,255,255,0.15); border-top-color: var(--red);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Controls bar ─────────────────────────────────────── */
+    #errorOverlay {
+      display: none; position: absolute; inset: 0;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+      background: rgba(0,0,0,0.85); z-index: 5;
+    }
+    #errorOverlay p { color: #ff6b6b; font-size: 15px; }
+    #retryBtn {
+      padding: 8px 22px; background: var(--red); color: white;
+      border: none; border-radius: 6px; font-family: var(--font-body);
+      font-size: 14px; cursor: pointer; transition: background 0.2s;
+    }
+    #retryBtn:hover { background: var(--red2); }
+
+    #bigOverlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; opacity: 0; z-index: 6; transition: opacity 0.25s;
+    }
+    #bigOverlay.show { opacity: 1; }
+    #bigOverlay svg { width: 80px; height: 80px; fill: rgba(255,255,255,0.75); filter: drop-shadow(0 0 20px rgba(0,0,0,0.8)); }
+
+    /* ── Controls ── */
     #controls {
-      display: none; /* switched to flex once video loads */
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 8px 14px 12px;
-      background: linear-gradient(transparent, rgba(0,0,0,0.88));
-      flex-direction: column;
-      gap: 6px;
-      z-index: 10;
-      opacity: 1;
-      transition: opacity 0.4s;
-      pointer-events: auto;
+      display: none; position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 6px 14px 12px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.92));
+      flex-direction: column; gap: 6px;
+      z-index: 10; opacity: 1; transition: opacity 0.35s; pointer-events: auto;
     }
-    #videoShell.hide-controls #controls {
-      opacity: 0;
-      pointer-events: none;
-    }
+    #videoShell.hide-ctrl #controls { opacity: 0; pointer-events: none; }
 
-    /* Progress bar */
     #progressWrap {
-      position: relative;
-      height: 4px;
-      background: rgba(255,255,255,0.25);
-      border-radius: 2px;
-      cursor: pointer;
-      transition: height 0.15s;
+      height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px;
+      cursor: pointer; transition: height 0.15s; position: relative;
     }
     #progressWrap:hover { height: 7px; }
-    #progressBar {
-      height: 100%;
-      background: #e50914;
-      border-radius: 2px;
-      width: 0%;
-      pointer-events: none;
-      position: relative;
-    }
+    #bufferedBar { position: absolute; top:0; left:0; height:100%; background: rgba(255,255,255,0.2); border-radius:2px; pointer-events:none; width:0%; }
+    #progressBar { position: absolute; top:0; left:0; height:100%; background: var(--red); border-radius:2px; pointer-events:none; width:0%; }
     #progressBar::after {
-      content: '';
-      position: absolute;
-      right: -5px; top: 50%;
+      content:''; position:absolute; right:-5px; top:50%;
       transform: translateY(-50%) scale(0);
-      width: 12px; height: 12px;
-      background: #fff;
-      border-radius: 50%;
-      transition: transform 0.15s;
+      width:13px; height:13px; background:#fff; border-radius:50%; transition: transform 0.15s;
     }
     #progressWrap:hover #progressBar::after { transform: translateY(-50%) scale(1); }
 
-    /* Bottom row */
-    #controlsRow {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    #ctrlRow { display:flex; align-items:center; gap:10px; }
+    .cbtn {
+      background:none; border:none; color:white; cursor:pointer; padding:4px;
+      display:flex; align-items:center; justify-content:center;
+      opacity:.85; transition: opacity .15s, transform .1s; flex-shrink:0;
     }
-    .ctrl-btn {
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      padding: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0.85;
-      transition: opacity 0.15s, transform 0.1s;
-      flex-shrink: 0;
-    }
-    .ctrl-btn:hover { opacity: 1; transform: scale(1.12); }
-    .ctrl-btn svg { width: 20px; height: 20px; fill: white; }
-
-    #timeDisplay {
-      font-size: 12px;
-      color: #ccc;
-      white-space: nowrap;
-      margin-right: auto;
-    }
-
-    /* Volume */
-    #volWrap { display: flex; align-items: center; gap: 6px; }
+    .cbtn:hover { opacity:1; transform:scale(1.15); }
+    .cbtn svg { width:22px; height:22px; fill:white; }
+    #timeDisp { font-size:12px; color:#ccc; white-space:nowrap; margin-right:auto; font-family:var(--font-display); letter-spacing:.5px; }
+    #volWrap { display:flex; align-items:center; gap:6px; }
     #volSlider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 70px; height: 4px;
-      background: rgba(255,255,255,0.3);
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
+      -webkit-appearance:none; appearance:none;
+      width:72px; height:4px; background:rgba(255,255,255,0.3); border-radius:2px; outline:none; cursor:pointer;
     }
-    #volSlider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: white;
-      cursor: pointer;
+    #volSlider::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:white; cursor:pointer; }
+
+    /* ── Below player ── */
+    #belowPlayer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    #serverRow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    #serverRow span { font-size:13px; color:var(--muted); }
+    .srvBtn {
+      padding:6px 16px; border:1px solid var(--border); background:var(--bg3); color:var(--text);
+      border-radius:6px; font-family:var(--font-body); font-size:13px; cursor:pointer; transition: background .2s, border-color .2s;
+    }
+    .srvBtn:hover { background:#25252f; border-color:rgba(255,255,255,0.15); }
+    .srvBtn.active { background:var(--red); border-color:var(--red); }
+    #prevNextRow { display:flex; gap:10px; }
+    .navBtn {
+      padding:8px 20px; border:none; border-radius:7px;
+      font-family:var(--font-body); font-size:14px; font-weight:600; cursor:pointer;
+      transition: background .2s, transform .1s; display:flex; align-items:center; gap:6px;
+    }
+    .navBtn:hover:not(:disabled) { transform:translateY(-1px); }
+    .navBtn:disabled { opacity:.35; cursor:default; }
+    #prevBtn { background:var(--bg3); color:var(--text); }
+    #prevBtn:hover:not(:disabled) { background:#25252f; }
+    #nextBtn { background:var(--red); color:white; }
+    #nextBtn:hover:not(:disabled) { background:var(--red2); }
+
+    /* ── Episode panel ── */
+    #episodePanel { background:var(--bg2); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    #panelHeader { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border); }
+    #panelHeader h2 { font-family:var(--font-display); font-size:18px; font-weight:600; letter-spacing:.3px; }
+    #totalEpBadge { font-size:12px; color:var(--muted); background:var(--bg3); padding:3px 10px; border-radius:20px; }
+
+    #rangeTabs { display:flex; flex-wrap:wrap; gap:6px; padding:12px 18px; border-bottom:1px solid var(--border); }
+    .rangeTab {
+      padding:5px 13px; border:1px solid var(--border); background:var(--bg3); color:var(--muted);
+      border-radius:5px; font-size:12px; cursor:pointer; transition:all .2s;
+      font-family:var(--font-display); font-weight:600;
+    }
+    .rangeTab:hover { color:var(--text); border-color:rgba(255,255,255,0.18); }
+    .rangeTab.active { background:var(--red); color:white; border-color:var(--red); }
+
+    #epGrid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(52px,1fr));
+      gap:7px; padding:14px 18px 18px; max-height:340px; overflow-y:auto;
+    }
+    #epGrid::-webkit-scrollbar { width:5px; }
+    #epGrid::-webkit-scrollbar-thumb { background:var(--bg3); border-radius:3px; }
+
+    .epBtn {
+      aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+      background:var(--bg3); border:1px solid var(--border); border-radius:7px;
+      font-family:var(--font-display); font-size:14px; font-weight:600;
+      color:var(--muted); cursor:pointer; transition:all .18s; position:relative;
+    }
+    .epBtn:hover { background:#25252f; color:var(--text); border-color:rgba(255,255,255,0.18); transform:translateY(-2px); }
+    .epBtn.active { background:var(--red); border-color:var(--red); color:white; box-shadow:0 4px 16px rgba(229,9,20,0.4); }
+    .epBtn.watched::after {
+      content:''; position:absolute; bottom:3px; left:50%; transform:translateX(-50%);
+      width:16px; height:2px; background:rgba(255,255,255,0.35); border-radius:1px;
     }
 
-    /* Episode nav */
-    #episodeNav {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-      justify-content: flex-end;
-    }
-    .ep-btn {
-      padding: 9px 20px;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .ep-btn:hover { transform: translateY(-1px); }
-    #prevEpBtn {
-      background: #2a2a2a;
-      color: #ccc;
-    }
-    #prevEpBtn:hover { background: #3a3a3a; color: white; }
-    #nextEpBtn {
-      background: #e50914;
-      color: white;
-    }
-    #nextEpBtn:hover { background: #c40812; }
-    #epLabel {
-      font-size: 13px;
-      color: #888;
-      margin-top: 8px;
-      text-align: right;
-    }
+    #loadingPlaceholder { display:flex; align-items:center; justify-content:center; min-height:200px; color:var(--muted); font-size:15px; gap:10px; }
+    .dot-pulse { display:flex; gap:5px; }
+    .dot-pulse span { width:6px; height:6px; border-radius:50%; background:var(--red); animation:pulse 1.2s ease-in-out infinite; }
+    .dot-pulse span:nth-child(2) { animation-delay:.2s; }
+    .dot-pulse span:nth-child(3) { animation-delay:.4s; }
+    @keyframes pulse { 0%,80%,100%{opacity:.2;transform:scale(.8)} 40%{opacity:1;transform:scale(1)} }
 
-    /* Big play overlay */
-    #bigPlayOverlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    #bigPlayOverlay.show { opacity: 1; }
-    #bigPlayOverlay svg {
-      width: 72px; height: 72px;
-      fill: rgba(255,255,255,0.8);
-      filter: drop-shadow(0 0 12px rgba(0,0,0,0.7));
+    @media(max-width:600px){
+      #topbar{padding:10px 14px;} #topbar h1{font-size:17px;}
+      #layout{padding:12px 10px 30px;gap:14px;}
+      #epGrid{grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:5px;}
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.12/hls.min.js"></script>
 </head>
 <body>
 
-<div id="playerWrapper">
-  <h2 id="animeTitle">Loading...</h2>
-  <a href="/s-e/episode-player.html?id=ANIME_MONGO_ID">Watch</a>
+<div id="topbar">
+  <button id="backBtn" onclick="history.back()">
+    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    Back
+  </button>
+  <h1 id="animeTitle">Loading...</h1>
+  <span id="epIndicator">Episode —</span>
+</div>
 
-  <!-- <button id="playBtn" onclick="loadPlayer()">▶ Watch Now</button> -->
-  <div id="status"></div>
+<div id="layout">
 
-  <div id="playerContainer">
-
-    <!-- Video shell with custom controls -->
-    <div id="videoShell">
-      <video id="hlsPlayer"></video>
-      <iframe id="iframePlayer" allowfullscreen allow="autoplay; fullscreen"></iframe>
-
-      <!-- Big play/pause flash -->
-      <div id="bigPlayOverlay">
-        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      </div>
-
-      <!-- Custom controls (only for HLS video) -->
-      <div id="controls">
-        <div id="progressWrap">
-          <div id="progressBar"></div>
-        </div>
-        <div id="controlsRow">
-          <!-- Play/Pause -->
-          <button class="ctrl-btn" id="playPauseBtn" title="Play/Pause">
-            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-          </button>
-          <!-- Time -->
-          <span id="timeDisplay">0:00 / 0:00</span>
-          <!-- Volume -->
-          <div id="volWrap">
-            <button class="ctrl-btn" id="muteBtn" title="Mute">
-              <svg id="volIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-              <svg id="muteIcon" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
-            </button>
-            <input type="range" id="volSlider" min="0" max="1" step="0.05" value="1">
-          </div>
-          <!-- Fullscreen -->
-          <button class="ctrl-btn" id="fsBtn" title="Fullscreen">
-            <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
-          </button>
-        </div>
-      </div>
-    </div><!-- /videoShell -->
-
-    <!-- Episode navigation -->
-    <div id="episodeNav">
-      <button class="ep-btn" id="prevEpBtn">← Prev Episode</button>
-      <button class="ep-btn" id="nextEpBtn">Next Episode →</button>
+  <!-- Player -->
+  <div id="videoShell">
+    <video id="hlsPlayer"></video>
+    <iframe id="iframePlayer" allowfullscreen allow="autoplay; fullscreen"></iframe>
+    <div id="spinnerOverlay"><div class="spinner"></div></div>
+    <div id="errorOverlay">
+      <p>⚠ Failed to load stream</p>
+      <button id="retryBtn">Retry</button>
     </div>
-    <p id="epLabel">Episode <span id="epNum">1</span></p>
+    <div id="bigOverlay">
+      <svg viewBox="0 0 24 24"><path id="bigIcon" d="M8 5v14l11-7z"/></svg>
+    </div>
+    <div id="controls">
+      <div id="progressWrap">
+        <div id="bufferedBar"></div>
+        <div id="progressBar"></div>
+      </div>
+      <div id="ctrlRow">
+        <button class="cbtn" id="playPauseBtn">
+          <svg id="playIco"  viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="pauseIco" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <span id="timeDisp">0:00 / 0:00</span>
+        <div id="volWrap">
+          <button class="cbtn" id="muteBtn">
+            <svg id="volIco"  viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            <svg id="muteIco" viewBox="0 0 24 24" style="display:none"><path d="M16.5 12A4.5 4.5 0 0014 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0021 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+          </button>
+          <input type="range" id="volSlider" min="0" max="1" step="0.05" value="1">
+        </div>
+        <button class="cbtn" id="fsBtn">
+          <svg id="fsEnter" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+          <svg id="fsExit"  viewBox="0 0 24 24" style="display:none"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
 
-  </div><!-- /playerContainer -->
+  <!-- Below player -->
+  <div id="belowPlayer">
+    <div id="serverRow">
+      <span>Server:</span>
+      <button class="srvBtn active" data-server="0">HD-1</button>
+      <button class="srvBtn" data-server="1">HD-2</button>
+    </div>
+    <div id="prevNextRow">
+      <button class="navBtn" id="prevBtn" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        Prev
+      </button>
+      <button class="navBtn" id="nextBtn">
+        Next
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Episode panel -->
+  <div id="episodePanel">
+    <div id="panelHeader">
+      <h2>Episodes</h2>
+      <span id="totalEpBadge">— Episodes</span>
+    </div>
+    <div id="rangeTabs"></div>
+    <div id="epGrid">
+      <div id="loadingPlaceholder">
+        <div class="dot-pulse"><span></span><span></span><span></span></div>
+        Loading episodes…
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const ANIME_SLUG = params.get('slug') || 'naruto';
-  let EPISODE_INDEX = parseInt(params.get('ep')) || 0;
-  document.getElementById('animeTitle').innerText = ANIME_SLUG.replace(/-/g, ' ');
+  const params     = new URLSearchParams(window.location.search);
+  const ANIME_ID   = params.get('id')   || '';
+  const ANIME_SLUG = params.get('slug') || '';
+  const API        = 'https://myanime-backend-2vc9.onrender.com/api';
 
-  // ── Episode label & nav ──────────────────────────────────────
-  function updateEpLabel() {
-    document.getElementById('epNum').innerText = EPISODE_INDEX + 1;
-    document.getElementById('prevEpBtn').disabled = EPISODE_INDEX <= 0;
-    document.getElementById('prevEpBtn').style.opacity = EPISODE_INDEX <= 0 ? '0.4' : '1';
-  }
-  updateEpLabel();
+  let currentEp   = parseInt(params.get('ep')) || 0;
+  let totalEps    = 0;
+  let allEpisodes = [];
+  let currentRange= 0;
+  let hlsInstance = null;
+  let watched     = JSON.parse(localStorage.getItem('w_'+(ANIME_ID||ANIME_SLUG)) || '[]');
 
-  document.getElementById('prevEpBtn').onclick = () => {
-    if (EPISODE_INDEX > 0) { EPISODE_INDEX--; reloadPlayer(); }
-  };
-  document.getElementById('nextEpBtn').onclick = () => {
-    EPISODE_INDEX++;
-    reloadPlayer();
-  };
+  const video    = document.getElementById('hlsPlayer');
+  const iframe   = document.getElementById('iframePlayer');
+  const shell    = document.getElementById('videoShell');
+  const controls = document.getElementById('controls');
+  const spinner  = document.getElementById('spinnerOverlay');
+  const errBox   = document.getElementById('errorOverlay');
 
-  function reloadPlayer() {
-    updateEpLabel();
-    const container = document.getElementById('playerContainer');
-    container.style.display = 'none';
-    document.getElementById('hlsPlayer').style.display = 'none';
-    document.getElementById('iframePlayer').style.display = 'none';
-    document.getElementById('controls').style.display = 'none';
-    loadPlayer();
+  // ── Init ─────────────────────────────────────────────────
+  async function init() {
+    await fetchAnimeInfo();
+    loadEpisode(currentEp);
   }
 
-  // ── Main loader (your original logic — untouched) ────────────
-  async function loadPlayer() {
-    const status = document.getElementById('status');
-    status.innerText = 'Fetching stream URL...';
+  async function fetchAnimeInfo() {
+    try {
+      const url = ANIME_ID ? `${API}/anime/${ANIME_ID}` : `${API}/anime?search=${encodeURIComponent(ANIME_SLUG)}&limit=1`;
+      const res  = await fetch(url);
+      const data = await res.json();
+      const doc  = data?.anime || data?.data || (Array.isArray(data) ? data[0] : data);
+
+      document.getElementById('animeTitle').innerText = doc?.title || ANIME_SLUG.replace(/-/g,' ');
+      document.getElementById('pageTitle').innerText  = 'Watch ' + (doc?.title || '');
+
+      const eps = [];
+      if (Array.isArray(doc?.seasons)) {
+        doc.seasons.forEach(s => { if (Array.isArray(s.episodes)) eps.push(...s.episodes); });
+      }
+      allEpisodes = eps.sort((a,b)=>(a.episodeNumber||a.number||0)-(b.episodeNumber||b.number||0));
+      totalEps    = allEpisodes.length;
+      document.getElementById('totalEpBadge').innerText = totalEps + ' Episodes';
+    } catch(e) {
+      document.getElementById('animeTitle').innerText = ANIME_SLUG.replace(/-/g,' ') || 'Anime';
+    }
+    buildRangeTabs();
+    renderEpGrid();
+  }
+
+  function buildRangeTabs() {
+    const total = totalEps || 100;
+    const count = Math.ceil(total / 100);
+    const tabs  = document.getElementById('rangeTabs');
+    tabs.innerHTML = '';
+    if (count <= 1) { tabs.style.display='none'; return; }
+    tabs.style.display = 'flex';
+    for (let i = 0; i < count; i++) {
+      const s = i*100+1, e = Math.min((i+1)*100, total);
+      const btn = document.createElement('button');
+      btn.className = 'rangeTab' + (i===currentRange?' active':'');
+      btn.innerText = s+' – '+e;
+      btn.onclick   = () => { currentRange=i; buildRangeTabs(); renderEpGrid(); };
+      tabs.appendChild(btn);
+    }
+  }
+
+  function renderEpGrid() {
+    const grid  = document.getElementById('epGrid');
+    const start = currentRange * 100;
+    const end   = Math.min(start + 100, totalEps || (start+100));
+    grid.innerHTML = '';
+    for (let i = start; i < end; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'epBtn' + (i===currentEp?' active':'') + (watched.includes(i)?' watched':'');
+      btn.innerText = i+1;
+      btn.title     = 'Episode '+(i+1);
+      btn.onclick   = () => loadEpisode(i);
+      grid.appendChild(btn);
+    }
+  }
+
+  function loadEpisode(idx) {
+    currentEp = idx;
+    updateNavBtns();
+    document.getElementById('epIndicator').innerText = 'Episode '+(idx+1);
+    markActiveBtn();
+    playStream();
+  }
+
+  async function playStream() {
+    spinner.style.display      = 'flex';
+    errBox.style.display       = 'none';
+    controls.style.display     = 'none';
+    video.style.display        = 'none';
+    iframe.style.display       = 'none';
+    if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
 
     try {
-      const res = await fetch(`https://myanime-backend-2vc9.onrender.com/api/stream/${ANIME_SLUG}/${EPISODE_INDEX}`);
+      const id  = ANIME_ID || ANIME_SLUG;
+      const res  = await fetch(`${API}/stream/${id}/${currentEp}`);
       const data = await res.json();
-
-      if (!data.success) throw new Error('Stream fetch failed');
-
-      document.getElementById('playerContainer').style.display = 'block';
-      status.innerText = '';
+      spinner.style.display = 'none';
+      if (!data.success) throw new Error('failed');
 
       if (data.type === 'm3u8') {
-        const video = document.getElementById('hlsPlayer');
-        video.style.display = 'block';
-        document.getElementById('controls').style.display = 'flex';
-        initControls(video);
-
+        video.style.display    = 'block';
+        controls.style.display = 'flex';
+        initControls();
         if (Hls.isSupported()) {
-          const hls = new Hls();
-          hls.loadSource(data.url);
-          hls.attachMedia(video);
-          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+          hlsInstance = new Hls({ enableWorker:true });
+          hlsInstance.loadSource(data.url);
+          hlsInstance.attachMedia(video);
+          hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
+          hlsInstance.on(Hls.Events.ERROR, (_,d) => { if(d.fatal) showError(); });
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = data.url;
-          video.play();
+          video.src = data.url; video.play().catch(()=>{});
         }
       } else {
-        const iframe = document.getElementById('iframePlayer');
-        iframe.style.display = 'block';
-        iframe.style.width = '100%';
-        iframe.style.height = '500px';
-        iframe.style.border = 'none';
-        iframe.src = data.url;
+        iframe.style.display = 'block'; iframe.src = data.url;
       }
 
-    } catch (err) {
-      status.innerText = '❌ Failed to load stream. Try again.';
-      console.error(err);
+      if (!watched.includes(currentEp)) {
+        watched.push(currentEp);
+        localStorage.setItem('w_'+(ANIME_ID||ANIME_SLUG), JSON.stringify(watched));
+        renderEpGrid();
+      }
+    } catch(e) {
+      spinner.style.display = 'none'; showError();
     }
   }
 
-  // ── Custom controls logic ────────────────────────────────────
-  function initControls(video) {
-    const shell        = document.getElementById('videoShell');
+  function showError() { errBox.style.display='flex'; controls.style.display='none'; }
+  document.getElementById('retryBtn').onclick = playStream;
+
+  function updateNavBtns() {
+    const max = totalEps > 0 ? totalEps-1 : 9999;
+    document.getElementById('prevBtn').disabled = currentEp <= 0;
+    document.getElementById('nextBtn').disabled = currentEp >= max;
+  }
+  document.getElementById('prevBtn').onclick = () => { if(currentEp>0) loadEpisode(currentEp-1); };
+  document.getElementById('nextBtn').onclick = () => loadEpisode(currentEp+1);
+
+  function markActiveBtn() {
+    document.querySelectorAll('.epBtn').forEach((b,i) => {
+      b.classList.toggle('active', currentRange*100+i === currentEp);
+    });
+    const neededRange = Math.floor(currentEp/100);
+    if (neededRange !== currentRange) { currentRange=neededRange; buildRangeTabs(); renderEpGrid(); }
+    const a = document.querySelector('.epBtn.active');
+    if (a) a.scrollIntoView({ block:'nearest', behavior:'smooth' });
+  }
+
+  document.querySelectorAll('.srvBtn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.srvBtn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      playStream();
+    };
+  });
+
+  // ── Custom controls ────────────────────────────────────────
+  let ctrlsReady = false;
+  function initControls() {
+    if (ctrlsReady) return; ctrlsReady = true;
+
     const playPauseBtn = document.getElementById('playPauseBtn');
-    const playIcon     = document.getElementById('playIcon');
-    const pauseIcon    = document.getElementById('pauseIcon');
-    const progressBar  = document.getElementById('progressBar');
-    const progressWrap = document.getElementById('progressWrap');
-    const timeDisplay  = document.getElementById('timeDisplay');
-    const volSlider    = document.getElementById('volSlider');
-    const muteBtn      = document.getElementById('muteBtn');
-    const volIcon      = document.getElementById('volIcon');
-    const muteIcon     = document.getElementById('muteIcon');
-    const fsBtn        = document.getElementById('fsBtn');
-    const bigOverlay   = document.getElementById('bigPlayOverlay');
+    const playIco  = document.getElementById('playIco');
+    const pauseIco = document.getElementById('pauseIco');
+    const bigIcon  = document.getElementById('bigIcon');
+    const bigOvl   = document.getElementById('bigOverlay');
+    const progBar  = document.getElementById('progressBar');
+    const bufBar   = document.getElementById('bufferedBar');
+    const progWrap = document.getElementById('progressWrap');
+    const timeDisp = document.getElementById('timeDisp');
+    const volSlider= document.getElementById('volSlider');
+    const muteBtn  = document.getElementById('muteBtn');
+    const volIco   = document.getElementById('volIco');
+    const muteIco  = document.getElementById('muteIco');
+    const fsBtn    = document.getElementById('fsBtn');
+    const fsEnter  = document.getElementById('fsEnter');
+    const fsExit   = document.getElementById('fsExit');
 
-    function fmt(s) {
-      const m = Math.floor(s / 60), sec = Math.floor(s % 60);
-      return `${m}:${sec.toString().padStart(2, '0')}`;
-    }
+    const fmt = s => { const m=Math.floor(s/60),sec=Math.floor(s%60); return `${m}:${sec.toString().padStart(2,'0')}`; };
 
-    // Play/Pause toggle
     function togglePlay() {
-      if (video.paused) { video.play(); } else { video.pause(); }
-      flashOverlay();
+      video.paused ? video.play() : video.pause();
+      bigIcon.setAttribute('d', !video.paused ? 'M6 19h4V5H6v14zm8-14v14h4V5h-4z' : 'M8 5v14l11-7z');
+      bigOvl.classList.add('show');
+      clearTimeout(bigOvl._t);
+      bigOvl._t = setTimeout(()=>bigOvl.classList.remove('show'), 500);
     }
-    video.addEventListener('play',  () => { playIcon.style.display='none'; pauseIcon.style.display='block'; shell.classList.remove('paused'); });
-    video.addEventListener('pause', () => { playIcon.style.display='block'; pauseIcon.style.display='none'; shell.classList.add('paused'); });
+
+    video.addEventListener('play',  ()=>{ playIco.style.display='none'; pauseIco.style.display='block'; shell.classList.remove('hide-ctrl'); resetHide(); });
+    video.addEventListener('pause', ()=>{ playIco.style.display='block'; pauseIco.style.display='none'; shell.classList.remove('hide-ctrl'); clearTimeout(hideTimer); });
     playPauseBtn.onclick = togglePlay;
     video.onclick = togglePlay;
 
-    function flashOverlay() {
-      bigOverlay.classList.add('show');
-      clearTimeout(bigOverlay._t);
-      bigOverlay._t = setTimeout(() => bigOverlay.classList.remove('show'), 500);
-      // swap icon to reflect action
-      bigOverlay.querySelector('svg path').setAttribute('d',
-        video.paused ? 'M8 5v14l11-7z' : 'M6 19h4V5H6v14zm8-14v14h4V5h-4z'
-      );
-    }
-
-    // Progress
-    video.addEventListener('timeupdate', () => {
+    video.addEventListener('timeupdate', ()=>{
       if (!video.duration) return;
-      const pct = (video.currentTime / video.duration) * 100;
-      progressBar.style.width = pct + '%';
-      timeDisplay.innerText = `${fmt(video.currentTime)} / ${fmt(video.duration)}`;
+      progBar.style.width = (video.currentTime/video.duration*100)+'%';
+      timeDisp.innerText = fmt(video.currentTime)+' / '+fmt(video.duration);
     });
-    progressWrap.addEventListener('click', e => {
-      const rect = progressWrap.getBoundingClientRect();
-      video.currentTime = ((e.clientX - rect.left) / rect.width) * video.duration;
+    video.addEventListener('progress', ()=>{
+      if (video.buffered.length) bufBar.style.width = (video.buffered.end(video.buffered.length-1)/video.duration*100)+'%';
     });
-
-    // Volume
-    volSlider.addEventListener('input', () => {
-      video.volume = volSlider.value;
-      video.muted  = volSlider.value == 0;
-      updateVolIcon();
-    });
-    muteBtn.onclick = () => {
-      video.muted = !video.muted;
-      volSlider.value = video.muted ? 0 : video.volume;
-      updateVolIcon();
-    };
-    function updateVolIcon() {
-      const muted = video.muted || video.volume == 0;
-      volIcon.style.display  = muted ? 'none'  : 'block';
-      muteIcon.style.display = muted ? 'block' : 'none';
-    }
-
-    // Fullscreen
-    fsBtn.onclick = () => {
-      if (!document.fullscreenElement) shell.requestFullscreen();
-      else document.exitFullscreen();
-    };
-    document.addEventListener('keydown', e => {
-      if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
-      if (e.code === 'ArrowRight') video.currentTime += 10;
-      if (e.code === 'ArrowLeft')  video.currentTime -= 10;
-      if (e.code === 'ArrowUp')    { video.volume = Math.min(1, video.volume + 0.1); volSlider.value = video.volume; }
-      if (e.code === 'ArrowDown')  { video.volume = Math.max(0, video.volume - 0.1); volSlider.value = video.volume; }
+    progWrap.addEventListener('click', e=>{
+      const r=progWrap.getBoundingClientRect();
+      video.currentTime = ((e.clientX-r.left)/r.width)*video.duration;
     });
 
-    // Always show controls when paused; hide after 3s when playing
-    video.addEventListener('pause', () => { shell.classList.remove('hide-controls'); clearTimeout(hideTimer); });
-    video.addEventListener('play',  () => resetHideTimer());
+    volSlider.addEventListener('input', ()=>{ video.volume=volSlider.value; video.muted=volSlider.value==0; updateVol(); });
+    muteBtn.onclick = ()=>{ video.muted=!video.muted; volSlider.value=video.muted?0:video.volume; updateVol(); };
+    function updateVol() { const m=video.muted||video.volume==0; volIco.style.display=m?'none':'block'; muteIco.style.display=m?'block':'none'; }
+
+    fsBtn.onclick = ()=>{ if(!document.fullscreenElement) shell.requestFullscreen(); else document.exitFullscreen(); };
+    document.addEventListener('fullscreenchange', ()=>{
+      const fs=!!document.fullscreenElement;
+      fsEnter.style.display=fs?'none':'block'; fsExit.style.display=fs?'block':'none';
+    });
+
+    document.addEventListener('keydown', e=>{
+      if(['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code)) e.preventDefault();
+      if(e.code==='Space') togglePlay();
+      if(e.code==='ArrowRight'){ video.currentTime+=10; resetHide(); }
+      if(e.code==='ArrowLeft') { video.currentTime-=10; resetHide(); }
+      if(e.code==='ArrowUp')   { video.volume=Math.min(1,video.volume+0.1); volSlider.value=video.volume; updateVol(); }
+      if(e.code==='ArrowDown') { video.volume=Math.max(0,video.volume-0.1); volSlider.value=video.volume; updateVol(); }
+      if(e.code==='KeyF') fsBtn.click();
+    });
 
     let hideTimer;
-    function resetHideTimer() {
-      shell.classList.remove('hide-controls');
-      clearTimeout(hideTimer);
-      if (!video.paused) hideTimer = setTimeout(() => shell.classList.add('hide-controls'), 3000);
+    function resetHide() {
+      shell.classList.remove('hide-ctrl'); clearTimeout(hideTimer);
+      if (!video.paused) hideTimer = setTimeout(()=>shell.classList.add('hide-ctrl'), 3000);
     }
-    shell.addEventListener('mousemove', resetHideTimer);
-    shell.addEventListener('mouseleave', () => {
-      if (!video.paused) shell.classList.add('hide-controls');
+    shell.addEventListener('mousemove', resetHide);
+    shell.addEventListener('mouseleave', ()=>{ if(!video.paused) shell.classList.add('hide-ctrl'); });
+
+    video.addEventListener('ended', ()=>{
+      if (currentEp < (totalEps||9999)-1) setTimeout(()=>loadEpisode(currentEp+1), 1500);
     });
   }
 
-  // Auto-load on page open
-  loadPlayer();
+  init();
 </script>
-
 </body>
 </html>
