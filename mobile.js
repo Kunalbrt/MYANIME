@@ -88,21 +88,18 @@
   }
 
   // ============================================================
-  //  2. VIDEO PLAYER — open HLS in best available way
+  //  2. VIDEO PLAYER
   // ============================================================
   function initMobilePlayer() {
     window._desktopOpenPlayer = window.openPlayer;
 
     window.openPlayer = function (anime, episodeUrl, episodeTitle) {
       if (!anime) return;
-
       const videoUrl = episodeUrl || anime.videoUrl || '';
-
       if (videoUrl && videoUrl.includes('.m3u8')) {
         showMobilePlayerOptions(anime, videoUrl, episodeTitle);
         return;
       }
-
       if (window._desktopOpenPlayer) {
         window._desktopOpenPlayer(anime, episodeUrl, episodeTitle);
       }
@@ -124,64 +121,37 @@
     const title = episodeTitle ? `${anime.title} — ${episodeTitle}` : anime.title;
 
     sheet.innerHTML = `
-      <div style="
-        background:#1a1a1a; border-radius:16px 16px 0 0;
-        padding:1.5rem; width:100%; max-width:480px;
-        animation: sheetUp 0.25s ease;
-      ">
+      <div style="background:#1a1a1a;border-radius:16px 16px 0 0;padding:1.5rem;width:100%;max-width:480px;">
         <style>
           @keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-          .mob-player-btn {
-            display:flex; align-items:center; gap:0.9rem;
-            background:#252525; border:1px solid #333; border-radius:10px;
-            padding:0.9rem 1.1rem; width:100%; margin-bottom:0.7rem;
-            color:#fff; font-size:0.95rem; font-weight:500; cursor:pointer;
-            text-align:left;
-          }
+          .mob-player-btn { display:flex;align-items:center;gap:0.9rem;background:#252525;border:1px solid #333;border-radius:10px;padding:0.9rem 1.1rem;width:100%;margin-bottom:0.7rem;color:#fff;font-size:0.95rem;font-weight:500;cursor:pointer;text-align:left; }
           .mob-player-btn:active { background:#333; }
           .mob-player-icon { font-size:1.4rem; }
         </style>
-
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">
           <div>
             <div style="color:#fff;font-weight:700;font-size:1rem">${title}</div>
             <div style="color:#aaa;font-size:0.8rem;margin-top:0.2rem">Choose how to watch</div>
           </div>
-          <button onclick="document.getElementById('mobilePlayerSheet').remove()"
-            style="background:none;border:none;color:#aaa;font-size:1.4rem;cursor:pointer">✕</button>
+          <button onclick="document.getElementById('mobilePlayerSheet').remove()" style="background:none;border:none;color:#aaa;font-size:1.4rem;cursor:pointer">✕</button>
         </div>
-
         <button class="mob-player-btn" onclick="mobilePlayInApp('${videoUrl}', '${anime.title}')">
           <span class="mob-player-icon">▶️</span>
-          <div>
-            <div>Play in App</div>
-            <div style="color:#aaa;font-size:0.78rem">Uses built-in HLS player</div>
-          </div>
+          <div><div>Play in App</div><div style="color:#aaa;font-size:0.78rem">Uses built-in HLS player</div></div>
         </button>
-
         <button class="mob-player-btn" onclick="mobileOpenExternal('${videoUrl}')">
           <span class="mob-player-icon">📱</span>
-          <div>
-            <div>Open in External App</div>
-            <div style="color:#aaa;font-size:0.78rem">VLC, MX Player, etc.</div>
-          </div>
+          <div><div>Open in External App</div><div style="color:#aaa;font-size:0.78rem">VLC, MX Player, etc.</div></div>
         </button>
-
         <button class="mob-player-btn" onclick="mobileCopyLink('${videoUrl}')">
           <span class="mob-player-icon">🔗</span>
-          <div>
-            <div>Copy Stream Link</div>
-            <div style="color:#aaa;font-size:0.78rem">Paste in any player</div>
-          </div>
+          <div><div>Copy Stream Link</div><div style="color:#aaa;font-size:0.78rem">Paste in any player</div></div>
         </button>
       </div>
     `;
 
     document.body.appendChild(sheet);
-
-    sheet.addEventListener('click', (e) => {
-      if (e.target === sheet) sheet.remove();
-    });
+    sheet.addEventListener('click', (e) => { if (e.target === sheet) sheet.remove(); });
   }
 
   window.mobilePlayInApp = function (videoUrl, title) {
@@ -197,9 +167,7 @@
   window.mobileCopyLink = function (videoUrl) {
     navigator.clipboard?.writeText(videoUrl).then(() => {
       showMobileToast('Stream link copied! Paste in VLC or MX Player');
-    }).catch(() => {
-      prompt('Copy this link:', videoUrl);
-    });
+    }).catch(() => { prompt('Copy this link:', videoUrl); });
     document.getElementById('mobilePlayerSheet')?.remove();
   };
 
@@ -212,36 +180,22 @@
 
     const overlay = document.createElement('div');
     overlay.id = 'mobileVideoOverlay';
-    overlay.style.cssText = `
-      position:fixed; inset:0; z-index:99999;
-      background:#000; display:flex; flex-direction:column;
-    `;
+    overlay.style.cssText = `position:fixed;inset:0;z-index:99999;background:#000;display:flex;flex-direction:column;`;
 
     overlay.innerHTML = `
-      <div style="
-        display:flex; align-items:center; gap:0.8rem;
-        padding:0.8rem 1rem; background:#111;
-      ">
-        <button onclick="document.getElementById('mobileVideoOverlay').remove()"
-          style="background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer">←</button>
-        <span style="color:#fff;font-size:0.9rem;font-weight:600;flex:1;
-          white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</span>
+      <div style="display:flex;align-items:center;gap:0.8rem;padding:0.8rem 1rem;background:#111;">
+        <button onclick="document.getElementById('mobileVideoOverlay').remove()" style="background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer">←</button>
+        <span style="color:#fff;font-size:0.9rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</span>
       </div>
       <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative">
-        <video id="mobileHlsPlayer" controls playsinline
-          style="width:100%;max-height:100%;background:#000">
-        </video>
-        <div id="mobilePlayerLoading" style="
-          position:absolute;inset:0;display:flex;align-items:center;
-          justify-content:center;background:rgba(0,0,0,0.6);
-        ">
+        <video id="mobileHlsPlayer" controls playsinline style="width:100%;max-height:100%;background:#000"></video>
+        <div id="mobilePlayerLoading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);">
           <div style="color:#fff;font-size:0.9rem">Loading...</div>
         </div>
       </div>
     `;
 
     document.body.appendChild(overlay);
-
     screen.orientation?.lock?.('landscape').catch(() => {});
 
     const video = document.getElementById('mobileHlsPlayer');
@@ -251,14 +205,9 @@
       const hls = new Hls();
       hls.loadSource(videoUrl);
       hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        loading.style.display = 'none';
-        video.play();
-      });
+      hls.on(Hls.Events.MANIFEST_PARSED, () => { loading.style.display = 'none'; video.play(); });
       hls.on(Hls.Events.ERROR, (e, data) => {
-        if (data.fatal) {
-          loading.innerHTML = '<div style="color:#e53935;font-size:0.9rem;text-align:center;padding:1rem">Failed to load stream.<br>Try External App instead.</div>';
-        }
+        if (data.fatal) loading.innerHTML = '<div style="color:#e53935;font-size:0.9rem;text-align:center;padding:1rem">Failed to load stream.<br>Try External App instead.</div>';
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = videoUrl;
@@ -269,16 +218,13 @@
     }
 
     video.oncanplay = () => { loading.style.display = 'none'; };
-
-    overlay.querySelector('button').addEventListener('click', () => {
-      screen.orientation?.unlock?.();
-    });
+    overlay.querySelector('button').addEventListener('click', () => { screen.orientation?.unlock?.(); });
   }
 
   // ============================================================
   //  4. TOUCH-FRIENDLY CARDS
   // ============================================================
-    function initTouchCards() {
+  function initTouchCards() {
     document.addEventListener('click', (e) => {
       const card = e.target.closest('.anime-card');
       if (!card) {
@@ -292,11 +238,9 @@
 
       const hover = card.querySelector('.card-hover');
       if (!hover) return;
-
       if (e.target.closest('button') || e.target.closest('.card-play-btn')) return;
 
       const isOpen = card.classList.contains('mob-active');
-
       document.querySelectorAll('.anime-card.mob-active').forEach(c => {
         c.classList.remove('mob-active');
         const h = c.querySelector('.card-hover');
@@ -311,40 +255,62 @@
     });
 
     const style = document.createElement('style');
-style.textContent = `
-  @media (max-width: 768px) {
-    .row-track { 
-      display: grid !important; 
-      grid-template-columns: repeat(3, 1fr) !important;
-      overflow-x: unset !important;
-      gap: 0.5rem !important;
-      padding: 0.5rem !important;
-    }
-    .anime-card { 
-      flex: none !important; 
-      width: 100% !important; 
-      min-width: unset !important; 
-      height: unset !important;
-      aspect-ratio: 2/3 !important; 
-      overflow: hidden !important; 
-      position: relative !important; 
-    }
-    .card-thumb, .card-thumb-placeholder { 
-      position: absolute !important; 
-      top: 0 !important; left: 0 !important; 
-      width: 100% !important; height: 100% !important; 
-      object-fit: cover !important; 
-    }
-    .anime-card:hover { transform: none !important; }
-    .anime-card.mob-active { transform: scale(1.05); z-index: 100; }
-    .card-hover { transition: opacity 0.2s ease !important; }
+    style.textContent = `
+      @media (max-width: 768px) {
+        .row-track {
+          display: grid !important;
+          grid-template-columns: repeat(3, 1fr) !important;
+          overflow-x: unset !important;
+          gap: 0.5rem !important;
+          padding: 0.5rem !important;
+        }
+        .anime-card {
+          flex: none !important;
+          width: 100% !important;
+          min-width: unset !important;
+          height: unset !important;
+          aspect-ratio: 2/3 !important;
+          overflow: hidden !important;
+          position: relative !important;
+        }
+        .card-thumb, .card-thumb-placeholder {
+          position: absolute !important;
+          top: 0 !important; left: 0 !important;
+          width: 100% !important; height: 100% !important;
+          object-fit: cover !important;
+        }
+        .anime-card:hover { transform: none !important; }
+        .anime-card.mob-active { transform: scale(1.05); z-index: 100; }
+        .card-hover { transition: opacity 0.2s ease !important; }
+
+        #mspGrid, #searchGrid, .browse-grid {
+          display: grid !important;
+          grid-template-columns: repeat(3, 1fr) !important;
+          gap: 0.5rem !important;
+          padding: 0.5rem !important;
+        }
+        .grid-card {
+          width: 100% !important;
+          aspect-ratio: 2/3 !important;
+          height: unset !important;
+          min-height: unset !important;
+          position: relative !important;
+          overflow: hidden !important;
+        }
+        .grid-card img {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important;
+          position: absolute !important;
+          top: 0 !important; left: 0 !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   }
-`  
-document.head.appendChild(style);
-  
-    }
+
   // ============================================================
-//  5. SWIPE ROWS
+  //  5. SWIPE ROWS
   // ============================================================
   function initSwipeRows() {
     document.querySelectorAll('.anime-row').forEach(row => {
@@ -359,7 +325,7 @@ document.head.appendChild(style);
   }
 
   // ============================================================
-  //  6. EPISODE SIDEBAR — bottom drawer on mobile
+  //  6. EPISODE SIDEBAR
   // ============================================================
   function initMobileEpisodeDrawer() {
     const style = document.createElement('style');
@@ -379,12 +345,11 @@ document.head.appendChild(style);
   }
 
   // ============================================================
-  //  7. MOBILE TOAST NOTIFICATIONS
+  //  7. MOBILE TOAST
   // ============================================================
   window.showMobileToast = function (msg, duration = 3000) {
     const old = document.getElementById('mobileToast');
     if (old) old.remove();
-
     const toast = document.createElement('div');
     toast.id = 'mobileToast';
     toast.textContent = msg;
@@ -392,7 +357,6 @@ document.head.appendChild(style);
       position:fixed; bottom:5rem; left:50%; transform:translateX(-50%);
       background:#333; color:#fff; padding:0.7rem 1.2rem; border-radius:8px;
       font-size:0.85rem; z-index:99999;
-      animation: fadeInUp 0.3s ease;
       max-width:85vw; text-align:center; white-space:normal;
     `;
     document.body.appendChild(toast);
@@ -400,30 +364,28 @@ document.head.appendChild(style);
   };
 
   // ============================================================
-  //  8. HERO BANNER — mobile layout fix
+  //  8. HERO + NAVBAR
   // ============================================================
   function initMobileHero() {
-  const style = document.createElement('style');
-  style.textContent = `
-    @media (max-width: 768px) {
-      .hero { height: 65vh !important; min-height: 380px !important; }
-      .hero-title { font-size: 2rem !important; }
-      .hero-desc { font-size: 0.82rem !important; -webkit-line-clamp: 2; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden; }
-      .hero-actions { gap: 0.6rem !important; }
-      .btn-play, .btn-info { padding: 0.5rem 1rem !important; font-size: 0.85rem !important; }
-      .hero-content { padding: 0 5% !important; }
-
-      /* NAVBAR FIX */
-      .navbar { padding: 0.4rem 0.8rem !important; gap: 0.4rem !important; flex-wrap: nowrap !important; }
-      .search-bar { flex: 1 !important; min-width: 0 !important; }
-      .search-bar input { font-size: 0.8rem !important; padding: 0.35rem 0.6rem !important; }
-      #loginBtn { padding: 0.35rem 0.7rem !important; font-size: 0.78rem !important; white-space: nowrap !important; }
-      .btn-signup { padding: 0.35rem 0.7rem !important; font-size: 0.78rem !important; white-space: nowrap !important; }
-      .logo-text { font-size: 0.95rem !important; }
-    }
-  `;
-  document.head.appendChild(style);
-}
+    const style = document.createElement('style');
+    style.textContent = `
+      @media (max-width: 768px) {
+        .hero { height: 65vh !important; min-height: 380px !important; }
+        .hero-title { font-size: 2rem !important; }
+        .hero-desc { font-size: 0.82rem !important; -webkit-line-clamp: 2; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden; }
+        .hero-actions { gap: 0.6rem !important; }
+        .btn-play, .btn-info { padding: 0.5rem 1rem !important; font-size: 0.85rem !important; }
+        .hero-content { padding: 0 5% !important; }
+        .navbar { padding: 0.4rem 0.8rem !important; gap: 0.4rem !important; flex-wrap: nowrap !important; }
+        .search-bar { flex: 1 !important; min-width: 0 !important; }
+        .search-bar input { font-size: 0.8rem !important; padding: 0.35rem 0.6rem !important; }
+        #loginBtn { padding: 0.35rem 0.7rem !important; font-size: 0.78rem !important; white-space: nowrap !important; }
+        .btn-signup { padding: 0.35rem 0.7rem !important; font-size: 0.78rem !important; white-space: nowrap !important; }
+        .logo-text { font-size: 0.95rem !important; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
   // ============================================================
   //  9. MOBILE SEARCH BAR
@@ -433,8 +395,7 @@ document.head.appendChild(style);
     style.textContent = `
       #mobileSearchBar {
         position: fixed; top: 56px; left: 0; right: 0; z-index: 998;
-        padding: 0.5rem 1rem;
-        background: #141414;
+        padding: 0.5rem 1rem; background: #141414;
         border-bottom: 1px solid #222;
         display: flex; align-items: center; gap: 0.5rem;
       }
@@ -454,49 +415,42 @@ document.head.appendChild(style);
     bar.id = 'mobileSearchBar';
     bar.innerHTML = `
       <span>🔍</span>
-      <input type="text" placeholder="Search anime..."
-        oninput="mobilSearch(event)" onkeyup="mobilSearch(event)" />
+      <input type="text" placeholder="Search anime..." oninput="mobilSearch(event)" onkeyup="mobilSearch(event)" />
     `;
     document.body.appendChild(bar);
   }
 
   window.mobilSearch = function (e) {
-  const input = document.querySelector('#mobileSearchBar input');
-  const q = input?.value.trim();
-  if (!q) return;
-
-  // Use the existing mspSearch if available (your search page function)
-  if (typeof mspSearch === 'function') {
+    const input = document.querySelector('#mobileSearchBar input');
+    const q = input?.value.trim();
+    if (!q) return;
+    if (typeof mspSearch === 'function') {
+      showPage('search');
+      const mspInput = document.getElementById('mspInput');
+      if (mspInput) mspInput.value = q;
+      mspSearch(q);
+      return;
+    }
+    if (typeof trackSearch === 'function') trackSearch(q);
+    const lib = window.animeLibrary || [];
+    const results = lib.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
     showPage('search');
-    // sync the msp input too
-    const mspInput = document.getElementById('mspInput');
-    if (mspInput) { mspInput.value = q; }
-    mspSearch(q);
-    return;
-  }
+    const grid = document.getElementById('mspGrid');
+    if (grid) {
+      grid.style.display = 'grid';
+      if (typeof renderGrid === 'function') renderGrid('mspGrid', results);
+    }
+  };
 
-  // Fallback
-  if (typeof trackSearch === 'function') trackSearch(q);
-  const lib = window.animeLibrary || [];
-  const results = lib.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
-  showPage('search');
-  const grid = document.getElementById('mspGrid');
-  if (grid) {
-    grid.style.display = 'grid';
-    if (typeof renderGrid === 'function') renderGrid('mspGrid', results);
-  }
-};
   // ============================================================
   //  10. BACK BUTTON
   // ============================================================
   function initBackButton() {
     const navHistory = ['home'];
-
     const _origShowPage = window.showPage;
+
     window.showPage = function (page) {
-      if (page !== navHistory[navHistory.length - 1]) {
-        navHistory.push(page);
-      }
+      if (page !== navHistory[navHistory.length - 1]) navHistory.push(page);
       _origShowPage(page);
       updateBackButton();
     };
@@ -541,7 +495,6 @@ document.head.appendChild(style);
     initMobileHero();
     initMobileSearchBar();
     initBackButton();
-
     console.log('[mobile.js] All mobile enhancements loaded ✅');
   }
 
