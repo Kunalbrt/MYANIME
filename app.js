@@ -1135,7 +1135,7 @@ function setupSearchListener() {
       const q = e.target.value.trim();
       if (q.length >= 2) {
         trackSearch(q);
-        showPage('search');
+        showPage('search'); mspPopulateTrending();
         const mspInput = document.getElementById('mspInput');
         if (mspInput) mspInput.value = q;
         const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase())); renderGrid('searchGrid', results);
@@ -1152,7 +1152,7 @@ function handleSearch(e) {
     if (q) {
       trackSearch(q);
       const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
-      showPage('search'); renderGrid('searchGrid', results);
+      showPage('search'); mspPopulateTrending(); renderGrid('searchGrid', results);
     }
   }
 }
@@ -1762,4 +1762,44 @@ document.addEventListener('DOMContentLoaded', init);
 
 
 
+
+
+// -- Mobile Search Page Functions -----------------------------
+function mspSearch(q) {
+  const grid    = document.getElementById('mspGrid');
+  const results = document.getElementById('mspResults');
+  if (!grid || !results) return;
+  if (!q || q.length < 2) {
+    grid.style.display    = 'none';
+    results.style.display = 'block';
+    return;
+  }
+  const filtered = animeLibrary.filter(a =>
+    a.title.toLowerCase().includes(q.toLowerCase()) ||
+    (a.genre && a.genre.toLowerCase().includes(q.toLowerCase()))
+  );
+  results.style.display = 'none';
+  grid.style.display    = 'block';
+  renderGrid('mspGrid', filtered);
+}
+
+function mspClear() {
+  const input = document.getElementById('mspInput');
+  if (input) { input.value = ''; }
+  mspSearch('');
+}
+
+function mspFill(text) {
+  const input = document.getElementById('mspInput');
+  if (input) { input.value = text; mspSearch(text); }
+}
+
+function mspPopulateTrending() {
+  const list = document.getElementById('mspTrending');
+  if (!list) return;
+  const trending = animeLibrary.filter(a => a.trending).slice(0, 5);
+  list.innerHTML = trending.map(a =>
+    <div class="msp-list-item" onclick="mspFill('')"> </div>
+  ).join('');
+}
 
