@@ -459,9 +459,11 @@ select.admin-input { cursor: pointer; }
   .login-btn { padding: 0.3rem 0.7rem; font-size: 0.78rem; }
   .search-bar input { width: 120px; }
 
-  .row-track { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; overflow-x: unset !important; gap: 0.5rem; padding: 0.5rem 0; }
-  .anime-card { flex: none !important; width: 100% !important; min-width: unset !important; height: 0 !important; padding-bottom: 150% !important; position: relative !important; }
-  .card-thumb, .card-thumb-placeholder { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; }
+  .row-track { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; overflow-x: unset !important; gap: 0.6rem; padding: 0.5rem 0; }
+.anime-card { flex: none !important; width: 100% !important; min-width: unset !important; height: unset !important; padding-bottom: 0 !important; position: relative !important; aspect-ratio: 2/3 !important; overflow: hidden !important; border-radius: var(--card-radius) !important; }
+.card-thumb, .card-thumb-placeholder { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; border-radius: var(--card-radius) !important; }
+.anime-card:hover { transform: none !important; } 
+
   .form-row { grid-template-columns: 1fr; }
   .modal-hero { height: 250px; }
   .analytics-stats-row { grid-template-columns: repeat(2, 1fr); }
