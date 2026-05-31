@@ -6,7 +6,7 @@
 (function () {
   const isMobile = /Mobi|Android|iPhone|iPad|Tablet/i.test(navigator.userAgent)
     || window.innerWidth <= 768;
-  if (!isMobile) return; // ← desktop sees nothing from this file
+  if (!isMobile) return;
 
   console.log('[mobile.js] Mobile mode active');
 
@@ -17,7 +17,6 @@
     const navbar = document.querySelector('.navbar');
     if (!navbar) return;
 
-    // Create hamburger button
     const burger = document.createElement('button');
     burger.id = 'mobileBurger';
     burger.innerHTML = '&#9776;';
@@ -27,7 +26,6 @@
       order:3; margin-left:auto;
     `;
 
-    // Create mobile menu drawer
     const drawer = document.createElement('div');
     drawer.id = 'mobileNavDrawer';
     drawer.style.cssText = `
@@ -48,7 +46,6 @@
       <a class="mob-nav-link" onclick="openAdminLogin();closeMobileNav()">Admin</a>
     `;
 
-    // Style nav links inside drawer
     const style = document.createElement('style');
     style.textContent = `
       .mob-nav-link {
@@ -61,15 +58,12 @@
     `;
     document.head.appendChild(style);
 
-    // Hide desktop nav links on mobile
     const navLinks = document.querySelector('.nav-links');
     if (navLinks) navLinks.style.display = 'none';
 
-    // Hide search bar on mobile (use search section instead)
     const searchBar = document.querySelector('.search-bar');
     if (searchBar) searchBar.style.display = 'none';
 
-    // Add burger to navbar right
     const navRight = document.querySelector('.nav-right');
     if (navRight) navRight.appendChild(burger);
 
@@ -86,7 +80,6 @@
       burger.innerHTML = '&#9776;';
     };
 
-    // Close on outside tap
     document.addEventListener('click', (e) => {
       if (!drawer.contains(e.target) && e.target !== burger) {
         closeMobileNav();
@@ -98,7 +91,6 @@
   //  2. VIDEO PLAYER — open HLS in best available way
   // ============================================================
   function initMobilePlayer() {
-    // Override openPlayer for mobile
     window._desktopOpenPlayer = window.openPlayer;
 
     window.openPlayer = function (anime, episodeUrl, episodeTitle) {
@@ -106,13 +98,11 @@
 
       const videoUrl = episodeUrl || anime.videoUrl || '';
 
-      // If HLS stream → show mobile player chooser
       if (videoUrl && videoUrl.includes('.m3u8')) {
         showMobilePlayerOptions(anime, videoUrl, episodeTitle);
         return;
       }
 
-      // Fallback to desktop player for non-HLS
       if (window._desktopOpenPlayer) {
         window._desktopOpenPlayer(anime, episodeUrl, episodeTitle);
       }
@@ -120,7 +110,6 @@
   }
 
   function showMobilePlayerOptions(anime, videoUrl, episodeTitle) {
-    // Remove old sheet if exists
     const old = document.getElementById('mobilePlayerSheet');
     if (old) old.remove();
 
@@ -163,7 +152,7 @@
         </div>
 
         <button class="mob-player-btn" onclick="mobilePlayInApp('${videoUrl}', '${anime.title}')">
-          <span class="mob-player-icon">▶¶ï¸</span>
+          <span class="mob-player-icon">▶️</span>
           <div>
             <div>Play in App</div>
             <div style="color:#aaa;font-size:0.78rem">Uses built-in HLS player</div>
@@ -190,7 +179,6 @@
 
     document.body.appendChild(sheet);
 
-    // Close on backdrop tap
     sheet.addEventListener('click', (e) => {
       if (e.target === sheet) sheet.remove();
     });
@@ -198,7 +186,6 @@
 
   window.mobilePlayInApp = function (videoUrl, title) {
     document.getElementById('mobilePlayerSheet')?.remove();
-    // Open full screen HLS player overlay
     showMobileVideoOverlay(videoUrl, title);
   };
 
@@ -255,7 +242,6 @@
 
     document.body.appendChild(overlay);
 
-    // Lock screen orientation to landscape if possible
     screen.orientation?.lock?.('landscape').catch(() => {});
 
     const video = document.getElementById('mobileHlsPlayer');
@@ -267,6 +253,7 @@
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         loading.style.display = 'none';
+        video.play();
       });
       hls.on(Hls.Events.ERROR, (e, data) => {
         if (data.fatal) {
@@ -274,7 +261,6 @@
         }
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // iOS Safari native HLS
       video.src = videoUrl;
       video.load();
       loading.style.display = 'none';
@@ -284,21 +270,18 @@
 
     video.oncanplay = () => { loading.style.display = 'none'; };
 
-    // Restore orientation on close
     overlay.querySelector('button').addEventListener('click', () => {
       screen.orientation?.unlock?.();
     });
   }
 
   // ============================================================
-  //  4. TOUCH-FRIENDLY CARDS (tap to show buttons)
+  //  4. TOUCH-FRIENDLY CARDS
   // ============================================================
   function initTouchCards() {
-    // On mobile, card hover doesn't work — use tap instead
     document.addEventListener('click', (e) => {
       const card = e.target.closest('.anime-card');
       if (!card) {
-        // Tap outside — close all open cards
         document.querySelectorAll('.anime-card.mob-active').forEach(c => {
           c.classList.remove('mob-active');
           const h = c.querySelector('.card-hover');
@@ -310,12 +293,10 @@
       const hover = card.querySelector('.card-hover');
       if (!hover) return;
 
-      // If tapping a button inside the card, let it fire
       if (e.target.closest('button') || e.target.closest('.card-play-btn')) return;
 
       const isOpen = card.classList.contains('mob-active');
 
-      // Close all others
       document.querySelectorAll('.anime-card.mob-active').forEach(c => {
         c.classList.remove('mob-active');
         const h = c.querySelector('.card-hover');
@@ -329,7 +310,6 @@
       }
     });
 
-    // Add touch-specific card styles
     const style = document.createElement('style');
     style.textContent = `
       @media (max-width: 768px) {
@@ -381,16 +361,7 @@
   // ============================================================
   //  7. MOBILE TOAST NOTIFICATIONS
   // ============================================================
-  window.mobilSearch = function(e) {
-  window.mobilSearch = function(e) {
-    const input = document.querySelector('#mobileSearchBar input');
-    const q = input?.value.trim();
-    if (!q) return;
-    if (typeof trackSearch === 'function') trackSearch(q);
-    const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
-    showPage('search');
-    renderGrid('searchGrid', results);
-  };
+  window.showMobileToast = function (msg, duration = 3000) {
     const old = document.getElementById('mobileToast');
     if (old) old.remove();
 
@@ -400,9 +371,9 @@
     toast.style.cssText = `
       position:fixed; bottom:5rem; left:50%; transform:translateX(-50%);
       background:#333; color:#fff; padding:0.7rem 1.2rem; border-radius:8px;
-      font-size:0.85rem; z-index:99999; white-space:nowrap;
+      font-size:0.85rem; z-index:99999;
       animation: fadeInUp 0.3s ease;
-      max-width: 85vw; text-align:center; white-space:normal;
+      max-width:85vw; text-align:center; white-space:normal;
     `;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), duration);
@@ -426,9 +397,8 @@
     document.head.appendChild(style);
   }
 
-  
   // ============================================================
-  //  9. MOBILE SEARCH BAR — below navbar on home screen
+  //  9. MOBILE SEARCH BAR
   // ============================================================
   function initMobileSearchBar() {
     const style = document.createElement('style');
@@ -455,16 +425,65 @@
     const bar = document.createElement('div');
     bar.id = 'mobileSearchBar';
     bar.innerHTML = `
-      <span></span>
-      <input type="text" placeholder="Search anime..." 
-        
+      <span>🔍</span>
+      <input type="text" placeholder="Search anime..."
         oninput="mobilSearch(event)" onkeyup="mobilSearch(event)" />
     `;
     document.body.appendChild(bar);
   }
 
+  window.mobilSearch = function (e) {
+    const input = document.querySelector('#mobileSearchBar input');
+    const q = input?.value.trim();
+    if (!q) return;
+    if (typeof trackSearch === 'function') trackSearch(q);
+    const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
+    showPage('search');
+    renderGrid('searchGrid', results);
+  };
 
+  // ============================================================
+  //  10. BACK BUTTON
+  // ============================================================
+  function initBackButton() {
+    const navHistory = ['home'];
 
+    const _origShowPage = window.showPage;
+    window.showPage = function (page) {
+      if (page !== navHistory[navHistory.length - 1]) {
+        navHistory.push(page);
+      }
+      _origShowPage(page);
+      updateBackButton();
+    };
+
+    const btn = document.createElement('button');
+    btn.id = 'mobileBackBtn';
+    btn.innerHTML = '&#8592;';
+    btn.style.cssText = `
+      position: fixed; top: 10px; left: 10px; z-index: 1001;
+      background: rgba(0,0,0,0.6); border: none; color: #fff;
+      font-size: 1.4rem; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer; display: none;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    `;
+    document.body.appendChild(btn);
+
+    btn.addEventListener('click', () => {
+      if (navHistory.length > 1) {
+        navHistory.pop();
+        const prev = navHistory[navHistory.length - 1];
+        _origShowPage(prev);
+        updateBackButton();
+      }
+    });
+
+    function updateBackButton() {
+      const activePage = document.querySelector('.page.active')?.id;
+      btn.style.display = (activePage && activePage !== 'homePage') ? 'flex' : 'none';
+    }
+  }
 
   // ============================================================
   //  INIT ALL
@@ -485,50 +504,7 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
-   // ============================================================
-  //  10. BACK BUTTON
-  // ============================================================
-  function initBackButton() {
-    const history = ['home'];
-    
-    // Override showPage to track history
-    const _origShowPage = window.showPage;
-    window.showPage = function(page) {
-      if (page !== history[history.length-1]) {
-        history.push(page);
-      }
-      _origShowPage(page);
-      updateBackButton();
-    };
-
-    // Create back button
-    const btn = document.createElement('button');
-    btn.id = 'mobileBackBtn';
-    btn.innerHTML = '&#8592;';
-    btn.style.cssText = `
-      position: fixed; top: 10px; left: 10px; z-index: 1001;
-      background: rgba(0,0,0,0.6); border: none; color: #fff;
-      font-size: 1.4rem; width: 36px; height: 36px;
-      border-radius: 50%; cursor: pointer; display: none;
-      align-items: center; justify-content: center;
-      backdrop-filter: blur(4px);
-    `;
-    document.body.appendChild(btn);
-
-    btn.addEventListener('click', () => {
-      if (history.length > 1) {
-        history.pop();
-        const prev = history[history.length-1];
-        _origShowPage(prev);
-        updateBackButton();
-      }
-    });
-    function updateBackButton() {
-      const activePage = document.querySelector('.page.active')?.id; btn.style.display = (activePage && activePage !== 'homePage') ? 'flex' : 'none';
-    }
+    init();
   }
-  init();
-}
+
 })();
-
-
