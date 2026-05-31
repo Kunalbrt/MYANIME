@@ -433,15 +433,31 @@
   }
 
   window.mobilSearch = function (e) {
-    const input = document.querySelector('#mobileSearchBar input');
-    const q = input?.value.trim();
-    if (!q) return;
-    if (typeof trackSearch === 'function') trackSearch(q);
-    const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
-    showPage('search');
-    renderGrid('searchGrid', results);
-  };
+  const input = document.querySelector('#mobileSearchBar input');
+  const q = input?.value.trim();
+  if (!q) return;
 
+  // Use the existing mspSearch if available (your search page function)
+  if (typeof mspSearch === 'function') {
+    showPage('search');
+    // sync the msp input too
+    const mspInput = document.getElementById('mspInput');
+    if (mspInput) { mspInput.value = q; }
+    mspSearch(q);
+    return;
+  }
+
+  // Fallback
+  if (typeof trackSearch === 'function') trackSearch(q);
+  const lib = window.animeLibrary || [];
+  const results = lib.filter(a => a.title.toLowerCase().includes(q.toLowerCase()));
+  showPage('search');
+  const grid = document.getElementById('mspGrid');
+  if (grid) {
+    grid.style.display = 'grid';
+    if (typeof renderGrid === 'function') renderGrid('mspGrid', results);
+  }
+};
   // ============================================================
   //  10. BACK BUTTON
   // ============================================================
