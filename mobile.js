@@ -278,7 +278,7 @@
   // ============================================================
   //  4. TOUCH-FRIENDLY CARDS
   // ============================================================
-  function initTouchCards() {
+    function initTouchCards() {
     document.addEventListener('click', (e) => {
       const card = e.target.closest('.anime-card');
       if (!card) {
@@ -311,40 +311,39 @@
     });
 
     const style = document.createElement('style');
-  const style = document.createElement('style');
-style.textContent = `
-  @media (max-width: 768px) {
-    .row-track { 
-      display: flex !important; 
-      overflow-x: auto !important;
-      overflow-y: visible !important;
-      gap: 0.5rem !important;
-      padding: 0.5rem 0.5rem 0.8rem !important;
-      scrollbar-width: none !important;
-    }
-    .row-track::-webkit-scrollbar { display: none !important; }
-    .anime-card { 
-      flex: 0 0 130px !important; 
-      min-width: 130px !important; 
-      height: 195px !important;
-      width: 130px !important;
-    }
-    .card-thumb, .card-thumb-placeholder { 
-      width: 130px !important;
-      height: 195px !important; 
-      object-fit: cover !important; 
-    }
-    .anime-card:hover { transform: none !important; }
-    .anime-card.mob-active { transform: scale(1.05); z-index: 100; }
-    .card-hover { transition: opacity 0.2s ease !important; }
-  }
-`;
-document.head.appendChild(style);
+    style.textContent = `
+      @media (max-width: 768px) {
+        .row-track { 
+          display: flex !important; 
+          overflow-x: auto !important;
+          overflow-y: visible !important;
+          gap: 0.5rem !important;
+          padding: 0.5rem 0.5rem 0.8rem !important;
+          scrollbar-width: none !important;
+        }
+        .row-track::-webkit-scrollbar { display: none !important; }
+        .anime-card { 
+          flex: 0 0 130px !important; 
+          min-width: 130px !important; 
+          height: 195px !important;
+          width: 130px !important;
+        }
+        .card-thumb, .card-thumb-placeholder { 
+          width: 130px !important;
+          height: 195px !important; 
+          object-fit: cover !important; 
+        }
+        .anime-card:hover { transform: none !important; }
+        .anime-card.mob-active { transform: scale(1.05); z-index: 100; }
+        .card-hover { transition: opacity 0.2s ease !important; }
+      }
+    `;
     document.head.appendChild(style);
-  }
+  } 
+  
 
   // ============================================================
-  //  5. SWIPE SUPPORT FOR ANIME ROWS
+//  5. SWIPE ROWS
   // ============================================================
   function initSwipeRows() {
     document.querySelectorAll('.anime-row').forEach(row => {
@@ -403,19 +402,27 @@ document.head.appendChild(style);
   //  8. HERO BANNER — mobile layout fix
   // ============================================================
   function initMobileHero() {
-    const style = document.createElement('style');
-    style.textContent = `
-      @media (max-width: 768px) {
-        .hero { height: 65vh !important; min-height: 380px !important; }
-        .hero-title { font-size: 2rem !important; }
-        .hero-desc { font-size: 0.82rem !important; -webkit-line-clamp: 2; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden; }
-        .hero-actions { gap: 0.6rem !important; }
-        .btn-play, .btn-info { padding: 0.5rem 1rem !important; font-size: 0.85rem !important; }
-        .hero-content { padding: 0 5% !important; }
-      }
-    `;
-    document.head.appendChild(style);
-  }
+  const style = document.createElement('style');
+  style.textContent = `
+    @media (max-width: 768px) {
+      .hero { height: 65vh !important; min-height: 380px !important; }
+      .hero-title { font-size: 2rem !important; }
+      .hero-desc { font-size: 0.82rem !important; -webkit-line-clamp: 2; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden; }
+      .hero-actions { gap: 0.6rem !important; }
+      .btn-play, .btn-info { padding: 0.5rem 1rem !important; font-size: 0.85rem !important; }
+      .hero-content { padding: 0 5% !important; }
+
+      /* NAVBAR FIX */
+      .navbar { padding: 0.4rem 0.8rem !important; gap: 0.4rem !important; flex-wrap: nowrap !important; }
+      .search-bar { flex: 1 !important; min-width: 0 !important; }
+      .search-bar input { font-size: 0.8rem !important; padding: 0.35rem 0.6rem !important; }
+      #loginBtn { padding: 0.35rem 0.7rem !important; font-size: 0.78rem !important; white-space: nowrap !important; }
+      .btn-signup { padding: 0.35rem 0.7rem !important; font-size: 0.78rem !important; white-space: nowrap !important; }
+      .logo-text { font-size: 0.95rem !important; }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
   // ============================================================
   //  9. MOBILE SEARCH BAR
