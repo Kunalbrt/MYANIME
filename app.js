@@ -1138,7 +1138,7 @@ function setupSearchListener() {
         showPage('search');
         const mspInput = document.getElementById('mspInput');
         if (mspInput) mspInput.value = q;
-        mspSearch(q);
+        const results = animeLibrary.filter(a => a.title.toLowerCase().includes(q.toLowerCase())); renderGrid('searchGrid', results);
       } else if (q.length === 0) {
         showPage('home');
       }
@@ -1758,6 +1758,7 @@ function showToast(msg) {
 //   START
 // --------------------------------------------
 document.addEventListener('DOMContentLoaded', init);
+
 
 
 
