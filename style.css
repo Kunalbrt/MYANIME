@@ -172,6 +172,25 @@ body {
 .card-badge { border: 1px solid #777; color: #aaa; padding: 0.05rem 0.3rem; font-size: 0.6rem; border-radius: 2px; }
 .card-genre { color: #aaa; font-size: 0.68rem; }
 
+.card-ep-info {
+  padding: 0.25rem 0.4rem;
+  background: #111;
+}
+.card-ep-num {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--red);
+  font-weight: 600;
+}
+.card-ep-name {
+  display: block;
+  font-size: 0.65rem;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ============ BROWSE PAGES ============ */
 .browse-page { padding: 100px 4% 4rem; }
 .browse-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--white); margin-bottom: 1.5rem; }

@@ -215,8 +215,11 @@ async function fetchAnimeFromBackend() {
         thumb:    a.thumbnailUrl || '',
         videoUrl: a.videoUrl     || '',
         emoji:    '??',
-        trending: a.isTrending  || false,
-        topRated: a.isTopRated  || false,
+       trending:      a.isTrending || false,
+topRated:      a.isTopRated || false,
+episodeCount:  Array.isArray(a.episodes) ? a.episodes.length : (a.episodeCount || 0),
+latestEpTitle: Array.isArray(a.episodes) && a.episodes.length > 0
+               ? (a.episodes[a.episodes.length - 1].title || '') : '',
       }));
       saveToStorage();
       renderAll();
