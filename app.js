@@ -1799,7 +1799,7 @@ function mspPopulateTrending() {
   if (!list) return;
   const trending = animeLibrary.filter(a => a.trending).slice(0, 5);
   list.innerHTML = trending.map(a =>
-    <div class="msp-list-item" onclick="mspFill('')"> </div>
+    `<div class="msp-list-item" onclick="mspFill(${JSON.stringify(a.title)})">${a.emoji||"??"} ${a.title}</div>`
   ).join('');
 }
 
