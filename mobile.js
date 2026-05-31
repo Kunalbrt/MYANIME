@@ -311,15 +311,16 @@
     });
 
     const style = document.createElement('style');
-    style.textContent = `
-      @media (max-width: 768px) {
-        .anime-card { flex: 0 0 130px; min-width: 130px; height: 75px; }
-        .card-thumb, .card-thumb-placeholder { height: 75px; }
-        .anime-card:hover { transform: none; }
-        .anime-card.mob-active { transform: scale(1.05); z-index: 100; }
-        .card-hover { transition: opacity 0.2s ease !important; }
-      }
-    `;
+style.textContent = `
+  @media (max-width: 768px) {
+    .row-track { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; overflow-x: unset !important; gap: 0.6rem; }
+    .anime-card { flex: none !important; width: 100% !important; min-width: unset !important; height: unset !important; padding-bottom: 0 !important; aspect-ratio: 2/3 !important; overflow: hidden !important; position: relative !important; }
+    .card-thumb, .card-thumb-placeholder { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover !important; }
+    .anime-card:hover { transform: none !important; }
+    .anime-card.mob-active { transform: scale(1.05); z-index: 100; }
+    .card-hover { transition: opacity 0.2s ease !important; }
+  }
+`;
     document.head.appendChild(style);
   }
 
