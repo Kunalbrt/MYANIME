@@ -303,7 +303,7 @@
   function loadEpisode(idx) {
     currentEp = idx;
     updateNavBtns();
-    document.getElementById('epIndicator').innerText = 'Episode ' + (idx + 1);
+    const curEp = allEpisodes[idx]; const curEpNum = curEp?.episodeNumber || curEp?.number || (idx + 1); document.getElementById('epIndicator').innerText = 'Episode ' + curEpNum;
     markActiveBtn();
     playStream();
   }
@@ -436,8 +436,8 @@
       btn.className = 'epBtn'
         + (i === currentEp   ? ' active'   : '')
         + (watched.includes(i) ? ' watched' : '');
-      btn.innerText = i + 1;
-      btn.title     = 'Episode ' + (i + 1) + (hasVid ? '' : ' (no video yet)');
+      const ep = allEpisodes[i]; const epNum = ep?.episodeNumber || ep?.number || (i + 1); btn.innerText = epNum;
+      btn.title = 'Episode ' + epNum + (hasVid ? '' : ' (no video yet)');
       btn.style.opacity = hasVid || i < totalEps ? '1' : '0.4';
       btn.onclick = () => loadEpisode(i);
       grid.appendChild(btn);
